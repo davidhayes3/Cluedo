@@ -1,13 +1,14 @@
-package cluedo;
+package ie.ucd.cluedo;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import static cluedo.GameValues.*;
+import static ie.ucd.cluedo.GameValues.*;
 
 public class Game 
 {
 	// Game attributes
-	ArrayList<Slot> startPositions = new ArrayList<Slot>(NUM_PAWNS);
+	// ArrayList<Slot> startPositions = new ArrayList<Slot>(NUM_PAWNS);
+	Board gameBoard;
 	ArrayList<Player> players = new ArrayList<Player>();
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	ArrayList<WeaponPawn> weaponPawns = new ArrayList<WeaponPawn>(NUM_WEAPONS);
@@ -20,27 +21,45 @@ public class Game
 		// Get number of players
 		int numPlayers = getNumPlayers();
 		
-		// Print details of murder for this game
-		System.out.println("\nMurder Details:");
-		System.out.printf("Suspect: %s\nWeapon: %s\nRoom: %s\n", murderSuspect, murderWeapon, murderRoom);
-		System.out.println("\n");
-		
 		// *** Setup Board ***
 		// Creates slots of the board 
-		makeSlots(startPositions);
-		
-		// Print co-ordinates of slots
-		System.out.println("Possible Start Positions:");
-		for (int i = 0; i < NUM_PAWNS; i++)
-		{
-			System.out.printf("(%d, %d)\n", startPositions.get(i).getXPosition(), startPositions.get(i).getYPosition());
-		}
-		
-		System.out.println("\n\n");
+		gameBoard = new Board();
+		//makeSlots(startPositions);
 		
 		// Instantiate all players, assign a suspect pawn to each player and place these suspect pawns at a slot
 		makePlayers(numPlayers, players, startPositions);
 		
+		// Create deck of cards excluding the murder cards
+		createDeck(cardDeck);
+		
+		// Allocate cards to players
+		allocateCards(numPlayers, players, cardDeck);
+		
+		// Create Pawns
+ 		makeWeaponPawns(weaponPawns, startPositions);
+ 		
+ 		/*// Print weapon pawns
+ 		System.out.printf("Weapon Pawns:\n");
+ 		
+ 		for (int i = 0; i < NUM_WEAPONS; i++)
+ 		{
+ 			System.out.printf("Type: %s, Name: %s\n", weaponPawns.get(i).getType(), weaponPawns.get(i).getName());
+ 		}
+
+ 		// Print details of murder for this game
+ 		System.out.println("\nMurder Details:");
+ 		System.out.printf("Suspect: %s\nWeapon: %s\nRoom: %s\n", murderSuspect, murderWeapon, murderRoom);
+ 		System.out.println("\n");
+ 		
+ 		// Print co-ordinates of slots
+ 		System.out.println("Possible Start Positions:");
+ 		for (int i = 0; i < NUM_PAWNS; i++)
+ 		{
+ 			System.out.printf("(%d, %d)\n", startPositions.get(i).getXPosition(), startPositions.get(i).getYPosition());
+ 		}
+ 			
+ 		System.out.println("\n\n");
+ 		
 		// Print the die roll scores of all players
 		
 		System.out.printf("Players:\n\n");
@@ -54,9 +73,6 @@ public class Game
 			System.out.println("\n");
 		}
 		
-		// Create deck of cards excluding the murder cards
-		createDeck(cardDeck);
-		
 		// Print the type and name of cards to be dealt to players
 		System.out.println("Deck in Play:");
 		
@@ -66,9 +82,6 @@ public class Game
 		}
 		
 		System.out.println("\n\n");
-		
-		// Allocate cards to players
-		allocateCards(numPlayers, players, cardDeck);
 		
 		// Print cards allocated to each player
 		System.out.printf("Cards Allocation:\n\n");
@@ -83,34 +96,13 @@ public class Game
 			}
 			
 			System.out.println("\n");
-		}
-		
-		// Create Pawns
- 		makeWeaponPawns(weaponPawns, startPositions);
- 		
- 		// Print weapon pawns
- 		System.out.printf("Weapon Pawns:\n");
- 		
- 		for (int i = 0; i < NUM_WEAPONS; i++)
- 		{
- 			System.out.printf("Type: %s, Name: %s\n", weaponPawns.get(i).getType(), weaponPawns.get(i).getName());
- 		}
- 		
- 		// Test player/notebook methods
- 		System.out.printf("\n\nNotebook:\n\n");
- 		
- 		System.out.printf("First Inspection: %s\n", players.get(0).inspectNotebook());
- 		players.get(0).updateNotebook("I formulated the hypothesis that Z made the murder in the kitchen with the gun.");
- 		System.out.printf("Second Inspection: %s", players.get(0).inspectNotebook());
-
+		}*/
 	}
 	
 	
 	
-
 	
-	
-	
+	// Method Implementations
 	
 	// Get number of players
 	public int getNumPlayers()
@@ -196,6 +188,15 @@ public class Game
 		{
 			weaponPawnList.add(new WeaponPawn(i, startPositions.get(i))); 
 		}
+	}
+	
+	
+	
+	// Game Main
+	
+	public static void main(String[] args) 
+	{	
+		new Game();	
 	}
 	
 }

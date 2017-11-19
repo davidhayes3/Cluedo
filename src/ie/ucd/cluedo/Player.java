@@ -1,8 +1,8 @@
-package cluedo;
+package ie.ucd.cluedo;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
-import static cluedo.GameValues.*;
+import static ie.ucd.cluedo.GameValues.*;
 
 public class Player 
 {

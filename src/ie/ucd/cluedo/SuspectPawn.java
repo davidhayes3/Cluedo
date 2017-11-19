@@ -1,4 +1,4 @@
-package cluedo;
+package ie.ucd.cluedo;
 
 public class SuspectPawn extends Pawn 
 {

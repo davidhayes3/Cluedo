@@ -1,6 +1,6 @@
-package cluedo;
+package ie.ucd.cluedo;
 
-import static cluedo.GameValues.*;
+import static ie.ucd.cluedo.GameValues.*;
 
 public abstract class Pawn 
 {

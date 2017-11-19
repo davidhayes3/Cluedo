@@ -1,4 +1,4 @@
-package cluedo;
+package ie.ucd.cluedo;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
