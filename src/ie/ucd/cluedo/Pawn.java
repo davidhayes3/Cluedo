@@ -2,18 +2,17 @@ package ie.ucd.cluedo;
 
 import static ie.ucd.cluedo.GameValues.*;
 
-public abstract class Pawn 
+public abstract class Pawn
 {
-	
+
 	// Pawn attributes
-	protected Slot pawnPosition;
 	private PawnType pawnType;
 	private Name pawnName;
+	protected Slot pawnPosition;
 	
 	// Pawn constructor
-	public Pawn(int pawnIndex, Slot startingSlot)
+	public Pawn(int pawnIndex, Slot pawnPosition)
 	{
-		this.pawnPosition = startingSlot;
 		
 		// Decide type of pawn based on index number of pawn
 		if (pawnIndex < NUM_SUSPECTS)
@@ -25,7 +24,7 @@ public abstract class Pawn
 			this.pawnType = PawnType.WEAPON;
 		}
 		
-		this.pawnName = gameList.get(pawnIndex);
+		this.pawnName = gameList.get(pawnIndex-1);
 	}
 	
 	// Returns type of pawn, suspect or weapon

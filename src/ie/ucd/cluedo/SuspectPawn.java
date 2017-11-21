@@ -1,12 +1,12 @@
 package ie.ucd.cluedo;
 
-public class SuspectPawn extends Pawn 
+public class SuspectPawn extends Pawn  
 {
-	
+
 	// SuspectPawn constructor
-	public SuspectPawn(int pawnIndex, Slot startingSlot)
+	public SuspectPawn(int pawnIndex, Slot pawnPosition)
 	{
-		super(pawnIndex, startingSlot);
+		super(pawnIndex, pawnPosition);
 	}
 	
 	// Returns slot where the suspect pawn is currently located
@@ -18,13 +18,7 @@ public class SuspectPawn extends Pawn
 	// Changes the slot occupied by the suspect pawn
 	public void movePosition(Slot newPosition)
 	{
-		// Knowledge of board needed to implement
+		this.pawnPosition = newPosition;
 	}
-	
-	// Checks if the slot occupied the suspect pawn is in a specific room
-	public void inRoom() 
-	{
-		// Knowledge of board needed to implement
-	}
-	
+
 }

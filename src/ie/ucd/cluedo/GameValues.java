@@ -27,7 +27,7 @@ public final class GameValues
 		KITCHEN, BALLROOM, CONSERVATORY, DINING_ROOM, LOUNGE, HALL, STUDY, BILLIARD_ROOM, LIBRARY;
 	}
 	
-	// List of all constants needed in game
+	// List of constants needed for logic
 	public static final int MIN_NUM_PLAYERS = 2;
 	public static final int MAX_NUM_PLAYERS = 6;		
 	public static final int MIN_DIES_SCORE = 2;
@@ -40,6 +40,12 @@ public final class GameValues
 	public static final int NUM_MURDER_CARDS = 3;
 	public static final int NUM_CARDS_IN_PLAY = NUM_CARDS_IN_DECK - NUM_MURDER_CARDS;
 	
+	// List of constants needed for board
+	public static final int BOARD_WIDTH = 25;
+	public static final int BOARD_HEIGHT = 25;
+	public static final int BUTTON_PIXEL_WIDTH = 21;
+	public static final int BUTTON_PIXEL_HEIGHT = 21;
+	
 	// List of all possible suspects, weapons and rooms 
 	public static final ArrayList<Name> gameList = new ArrayList<Name>(EnumSet.allOf(Name.class));
 	
@@ -47,7 +53,6 @@ public final class GameValues
 	public static final int murderSuspectIndex = ThreadLocalRandom.current().nextInt(0, NUM_SUSPECTS);
 	public static final int murderWeaponIndex = ThreadLocalRandom.current().nextInt(NUM_SUSPECTS, NUM_SUSPECTS + NUM_WEAPONS);
 	public static final int murderRoomIndex = ThreadLocalRandom.current().nextInt(NUM_SUSPECTS + NUM_WEAPONS, NUM_SUSPECTS + NUM_WEAPONS + NUM_ROOMS);
-	
 	public static final Name murderSuspect = gameList.get(murderSuspectIndex);
 	public static final Name murderWeapon = gameList.get(murderWeaponIndex);
 	public static final Name murderRoom = gameList.get(murderRoomIndex);

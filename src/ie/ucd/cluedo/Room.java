@@ -6,18 +6,18 @@ public class Room extends Slot
 {
 	
 	// Attributes of room
-	public Name roomName;
+	private int roomIndex;
 	
 	// Room constructor
-	public Room(int x, int y, Name roomName)
+	public Room(int x, int y, int roomIndex)
 	{
 		super(x, y);
-		this.roomName = roomName;
+		this.roomIndex = roomIndex;
 	}
 	
 	// Returns name of room
 	public Name getRoom()
 	{
-		return this.roomName;
+		return gameList.get(NUM_PAWNS + roomIndex - 1);
 	}
 }

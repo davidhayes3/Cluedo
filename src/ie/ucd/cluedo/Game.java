@@ -7,104 +7,61 @@ import static ie.ucd.cluedo.GameValues.*;
 public class Game 
 {
 	// Game attributes
-	// ArrayList<Slot> startPositions = new ArrayList<Slot>(NUM_PAWNS);
+	ArrayList<Player> players = new ArrayList<Player>(6);
 	Board gameBoard;
-	ArrayList<Player> players = new ArrayList<Player>();
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
-	ArrayList<WeaponPawn> weaponPawns = new ArrayList<WeaponPawn>(NUM_WEAPONS);
-	
+	int numPlayers;
+	boolean gameOver = false;
+	int playerTurn = 0;
 	
 	// Game Constructor
+	@SuppressWarnings("resource")
 	public Game()
 	{
 		
+		// Main part of game
+		System.out.println("NEW GAME\n\n");
+			
 		// Get number of players
-		int numPlayers = getNumPlayers();
-		
-		// *** Setup Board ***
-		// Creates slots of the board 
-		gameBoard = new Board();
-		//makeSlots(startPositions);
-		
+		numPlayers = getNumPlayers();
+			
+		// Print details of murder
+		printMurderDetails();
+			
 		// Instantiate all players, assign a suspect pawn to each player and place these suspect pawns at a slot
-		makePlayers(numPlayers, players, startPositions);
-		
+		makePlayers(numPlayers, players);
+						
+		// Setup Board
+		gameBoard = new Board(players);
+		gameBoard.makeSuspectPawns(players);
+
+		// Print details of players
+		printPlayerDetails();
+			
 		// Create deck of cards excluding the murder cards
 		createDeck(cardDeck);
-		
+		printDeckInPlayDetails();
+			
 		// Allocate cards to players
-		allocateCards(numPlayers, players, cardDeck);
-		
-		// Create Pawns
- 		makeWeaponPawns(weaponPawns, startPositions);
- 		
- 		/*// Print weapon pawns
- 		System.out.printf("Weapon Pawns:\n");
- 		
- 		for (int i = 0; i < NUM_WEAPONS; i++)
- 		{
- 			System.out.printf("Type: %s, Name: %s\n", weaponPawns.get(i).getType(), weaponPawns.get(i).getName());
- 		}
-
- 		// Print details of murder for this game
- 		System.out.println("\nMurder Details:");
- 		System.out.printf("Suspect: %s\nWeapon: %s\nRoom: %s\n", murderSuspect, murderWeapon, murderRoom);
- 		System.out.println("\n");
- 		
- 		// Print co-ordinates of slots
- 		System.out.println("Possible Start Positions:");
- 		for (int i = 0; i < NUM_PAWNS; i++)
- 		{
- 			System.out.printf("(%d, %d)\n", startPositions.get(i).getXPosition(), startPositions.get(i).getYPosition());
- 		}
- 			
- 		System.out.println("\n\n");
- 		
-		// Print the die roll scores of all players
-		
-		System.out.printf("Players:\n\n");
-		
-		for (int i = 0; i < numPlayers; i++)
+		allocateCards(players, cardDeck);
+		printCardAllocation();
+			
+		// Game play
+		while(!gameOver)
 		{
-			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
-			System.out.printf("Pawn: %s\n", players.get(i).getSuspectPawn().getName());
-			System.out.printf("Dice Score: %d\n", players.get(i).rollDies());
-			System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition().getXPosition(), players.get(i).getPosition().getYPosition());
-			System.out.println("\n");
+			Turn();
 		}
 		
-		// Print the type and name of cards to be dealt to players
-		System.out.println("Deck in Play:");
-		
-		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
-		{
-			System.out.printf("Type: %s, Name: %s\n", cardDeck.get(i).getType(), cardDeck.get(i).getName());
-		}
-		
-		System.out.println("\n\n");
-		
-		// Print cards allocated to each player
-		System.out.printf("Cards Allocation:\n\n");
-		
-		for (int i = 0; i < numPlayers; i++)
-		{
-			System.out.printf("Player %d Cards:\n", players.get(i).getPlayerNumber());
+		System.out.println("\n\nGAME OVER\n\n");	
 			
-			for (int n = 0; n < players.get(i).getCards().size(); n++)
-			{
-				System.out.println(players.get(i).getCards().get(n).getName());
-			}
-			
-			System.out.println("\n");
-		}*/
 	}
-	
-	
+		
 	
 	
 	// Method Implementations
 	
 	// Get number of players
+	@SuppressWarnings("resource")
 	public int getNumPlayers()
 	{
 		int numPlayers;
@@ -113,9 +70,8 @@ public class Game
 		{
 			// Ask user for input until no. of players between 2 and 6 is selected
 			System.out.println("Welcome to Cluedo. Please enter the number of players (2-6):");
-			@SuppressWarnings("resource")
-			Scanner sc = new Scanner(System.in);
-			numPlayers = sc.nextInt();
+			Scanner scanner = new Scanner(System.in);
+			numPlayers = scanner.nextInt();
 				
 			if (numPlayers >= MIN_NUM_PLAYERS && numPlayers <= MAX_NUM_PLAYERS)
 			{
@@ -129,23 +85,67 @@ public class Game
 		
 		return numPlayers;
 	}
-		
-	// Define locations where pawns start
-	public void makeSlots(ArrayList<Slot> startPositions)
-	{
-		for (int i = 0; i < NUM_PAWNS; i++)
-		{
-			startPositions.add(new Slot(i, i));
-		}
-	}
-	
+
 	// Create Players
-	public void makePlayers(int numPlayers, ArrayList<Player> playerList, ArrayList<Slot> startPositions)
+	public void makePlayers(int numPlayers, ArrayList<Player> playerList)
 	{		
 		for (int i = 0; i < numPlayers; i++)
 		{
-			playerList.add(new Player(i + 1, new SuspectPawn(i, startPositions.get(i)), new Notebook()));
+			playerList.add(new Player(i + 1, new Notebook()));
 		}
+	}
+	
+	
+	// Turn for a player
+	@SuppressWarnings("resource")
+	public void Turn()
+	{
+		System.out.printf("\nTURN: PLAYER %d\n", playerTurn + 1);
+		
+		Player currentPlayer = this.players.get(playerTurn);
+		
+		int diceScore = currentPlayer.rollDies();
+		System.out.printf("\nYou rolled a score of %d!\n\n", playerTurn + 1, diceScore);
+		
+		while (true)
+		{
+			Scanner scanner = new Scanner(System.in);
+			System.out.printf( "What do you want to do?\nMove Postion [m],\nEnter Room [r],\nMake Hypothesis [h],\nMake Accusation [a]\nOption: " );
+			String playerChoice = scanner.nextLine();
+			
+			if (playerChoice.equals("m"))
+			{
+				//pawnMove(currentPlayer);
+				break;
+			}
+			else if (playerChoice.equals("r"))
+			{
+				//enterRoom()
+				gameOver = true;
+				break;
+			}
+			else if (playerChoice.equals("h"))
+			{
+				//hypothesis();
+				gameOver = true;
+				break;
+			}
+			else if (playerChoice.equals("a"))
+			{
+				//accusation();
+				gameOver = true;
+				break;
+			}
+			else
+			{
+				System.out.println("Please enter a valid option");
+			}
+		}
+		
+		players.set(playerTurn, currentPlayer);
+		playerTurn = (playerTurn + 1) % players.size();
+		System.out.println("\n");
+		
 	}
 	
 	// Creates deck of cards with all cards except murder cards
@@ -165,7 +165,7 @@ public class Game
 	}
 	
 	// Allocates the deck of cards created among all players, giving one at a time to each player starting with player 1, player 2...
-	public void allocateCards(int numPlayers, ArrayList<Player> players, ArrayList<Card> cardDeck) 
+	public void allocateCards(ArrayList<Player> players, ArrayList<Card> cardDeck) 
 	{
 		int playerNumber = 0;
 		
@@ -173,23 +173,61 @@ public class Game
 		{
 			players.get(playerNumber++).giveCard(cardDeck.get(i));
 			
-			if (playerNumber == numPlayers)
+			if (playerNumber == players.size())
 			{
 				playerNumber = 0;
 			}
 		}
 	}
 	
-	// Instantiates the weapon pawns for the game and stores in an ArrayList
-	public void makeWeaponPawns(ArrayList<WeaponPawn> weaponPawnList, ArrayList<Slot> startPositions)
-	{		
-		// Create Weapon Pawns
-		for (int i = NUM_SUSPECTS; i < NUM_PAWNS; i++)
+	// Print details of murder for this game
+	public void printMurderDetails()
+	{
+		System.out.println("\nMURDER DETAILS:\n");
+		System.out.printf("Suspect: %s\nWeapon: %s\nRoom: %s\n\n", murderSuspect, murderWeapon, murderRoom);
+	}	
+	
+	public void printPlayerDetails()
+	{
+		System.out.printf("\nPLAYER DETAILS:\n\n");
+		
+		for (int i = 0; i < players.size(); i++)
 		{
-			weaponPawnList.add(new WeaponPawn(i, startPositions.get(i))); 
+			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
+			System.out.printf("Pawn: %s\n\n", players.get(i).getSuspectPawn().getName());
+			System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition().getXPosition(), players.get(i).getPosition().getYPosition());
+			//System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition());//.getXPosition(), players.get(i).getPosition().getYPosition());
 		}
 	}
 	
+	// Print the type and name of cards to be dealt to players
+	public void printDeckInPlayDetails()
+	{
+		System.out.println("\nDECK IN PLAY:\n");
+	
+		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
+		{
+			System.out.printf("Type: %s, Name: %s\n", cardDeck.get(i).getType(), cardDeck.get(i).getName());
+		}
+	}
+	
+	// Print cards allocated to each player
+	public void printCardAllocation()
+	{
+		System.out.printf("\n\nCARD ALLOCATION:\n\n");
+	
+		for (int i = 0; i < players.size(); i++)
+		{
+			System.out.printf("Player %d Cards:\n", players.get(i).getPlayerNumber());
+		
+			for (int n = 0; n < players.get(i).getCards().size(); n++)
+			{
+				System.out.println(players.get(i).getCards().get(n).getName());
+			}
+			
+			System.out.println("\n");
+		}
+	}
 	
 	
 	// Game Main

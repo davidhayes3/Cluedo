@@ -4,9 +4,9 @@ public class WeaponPawn extends Pawn
 {
 
 	// WeaponPawn constructor
-	public WeaponPawn(int pawnIndex, Slot startingSlot)
+	public WeaponPawn(int pawnIndex, Slot pawnPosition)
 	{
-		super(pawnIndex, startingSlot);
+		super(pawnIndex, pawnPosition);
 	}
 	
 	// Returns the room occupied by the weapon pawn

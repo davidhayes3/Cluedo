@@ -15,10 +15,9 @@ public class Player
 	
 	// Player constructor
 	// Arguments: player number, suspect pawn allocated to player, notebook assigned to player, cards assigned to player later
-	public Player(int playerNumber, SuspectPawn playerPawn, Notebook playerNotebook)
+	public Player(int playerNumber, Notebook playerNotebook)
 	{
 		this.playerNumber = playerNumber;
-		this.playerPawn = playerPawn;
 		this.playerNotebook = playerNotebook;
 	}
 	
@@ -40,6 +39,12 @@ public class Player
 		return this.playerCards;
 	}
 	
+	// Assigns suspect pawn to player
+	public void giveSuspectPawn(SuspectPawn playerPawn)
+	{
+		this.playerPawn = playerPawn;
+	}
+	
 	// Returns suspect pawn assigned to player
 	public SuspectPawn getSuspectPawn()
 	{
@@ -59,9 +64,9 @@ public class Player
 	}
 	
 	// Moves the player's suspect pawn to a different slot on the board
-	public void movePawn()
+	public void movePawn(Slot newPosition)
 	{
-		// Knowledge of board required to implement
+		playerPawn.movePosition(newPosition);
 	}
 	
 	// Moves the player's suspect pawn into a room 
