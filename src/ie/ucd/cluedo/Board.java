@@ -38,16 +38,15 @@ public class Board
 		}
 			
 		//gui();
-		//makeSuspectPawns(players);
+		makeSuspectPawns(players);
 		
 		System.out.printf("\nPLAYER DETAILS:\n\n");
 		
-		/*for (int i = 0; i < players.size(); i++)
+		for (int i = 0; i < players.size(); i++)
 		{
 			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
 			System.out.printf("Pawn: %s\n", players.get(i).getSuspectPawn().getName());
-			System.out.printf("Pawn Location: (%d, %d)\n\n", slots.get(i*100).getXPosition(), slots.get(i*100).getYPosition());
-		}*/
+		}
 
 	}
 
@@ -113,7 +112,7 @@ public class Board
 	{
 		players.get(0).giveSuspectPawn(new SuspectPawn(1, slots.get(0)));
 		players.get(1).giveSuspectPawn(new SuspectPawn(2, slots.get(100)));
-		
+
 		if (players.size() <= 2)
 		{
 			return;

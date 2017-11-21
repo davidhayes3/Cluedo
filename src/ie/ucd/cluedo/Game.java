@@ -33,10 +33,9 @@ public class Game
 						
 		// Setup Board
 		gameBoard = new Board(players);
-		gameBoard.makeSuspectPawns(players);
 
 		// Print details of players
-		printPlayerDetails();
+		//printPlayerDetails();
 			
 		// Create deck of cards excluding the murder cards
 		createDeck(cardDeck);
@@ -195,8 +194,6 @@ public class Game
 		{
 			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
 			System.out.printf("Pawn: %s\n\n", players.get(i).getSuspectPawn().getName());
-			System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition().getXPosition(), players.get(i).getPosition().getYPosition());
-			//System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition());//.getXPosition(), players.get(i).getPosition().getYPosition());
 		}
 	}
 	
