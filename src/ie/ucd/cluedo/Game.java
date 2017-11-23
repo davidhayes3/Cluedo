@@ -195,7 +195,8 @@ public class Game
 		{
 			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
 			System.out.printf("Pawn: %s\n\n", players.get(i).getSuspectPawn().getName());
-			System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition().getXPosition(), players.get(i).getPosition().getYPosition());
+			Slot temp = players.get(i).getPosition();
+			System.out.printf("Pawn Location: (%d, %d)\n", temp.getXPosition(), temp.getYPosition());
 			//System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition());//.getXPosition(), players.get(i).getPosition().getYPosition());
 		}
 	}
@@ -235,6 +236,7 @@ public class Game
 	public static void main(String[] args) 
 	{	
 		new Game();	
+		//BoardR CluedoB = new BoardR();
 	}
 	
 }
