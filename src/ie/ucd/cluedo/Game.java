@@ -8,7 +8,7 @@ public class Game
 {
 	// Game attributes
 	ArrayList<Player> players = new ArrayList<Player>(6);
-	Board gameBoard;
+	BoardR gameBoard;
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	int numPlayers;
 	boolean gameOver = false;
@@ -32,9 +32,10 @@ public class Game
 		makePlayers(numPlayers, players);
 						
 		// Setup Board
-		gameBoard = new Board(players);
+		gameBoard = new BoardR(players);
+		gameBoard.changePlayerTurn(players.get(0));
 		gameBoard.makeSuspectPawns(players);
-
+		
 		// Print details of players
 		printPlayerDetails();
 			

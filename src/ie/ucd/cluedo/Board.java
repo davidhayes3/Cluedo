@@ -117,6 +117,7 @@ public class Board
 		
 		if (players.size() <= 2)
 		{
+			
 			return;
 		}
 		

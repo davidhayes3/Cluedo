@@ -1,10 +1,14 @@
 package ie.ucd.cluedo;
 
+import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
+import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -25,10 +29,20 @@ public class BoardR implements ActionListener {
 	private int j = 0;
 	public int x_position;
 	public int y_position;
-	
-
-	
-	public BoardR() {
+	public boolean letPlayerMove;
+	ArrayList<Slot> slots = new ArrayList<Slot>(BOARD_WIDTH * BOARD_HEIGHT);
+	public Player playerTurn;
+	//private int diceRoll = 10;
+	diceButton dice = new diceButton();
+	public BoardR(ArrayList<Player> players) {
+		// Fill slots and buttons
+				for (int i = 0; i < BOARD_WIDTH; i++)
+				{
+					for (int j = 0; j < BOARD_HEIGHT; j++)
+					{
+						slots.add(new Slot(i, j));
+					}
+				}
 		
 		gui2();
 	}
@@ -240,7 +254,7 @@ public class BoardR implements ActionListener {
 			buttons[col][row] = new BoardButton(col,row);
 			Board.add(buttons[col][row]);
 		}
-		
+		Board.add(dice);
 		Board.add(boardLabel);
 		Board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Board.setVisible(true);
@@ -267,12 +281,73 @@ public class BoardR implements ActionListener {
 	public void actionPerformed(ActionEvent e){
 	                	BoardButton buttonB = (BoardButton) e.getSource();
 	                	System.out.println("Button pressed is: " + buttonB.getXpos() + "," + buttonB.getYpos());
-	                    buttons[buttonB.getXpos()][buttonB.getYpos()].setBackground(Color.RED);
-	                    canPlayerMove(buttonB.getXpos(), buttonB.getYpos());
+	                    //buttons[buttonB.getXpos()][buttonB.getYpos()].setBackground(Color.RED);
+	                    letPlayerMove = canPlayerMove(buttonB.getXpos(), buttonB.getYpos());
+	                    if(letPlayerMove){
+	                    	playerTurn.getSuspectPawn().getSuspectButton().setBackground(Color.YELLOW);
+	                    	playerTurn.getSuspectPawn().movePawn(buttonB);
+	                    	buttonB.setBackground(Color.RED);
+	                    	
+	                    }
 	                }
 	            
-	public void canPlayerMove(int x, int y){
+	public void makeSuspectPawns(ArrayList<Player> players)
+	{
+		
+		//System.out.println(players.get(0).getPosition().getXPosition());
+		players.get(0).giveSuspectPawn(new SuspectPawn(1, slots.get(0)));
+		players.get(0).getSuspectPawn().movePawn(buttons[6][0]);
+		players.get(0).getSuspectPawn().getSuspectButton().setBackground(Color.BLUE);
+		players.get(1).giveSuspectPawn(new SuspectPawn(2, slots.get(100)));
+		
+		if (players.size() <= 2)
+		{
+			
+			return;
+		}
+		
+		players.get(2).giveSuspectPawn(new SuspectPawn(3, slots.get(200)));
+		
+		if (players.size() <= 3)
+		{
+			return;
+		}
+		
+		players.get(3).giveSuspectPawn(new SuspectPawn(4, slots.get(300)));
+		
+		if (players.size() <= 4)
+		{
+			return;
+		}
+		
+		players.get(4).giveSuspectPawn(new SuspectPawn(5, slots.get(400)));
+		
+		if (players.size() <= 5)
+		{
+			return;
+		}
+		
+		players.get(5).giveSuspectPawn(new SuspectPawn(6, slots.get(500)));
+	}
+	
+	public void changePlayerTurn(Player playerTurn){
+		this.playerTurn = playerTurn;
+	}
+	
+
+	public boolean canPlayerMove(int x, int y){
 		System.out.println("Check if the player can move");
+		int newX = playerTurn.getSuspectPawn().getX();
+		int newY = playerTurn.getSuspectPawn().getY();
+		int a = java.lang.Math.abs(newX - x);
+		int b = java.lang.Math.abs(newY - y);
+		int c = a+b;
+		if(c<=dice.getDiceRoll()){
+		System.out.println("Player Moved");
+		return true;
+		}
+		System.out.println("Too far away dumb ass");
+		return false;
 		//getPlayer();
 		//
 	}	    
