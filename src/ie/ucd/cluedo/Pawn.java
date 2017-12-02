@@ -8,12 +8,12 @@ public abstract class Pawn
 	// Pawn attributes
 	private PawnType pawnType;
 	private Name pawnName;
-	protected Slot pawnPosition;
+	public Slot pawnPosition;
 	
 	// Pawn constructor
 	public Pawn(int pawnIndex, Slot pawnPosition)
 	{
-		
+
 		// Decide type of pawn based on index number of pawn
 		if (pawnIndex < NUM_SUSPECTS)
 		{

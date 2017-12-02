@@ -8,11 +8,11 @@ public class Game
 {
 	// Game attributes
 	ArrayList<Player> players = new ArrayList<Player>(6);
-	Board gameBoard;
+	BoardR gameBoard;
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	int numPlayers;
 	boolean gameOver = false;
-	int playerTurn = 0;
+	int playerTurn = 1;
 	
 	// Game Constructor
 	@SuppressWarnings("resource")
@@ -32,8 +32,14 @@ public class Game
 		makePlayers(numPlayers, players);
 						
 		// Setup Board
+<<<<<<< HEAD
 		gameBoard = new Board(players);
 
+=======
+		gameBoard = new BoardR(players);
+		gameBoard.makeSuspectPawns(players);
+		
+>>>>>>> 4749ef3168c6c46b1fa936103ec6ffc4e94d1d35
 		// Print details of players
 		//printPlayerDetails();
 			
@@ -105,11 +111,12 @@ public class Game
 		
 		int diceScore = currentPlayer.rollDies();
 		System.out.printf("\nYou rolled a score of %d!\n\n", playerTurn + 1, diceScore);
+		gameBoard.changePlayerTurn(players.get(1));
 		
 		while (true)
 		{
 			Scanner scanner = new Scanner(System.in);
-			System.out.printf( "What do you want to do?\nMove Postion [m],\nEnter Room [r],\nMake Hypothesis [h],\nMake Accusation [a]\nOption: " );
+			System.out.printf("What do you want to do?\nMove Postion [m],\nEnter Room [r],\nMake Hypothesis [h],\nMake Accusation [a]\nOption: " );
 			String playerChoice = scanner.nextLine();
 			
 			if (playerChoice.equals("m"))
@@ -194,6 +201,12 @@ public class Game
 		{
 			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
 			System.out.printf("Pawn: %s\n\n", players.get(i).getSuspectPawn().getName());
+<<<<<<< HEAD
+=======
+			Slot temp = players.get(i).getPosition();
+			System.out.printf("Pawn Location: (%d, %d)\n", temp.getXPosition(), temp.getYPosition());
+			//System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition());//.getXPosition(), players.get(i).getPosition().getYPosition());
+>>>>>>> 4749ef3168c6c46b1fa936103ec6ffc4e94d1d35
 		}
 	}
 	
@@ -227,11 +240,13 @@ public class Game
 	}
 	
 	
+	
 	// Game Main
 	
 	public static void main(String[] args) 
 	{	
 		new Game();	
+		//BoardR CluedoB = new BoardR();
 	}
 	
 }

@@ -110,11 +110,13 @@ public class Board
 
 	public void makeSuspectPawns(ArrayList<Player> players)
 	{
+		
 		players.get(0).giveSuspectPawn(new SuspectPawn(1, slots.get(0)));
 		players.get(1).giveSuspectPawn(new SuspectPawn(2, slots.get(100)));
 
 		if (players.size() <= 2)
 		{
+			
 			return;
 		}
 		
