@@ -12,7 +12,7 @@ public class Game
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	int numPlayers;
 	boolean gameOver = false;
-	int playerTurn = 0;
+	int playerTurn = 1;
 	
 	// Game Constructor
 	@SuppressWarnings("resource")
@@ -33,7 +33,6 @@ public class Game
 						
 		// Setup Board
 		gameBoard = new BoardR(players);
-		gameBoard.changePlayerTurn(players.get(0));
 		gameBoard.makeSuspectPawns(players);
 		
 		// Print details of players
@@ -107,11 +106,12 @@ public class Game
 		
 		int diceScore = currentPlayer.rollDies();
 		System.out.printf("\nYou rolled a score of %d!\n\n", playerTurn + 1, diceScore);
+		gameBoard.changePlayerTurn(players.get(1));
 		
 		while (true)
 		{
 			Scanner scanner = new Scanner(System.in);
-			System.out.printf( "What do you want to do?\nMove Postion [m],\nEnter Room [r],\nMake Hypothesis [h],\nMake Accusation [a]\nOption: " );
+			System.out.printf("What do you want to do?\nMove Postion [m],\nEnter Room [r],\nMake Hypothesis [h],\nMake Accusation [a]\nOption: " );
 			String playerChoice = scanner.nextLine();
 			
 			if (playerChoice.equals("m"))
@@ -230,6 +230,7 @@ public class Game
 			System.out.println("\n");
 		}
 	}
+	
 	
 	
 	// Game Main

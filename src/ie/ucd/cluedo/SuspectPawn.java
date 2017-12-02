@@ -1,5 +1,6 @@
 package ie.ucd.cluedo;
 
+import java.awt.Color;
 
 public class SuspectPawn extends Pawn  
 {
@@ -7,11 +8,13 @@ public class SuspectPawn extends Pawn
 	public int playerX;
 	public int playerY;
 	public BoardButton suspectButton;
+	public Color pawnColour;
 	// SuspectPawn constructor
-	public SuspectPawn(int pawnIndex, Slot pawnPosition)
+	public SuspectPawn(int pawnIndex, Slot pawnPosition, Color pawnColour)
 	{
 		super(pawnIndex, pawnPosition);
 		this.pawnPosition = pawnPosition;
+		this.pawnColour = pawnColour;
 	}
 	
 	// Returns slot where the suspect pawn is currently located
@@ -43,5 +46,9 @@ public class SuspectPawn extends Pawn
 	{
 		this.pawnPosition = newPosition;
 	}
-
+	
+	public Color getColor(){
+		return pawnColour;
+		
+	}
 }

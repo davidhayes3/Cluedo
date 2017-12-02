@@ -4,6 +4,7 @@ import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
 import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -34,6 +35,7 @@ public class BoardR implements ActionListener {
 	public Player playerTurn;
 	//private int diceRoll = 10;
 	diceButton dice = new diceButton();
+	
 	public BoardR(ArrayList<Player> players) {
 		// Fill slots and buttons
 				for (int i = 0; i < BOARD_WIDTH; i++)
@@ -255,13 +257,17 @@ public class BoardR implements ActionListener {
 			Board.add(buttons[col][row]);
 		}
 		Board.add(dice);
+		
 		Board.add(boardLabel);
 		Board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Board.setVisible(true);
 		Board.setSize(700, 533);
-		Board.setResizable(false);
+		Board.setResizable(true);
 		Board.setLocationRelativeTo(null);
-		
+		noteBookDialog note  = new noteBookDialog(Board, "this is your notebook"); 
+		noteBookButton noteBook = new noteBookButton(note);
+		Board.add(noteBook);
+
 		//Adding action Listeners to our board
 		for(Integer x=0;x<23;x++)
 	    {
@@ -284,9 +290,9 @@ public class BoardR implements ActionListener {
 	                    //buttons[buttonB.getXpos()][buttonB.getYpos()].setBackground(Color.RED);
 	                    letPlayerMove = canPlayerMove(buttonB.getXpos(), buttonB.getYpos());
 	                    if(letPlayerMove){
-	                    	playerTurn.getSuspectPawn().getSuspectButton().setBackground(Color.YELLOW);
+	                    	playerTurn.getSuspectPawn().getSuspectButton().setBackground(Color.yellow);
 	                    	playerTurn.getSuspectPawn().movePawn(buttonB);
-	                    	buttonB.setBackground(Color.RED);
+	                    	buttonB.setBackground(playerTurn.getSuspectPawn().getColor());
 	                    	
 	                    }
 	                }
@@ -295,10 +301,12 @@ public class BoardR implements ActionListener {
 	{
 		
 		//System.out.println(players.get(0).getPosition().getXPosition());
-		players.get(0).giveSuspectPawn(new SuspectPawn(1, slots.get(0)));
-		players.get(0).getSuspectPawn().movePawn(buttons[6][0]);
-		players.get(0).getSuspectPawn().getSuspectButton().setBackground(Color.BLUE);
-		players.get(1).giveSuspectPawn(new SuspectPawn(2, slots.get(100)));
+		players.get(0).giveSuspectPawn(new SuspectPawn(1, slots.get(0), Color.red));
+		players.get(0).getSuspectPawn().movePawn(buttons[9][0]);
+		players.get(0).getSuspectPawn().getSuspectButton().setBackground(Color.red);
+		players.get(1).giveSuspectPawn(new SuspectPawn(2, slots.get(100), Color.blue));
+		players.get(1).getSuspectPawn().movePawn(buttons[14][0]);
+		players.get(1).getSuspectPawn().getSuspectButton().setBackground(Color.blue);
 		
 		if (players.size() <= 2)
 		{
@@ -306,28 +314,28 @@ public class BoardR implements ActionListener {
 			return;
 		}
 		
-		players.get(2).giveSuspectPawn(new SuspectPawn(3, slots.get(200)));
+		players.get(2).giveSuspectPawn(new SuspectPawn(3, slots.get(200), Color.green));
 		
 		if (players.size() <= 3)
 		{
 			return;
 		}
 		
-		players.get(3).giveSuspectPawn(new SuspectPawn(4, slots.get(300)));
+		//players.get(3).giveSuspectPawn(new SuspectPawn(4, slots.get(300)));
 		
 		if (players.size() <= 4)
 		{
 			return;
 		}
 		
-		players.get(4).giveSuspectPawn(new SuspectPawn(5, slots.get(400)));
+		//players.get(4).giveSuspectPawn(new SuspectPawn(5, slots.get(400)));
 		
 		if (players.size() <= 5)
 		{
 			return;
 		}
 		
-		players.get(5).giveSuspectPawn(new SuspectPawn(6, slots.get(500)));
+		//players.get(5).giveSuspectPawn(new SuspectPawn(6, slots.get(500)));
 	}
 	
 	public void changePlayerTurn(Player playerTurn){
