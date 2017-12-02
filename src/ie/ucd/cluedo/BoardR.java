@@ -33,10 +33,15 @@ public class BoardR implements ActionListener {
 	public boolean letPlayerMove;
 	ArrayList<Slot> slots = new ArrayList<Slot>(BOARD_WIDTH * BOARD_HEIGHT);
 	public Player playerTurn;
+	public int playersTurn = 0;
 	//private int diceRoll = 10;
-	diceButton dice = new diceButton();
+	DiceButton dice = new DiceButton();
+	public ArrayList<Player> players;
+	FinishMoveButton finishButton;
 	
 	public BoardR(ArrayList<Player> players) {
+		this.players = players;
+		this.finishButton = new FinishMoveButton(players.size());
 		// Fill slots and buttons
 				for (int i = 0; i < BOARD_WIDTH; i++)
 				{
@@ -262,11 +267,12 @@ public class BoardR implements ActionListener {
 		Board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Board.setVisible(true);
 		Board.setSize(700, 533);
-		Board.setResizable(true);
+		Board.setResizable(false);
 		Board.setLocationRelativeTo(null);
 		noteBookDialog note  = new noteBookDialog(Board, "this is your notebook"); 
 		noteBookButton noteBook = new noteBookButton(note);
 		Board.add(noteBook);
+		Board.add(finishButton);
 
 		//Adding action Listeners to our board
 		for(Integer x=0;x<23;x++)
@@ -289,12 +295,18 @@ public class BoardR implements ActionListener {
 	                	System.out.println("Button pressed is: " + buttonB.getXpos() + "," + buttonB.getYpos());
 	                    //buttons[buttonB.getXpos()][buttonB.getYpos()].setBackground(Color.RED);
 	                    letPlayerMove = canPlayerMove(buttonB.getXpos(), buttonB.getYpos());
-	                    if(letPlayerMove){
+	                    /*if(letPlayerMove){
 	                    	playerTurn.getSuspectPawn().getSuspectButton().setBackground(Color.yellow);
 	                    	playerTurn.getSuspectPawn().movePawn(buttonB);
 	                    	buttonB.setBackground(playerTurn.getSuspectPawn().getColor());
 	                    	
-	                    }
+	                    }*/
+	                    if(letPlayerMove){
+	                    	players.get(finishButton.getPlayerTurn()).getSuspectPawn().getSuspectButton().setBackground(Color.yellow);
+	                    	players.get(finishButton.getPlayerTurn()).getSuspectPawn().movePawn(buttonB);
+	                    	buttonB.setBackground(players.get(finishButton.getPlayerTurn()).getSuspectPawn().getColor());
+                    	
+                    }
 	                }
 	            
 	public void makeSuspectPawns(ArrayList<Player> players)
@@ -314,28 +326,35 @@ public class BoardR implements ActionListener {
 			return;
 		}
 		
-		players.get(2).giveSuspectPawn(new SuspectPawn(3, slots.get(200), Color.green));
-		
+		players.get(2).giveSuspectPawn(new SuspectPawn(3, slots.get(200), Color.ORANGE));
+		players.get(2).getSuspectPawn().movePawn(buttons[23][5]);
+		players.get(2).getSuspectPawn().getSuspectButton().setBackground(Color.ORANGE);
 		if (players.size() <= 3)
 		{
 			return;
 		}
 		
-		//players.get(3).giveSuspectPawn(new SuspectPawn(4, slots.get(300)));
+		players.get(3).giveSuspectPawn(new SuspectPawn(4, slots.get(300), Color.MAGENTA));
+		players.get(3).getSuspectPawn().movePawn(buttons[23][12]);
+		players.get(3).getSuspectPawn().getSuspectButton().setBackground(Color.MAGENTA);
 		
 		if (players.size() <= 4)
 		{
 			return;
 		}
 		
-		//players.get(4).giveSuspectPawn(new SuspectPawn(5, slots.get(400)));
+		players.get(4).giveSuspectPawn(new SuspectPawn(4, slots.get(300), Color.WHITE));
+		players.get(4).getSuspectPawn().movePawn(buttons[15][23]);
+		players.get(4).getSuspectPawn().getSuspectButton().setBackground(Color.WHITE);
 		
 		if (players.size() <= 5)
 		{
 			return;
 		}
 		
-		//players.get(5).giveSuspectPawn(new SuspectPawn(6, slots.get(500)));
+		players.get(5).giveSuspectPawn(new SuspectPawn(4, slots.get(300), Color.PINK));
+		players.get(5).getSuspectPawn().movePawn(buttons[0][16]);
+		players.get(5).getSuspectPawn().getSuspectButton().setBackground(Color.PINK);
 	}
 	
 	public void changePlayerTurn(Player playerTurn){
@@ -345,8 +364,8 @@ public class BoardR implements ActionListener {
 
 	public boolean canPlayerMove(int x, int y){
 		System.out.println("Check if the player can move");
-		int newX = playerTurn.getSuspectPawn().getX();
-		int newY = playerTurn.getSuspectPawn().getY();
+		int newX = players.get(finishButton.getPlayerTurn()).getSuspectPawn().getX();
+		int newY = players.get(finishButton.getPlayerTurn()).getSuspectPawn().getY();
 		int a = java.lang.Math.abs(newX - x);
 		int b = java.lang.Math.abs(newY - y);
 		int c = a+b;

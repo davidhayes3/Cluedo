@@ -10,9 +10,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JButton;
 
-public class diceButton extends JButton implements ActionListener{
+public class DiceButton extends JButton implements ActionListener{
 	public int diceRoll;
-	public diceButton() {
+	public DiceButton() {
 		this.setBounds(550,50, 100, 50);
 		this.setText("Roll Dice");
 		this.addActionListener(this);
