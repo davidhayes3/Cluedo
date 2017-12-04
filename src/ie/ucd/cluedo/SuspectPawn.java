@@ -29,7 +29,12 @@ public class SuspectPawn extends Pawn
 		this.playerX = newPosition.getXpos();
 		this.playerY = newPosition.getYpos();
 	}
-	
+	//Alternative to the method above
+	public void movePawns(int x, int y)
+	{
+		this.playerX = x;
+		this.playerY = y;
+	}
 	public int getX(){
 		return this.playerX;
 	}

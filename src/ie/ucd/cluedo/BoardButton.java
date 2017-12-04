@@ -9,10 +9,11 @@ import javax.swing.JButton;
 
 public class BoardButton extends JButton{
 
-	int x;
-	int y;
-	int col;
-	int row;
+	public int x;
+	public int y;
+	public static int col;
+	public static int row;
+	
 	public BoardButton(int col, int row) {
 		this.x = 21*col;
 		this.y = 21*row;
@@ -29,5 +30,8 @@ public class BoardButton extends JButton{
 	public int getYpos(){
 		return y/21;
 		
+	}
+	public void reset(){
+	this.setBackground(Color.yellow);
 	}
 	}

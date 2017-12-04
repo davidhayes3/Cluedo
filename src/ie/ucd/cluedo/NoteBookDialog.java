@@ -1,5 +1,6 @@
 package ie.ucd.cluedo;
 
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,26 +9,33 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-public class noteBookDialog extends JDialog implements ActionListener{
+public class NoteBookDialog extends JDialog implements ActionListener{
 	
 	String playerNotes; 
-
-    
-	public noteBookDialog(Frame board, String title) {
+	JLabel label;
+	
+	public NoteBookDialog(Frame board, String title) {
 		super(board, title);
 		this.setSize(300,300);
 		this.setVisible(false);
-	    JButton Close = new JButton();
-		Close.setBounds(150,250, 20, 20);
-		Close.addActionListener(this);
-		Close.add( new JLabel ("Click button to continue"));  
-		this.add(Close); 
+		
+		JPanel pan = new JPanel();
+		pan.setLayout(new FlowLayout());
+		label = new JLabel("label");
+		label.setText("Your Notebook");
+		pan.add(label);
+		
+		this.add(pan);
 
+		//this.add(Close); 
+		
 	}
 
 	public void changeNoteBook(String playerNotes){
 		this.playerNotes = playerNotes;
+		this.label.setText(playerNotes);
 	}
 	
 	public void openDialog(){

@@ -2,83 +2,46 @@ package ie.ucd.cluedo;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
+
 import static ie.ucd.cluedo.GameValues.*;
 
 public class Game 
 {
 	// Game attributes
 	ArrayList<Player> players = new ArrayList<Player>(6);
-	BoardR gameBoard;
+	Board gameBoard;
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	int numPlayers;
 	boolean gameOver = false;
-	int playerTurn = 1;
+	int playerTurn = 0;
 	
 	// Game Constructor
-	@SuppressWarnings("resource")
 	public Game()
 	{
 		
-		// Main part of game
-		System.out.println("NEW GAME\n\n");
-			
-		// Get number of players
-		numPlayers = getNumPlayers();
-			
-		// Print details of murder
-		printMurderDetails();
-			
-		// Instantiate all players, assign a suspect pawn to each player and place these suspect pawns at a slot
-		makePlayers(numPlayers, players);
-						
-		// Setup Board
-<<<<<<< HEAD
-		gameBoard = new Board(players);
-
-=======
-		gameBoard = new BoardR(players);
-		gameBoard.makeSuspectPawns(players);
-		
->>>>>>> 4749ef3168c6c46b1fa936103ec6ffc4e94d1d35
-		// Print details of players
-		//printPlayerDetails();
-			
-		// Create deck of cards excluding the murder cards
-		createDeck(cardDeck);
-		printDeckInPlayDetails();
-			
-		// Allocate cards to players
-		allocateCards(players, cardDeck);
-		printCardAllocation();
-			
-		// Game play
-		while(!gameOver)
-		{
-			Turn();
-		}
-		
-		System.out.println("\n\nGAME OVER\n\n");	
-			
 	}
-		
-	
 	
 	// Method Implementations
 	
+	// Make board
+	public void makeBoard()
+	{
+		 this.gameBoard = new Board(this.players);
+	}
+	
 	// Get number of players
 	@SuppressWarnings("resource")
-	public int getNumPlayers()
-	{
-		int numPlayers;
-		
+	public void getNumPlayers()
+	{	
 		while (true)
 		{
 			// Ask user for input until no. of players between 2 and 6 is selected
 			System.out.println("Welcome to Cluedo. Please enter the number of players (2-6):");
 			Scanner scanner = new Scanner(System.in);
-			numPlayers = scanner.nextInt();
+			this.numPlayers = scanner.nextInt();
 				
-			if (numPlayers >= MIN_NUM_PLAYERS && numPlayers <= MAX_NUM_PLAYERS)
+			if (this.numPlayers >= MIN_NUM_PLAYERS && this.numPlayers <= MAX_NUM_PLAYERS)
 			{
 				break;
 			}
@@ -87,75 +50,72 @@ public class Game
 				System.out.println("Please enter a number between 2 and 6");
 			}
 		}
-		
-		return numPlayers;
 	}
 
 	// Create Players
-	public void makePlayers(int numPlayers, ArrayList<Player> playerList)
+	public void makePlayers()
 	{		
-		for (int i = 0; i < numPlayers; i++)
+		for (int i = 0; i < this.numPlayers; i++)
 		{
-			playerList.add(new Player(i + 1, new Notebook()));
+			this.players.add(new Player(i + 1, new Notebook()));
 		}
 	}
 	
 	
 	// Turn for a player
-	@SuppressWarnings("resource")
-	public void Turn()
+	public boolean Turn()
 	{
-		System.out.printf("\nTURN: PLAYER %d\n", playerTurn + 1);
+		int buttonPress = 0;
+		int trackButtonPress = 0;
+		int numButtonPressed = 0;
+		int diceScore = 0;
 		
-		Player currentPlayer = this.players.get(playerTurn);
-		
-		int diceScore = currentPlayer.rollDies();
-		System.out.printf("\nYou rolled a score of %d!\n\n", playerTurn + 1, diceScore);
-		gameBoard.changePlayerTurn(players.get(1));
-		
+		System.out.println("\nPlayer " + (playerTurn + 1) + "'s turn");
+
 		while (true)
 		{
-			Scanner scanner = new Scanner(System.in);
-			System.out.printf("What do you want to do?\nMove Postion [m],\nEnter Room [r],\nMake Hypothesis [h],\nMake Accusation [a]\nOption: " );
-			String playerChoice = scanner.nextLine();
+			Thread.yield();			
+			buttonPress = gameBoard.detectButtonPress();
+			numButtonPressed = gameBoard.getButtonPressed();
 			
-			if (playerChoice.equals("m"))
-			{
-				//pawnMove(currentPlayer);
-				break;
+			
+			if (buttonPress - trackButtonPress == 1)
+			{	
+				
+				trackButtonPress++;
+				
+				if (numButtonPressed == DIES_BUTTON_PRESS)
+				{
+					diceScore = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
+					System.out.println("Dice score: " + diceScore);
+					continue;
+				}
+				
+				if (numButtonPressed == BOARD_BUTTON_PRESS)
+				{
+					diceScore = gameBoard.movePawn(playerTurn, diceScore);
+					continue;
+				}
+				
+				if (numButtonPressed == END_TURN_BUTTON_PRESS)
+				{
+					playerTurn = (playerTurn + 1) % numPlayers;
+					System.out.println("\nPlayer " + (playerTurn + 1) + "'s turn");
+				}
+				
+				if (numButtonPressed == NOTEBOOK_BUTTON_PRESS)
+				{
+					gameBoard.showNoteBook(playerTurn);
+					System.out.println("Player " + playerTurn + " ended their move.");
+					
+				}
 			}
-			else if (playerChoice.equals("r"))
-			{
-				//enterRoom()
-				gameOver = true;
-				break;
-			}
-			else if (playerChoice.equals("h"))
-			{
-				//hypothesis();
-				gameOver = true;
-				break;
-			}
-			else if (playerChoice.equals("a"))
-			{
-				//accusation();
-				gameOver = true;
-				break;
-			}
-			else
-			{
-				System.out.println("Please enter a valid option");
-			}
-		}
-		
-		players.set(playerTurn, currentPlayer);
-		playerTurn = (playerTurn + 1) % players.size();
-		System.out.println("\n");
-		
+		}							
 	}
+
 	
 	// Creates deck of cards with all cards except murder cards
-	public void createDeck(ArrayList<Card> cardDeck)
+	public void createDeck()
 	{
 		for (int i = 0; i < NUM_CARDS_IN_DECK; i++)
 		{
@@ -165,19 +125,19 @@ public class Game
 			}
 			else
 			{
-				cardDeck.add(new Card(i));
+				this.cardDeck.add(new Card(i));
 			}
 		}
 	}
 	
 	// Allocates the deck of cards created among all players, giving one at a time to each player starting with player 1, player 2...
-	public void allocateCards(ArrayList<Player> players, ArrayList<Card> cardDeck) 
+	public void allocateCards() 
 	{
 		int playerNumber = 0;
 		
 		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
 		{
-			players.get(playerNumber++).giveCard(cardDeck.get(i));
+			this.players.get(playerNumber++).giveCard(this.cardDeck.get(i));
 			
 			if (playerNumber == players.size())
 			{
@@ -201,12 +161,10 @@ public class Game
 		{
 			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
 			System.out.printf("Pawn: %s\n\n", players.get(i).getSuspectPawn().getName());
-<<<<<<< HEAD
-=======
+
 			Slot temp = players.get(i).getPosition();
 			System.out.printf("Pawn Location: (%d, %d)\n", temp.getXPosition(), temp.getYPosition());
 			//System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition());//.getXPosition(), players.get(i).getPosition().getYPosition());
->>>>>>> 4749ef3168c6c46b1fa936103ec6ffc4e94d1d35
 		}
 	}
 	
@@ -238,15 +196,4 @@ public class Game
 			System.out.println("\n");
 		}
 	}
-	
-	
-	
-	// Game Main
-	
-	public static void main(String[] args) 
-	{	
-		new Game();	
-		//BoardR CluedoB = new BoardR();
-	}
-	
 }

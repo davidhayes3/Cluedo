@@ -46,6 +46,12 @@ public final class GameValues
 	public static final int BUTTON_PIXEL_WIDTH = 21;
 	public static final int BUTTON_PIXEL_HEIGHT = 21;
 	
+	// List of constants needed for button press type;
+	public static final int BOARD_BUTTON_PRESS = 1;
+	public static final int DIES_BUTTON_PRESS = 2;
+	public static final int END_TURN_BUTTON_PRESS = 3;
+	public static final int NOTEBOOK_BUTTON_PRESS = 4; 
+	
 	// List of all possible suspects, weapons and rooms 
 	public static final ArrayList<Name> gameList = new ArrayList<Name>(EnumSet.allOf(Name.class));
 	

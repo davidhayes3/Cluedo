@@ -10,23 +10,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JButton;
 
-public class DiceButton extends JButton implements ActionListener{
-	public int diceRoll;
+public class DiceButton extends JButton{
+	
 	public DiceButton() {
 		this.setBounds(550,50, 100, 50);
 		this.setText("Roll Dice");
-		this.addActionListener(this);
+		//this.addActionListener(this);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		diceRoll = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
-		System.out.println("Dice Rolled"+diceRoll);
-	}
-	
-	public int getDiceRoll(){
-		return diceRoll;
-		
-	}
 }

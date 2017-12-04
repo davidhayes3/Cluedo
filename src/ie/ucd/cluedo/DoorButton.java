@@ -33,10 +33,20 @@ public class DoorButton extends JButton implements ActionListener{
 		}
 		
 		this.setIcon(image);
+		
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public int getXpos(){
+		return x/21;
+		
+	}
+	public int getYpos(){
+		return y/21;
 		
 	}
 
