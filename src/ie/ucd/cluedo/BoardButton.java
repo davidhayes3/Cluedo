@@ -2,12 +2,11 @@ package ie.ucd.cluedo;
 
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.Font;
 import javax.swing.JButton;
 
-public class BoardButton extends JButton{
+public class BoardButton extends JButton
+{
 
 	public int x;
 	public int y;
@@ -21,6 +20,8 @@ public class BoardButton extends JButton{
 		this.row = row;
 		this.setBounds(x,y, 21, 21);
 		this.setBackground(Color.YELLOW);
+		Font font = new Font("Courier", Font.BOLD,10);
+		this.setFont(font);
 	}
 	
 	public int getXpos(){

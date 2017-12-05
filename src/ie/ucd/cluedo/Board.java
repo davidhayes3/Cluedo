@@ -4,19 +4,18 @@ import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
 import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -31,14 +30,16 @@ public class Board implements ActionListener
 	//Board Attributes
 	
 	ArrayList<Player> players;
+	ArrayList<WeaponPawn> weaponPawns;
 	ArrayList<Slot> slots = new ArrayList<Slot>(BOARD_WIDTH * BOARD_HEIGHT);
 	
-	BoardButton[][] buttons = new BoardButton[24][24]; 
-	DoorButton[][] doorButtons = new DoorButton[24][24]; 
+	BoardButton[][] buttons = new BoardButton[BOARD_WIDTH][BOARD_HEIGHT]; 
+	DoorButton[][] doorButtons = new DoorButton[BOARD_WIDTH][BOARD_HEIGHT]; 
 	
 	DiceButton dice = new DiceButton();
 	JButton buttonB = new JButton();
 	FinishMoveButton finishButton = new FinishMoveButton();
+	NoteBookButton noteBook;
 	
 	private ImageIcon image;
 	
@@ -76,6 +77,13 @@ public class Board implements ActionListener
 	public void gui() 
 	{
 
+		for (int col = 0;col <=23; col++){
+			for (int row =0; row <=23; row++){
+				buttons[col][row] = new BoardButton(col, row
+						);
+			}
+		}
+		
 		JFrame Board = new JFrame("Welcome to Cluedo");
 		Board.setLayout(null);
 
@@ -95,22 +103,63 @@ public class Board implements ActionListener
 		doorButtons[8][4] = new DoorButton(8,4);
 		doorButtons[8][4].addActionListener(this);
 		Board.add(doorButtons[8][4]);
-		Board.add(new DoorButton(4, 5));
 		
-		//Board.add(new DoorButton(8, 4));
-		Board.add(new DoorButton(9, 6));
-		Board.add(new DoorButton(14, 6));
-		Board.add(new DoorButton(15, 4));
-		Board.add(new DoorButton(18, 3));
-		Board.add(new DoorButton(18, 8));
-		Board.add(new DoorButton(20,13));
-		Board.add(new DoorButton(17, 15));
-		Board.add(new DoorButton(17, 20));
-		Board.add(new DoorButton(11, 18));
-		Board.add(new DoorButton(12, 18));
-		Board.add(new DoorButton(6, 18));
-		Board.add(new DoorButton(7, 11));
-		Board.add(new DoorButton(6, 14));
+		doorButtons[4][5] = new DoorButton(4,5);
+		doorButtons[4][5].addActionListener(this);
+		Board.add(doorButtons[4][5]);
+		
+		doorButtons[9][6] = new DoorButton(9,6);
+		doorButtons[9][6].addActionListener(this);
+		Board.add(doorButtons[9][6]);
+
+		doorButtons[14][6] = new DoorButton(14,6);
+		doorButtons[14][6].addActionListener(this);
+		Board.add(doorButtons[14][6]);
+
+		doorButtons[15][4] = new DoorButton(15,4);
+		doorButtons[15][4].addActionListener(this);
+		Board.add(doorButtons[15][4]);
+
+		doorButtons[18][3] = new DoorButton(18,3);
+		doorButtons[18][3].addActionListener(this);
+		Board.add(doorButtons[18][3]);
+
+		doorButtons[18][8] = new DoorButton(18,8);
+		doorButtons[18][8].addActionListener(this);
+		Board.add(doorButtons[18][8]);
+
+		doorButtons[20][13] = new DoorButton(20,13);
+		doorButtons[20][13].addActionListener(this);
+		Board.add(doorButtons[20][13]);
+
+		doorButtons[17][15] = new DoorButton(17,15);
+		doorButtons[17][15].addActionListener(this);
+		Board.add(doorButtons[17][15]);
+
+		doorButtons[17][20] = new DoorButton(17,20);
+		doorButtons[17][20].addActionListener(this);
+		Board.add(doorButtons[17][20]);
+		
+		doorButtons[11][18] = new DoorButton(11,18);
+		doorButtons[11][18].addActionListener(this);
+		Board.add(doorButtons[11][18]);
+		
+		doorButtons[12][18] = new DoorButton(12,18);
+		doorButtons[12][18].addActionListener(this);
+		Board.add(doorButtons[12][18]);
+
+		doorButtons[6][18] = new DoorButton(6,18);
+		doorButtons[6][18].addActionListener(this);
+		Board.add(doorButtons[6][18]);
+
+		doorButtons[7][11] = new DoorButton(7,11);
+		doorButtons[7][11].addActionListener(this);
+		Board.add(doorButtons[7][11]);
+
+		doorButtons[6][14] = new DoorButton(6,14);
+		doorButtons[6][14].addActionListener(this);
+		Board.add(doorButtons[6][14]);
+		
 		
 		Board.add(new SecretDoor(0, 0));
 		Board.add(new SecretDoor(23, 23));
@@ -288,7 +337,7 @@ public class Board implements ActionListener
 		}
 		
 		this.note =  new NoteBookDialog(Board, "This is your notebook"); 
-		NoteBookButton noteBook = new NoteBookButton(note);
+		noteBook = new NoteBookButton(note);
 		
 		// Add action listeners to all buttons
 		finishButton.addActionListener(this);
@@ -306,11 +355,10 @@ public class Board implements ActionListener
 		
 		Board.add(boardLabel);
 		Board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Board.setVisible(true);
 		Board.setSize(700, 533);
 		Board.setResizable(false);
 		Board.setLocationRelativeTo(null);
-
+		Board.setVisible(true);
 
 
 		//Adding action Listeners to our board
@@ -342,8 +390,8 @@ public class Board implements ActionListener
 		{
 	    	buttonB = (JButton) e.getSource();
 	       
-	       	this.x = buttonB.getX()/21;
-        	this.y = buttonB.getY()/21;
+	       	this.x = buttonB.getX() / BUTTON_PIXEL_WIDTH;
+        	this.y = buttonB.getY() / BUTTON_PIXEL_HEIGHT ;
 
 	       	this.numButtonPressed = BOARD_BUTTON_PRESS;
 		}
@@ -357,6 +405,16 @@ public class Board implements ActionListener
 		else if(e.getSource() instanceof NoteBookButton)
 		{
 	       	this.numButtonPressed = NOTEBOOK_BUTTON_PRESS;
+		}
+		
+		else if(e.getSource() instanceof DoorButton)
+		{
+	    	buttonB = (JButton) e.getSource();
+		       
+	       	this.x = buttonB.getX() / BUTTON_PIXEL_HEIGHT ;
+        	this.y = buttonB.getY() / BUTTON_PIXEL_HEIGHT;
+
+	       	this.numButtonPressed = DOOR_BUTTON_PRESS;
 		}
                   	
 	}
@@ -372,8 +430,10 @@ public class Board implements ActionListener
 			//System.out.println("Player moved to: " + players.get(playerTurn).getSuspectPawn().getX() + "," + players.get(playerTurn).getSuspectPawn().getY());
 			
 			this.buttons[old_x][old_y].setBackground(Color.yellow);
+			this.buttons[old_x][old_y].setText("");
 	        this.buttons[this.x][this.y].setBackground(players.get(playerTurn).getSuspectPawn().getColor());
-
+	        
+	        
 	        diceScore = 0;
 		}
 		
@@ -381,50 +441,46 @@ public class Board implements ActionListener
 	}
 	
 	public void makeSuspectPawns()
-	{
+	{		
+		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
+		int[] init_x = {9, 14, 23, 23, 15, 0};
+		int[] init_y = {0, 0, 5, 12, 23, 16};
 		
-		//System.out.println(players.get(0).getPosition().getXPosition());
-		this.players.get(0).giveSuspectPawn(new SuspectPawn(1, slots.get(0), Color.red));
-		this.players.get(0).getSuspectPawn().movePawn(buttons[9][0]);
-		this.players.get(0).getSuspectPawn().getSuspectButton().setBackground(Color.red);
-		this.players.get(1).giveSuspectPawn(new SuspectPawn(2, slots.get(100), Color.blue));
-		this.players.get(1).getSuspectPawn().movePawn(buttons[14][0]);
-		this.players.get(1).getSuspectPawn().getSuspectButton().setBackground(Color.blue);
+		Map<Color, String> colorMap = new HashMap<Color, String>();
+		colorMap.put(Color.RED, "Red");  
+	    colorMap.put(Color.BLUE, "Blue");
+	    colorMap.put(Color.GREEN, "Green");
+	    colorMap.put(Color.MAGENTA, "Magenta");
+	    colorMap.put(Color.WHITE, "White");
+	    colorMap.put(Color.PINK, "Pink");
 		
-		if (this.players.size() <= 2)
-		{		
-			return;
-		}
-		
-		this.players.get(2).giveSuspectPawn(new SuspectPawn(3, slots.get(200), Color.ORANGE));
-		this.players.get(2).getSuspectPawn().movePawn(buttons[23][5]);
-		this.players.get(2).getSuspectPawn().getSuspectButton().setBackground(Color.ORANGE);
-		if (this.players.size() <= 3)
+		for (int i = 0; i < players.size(); i++)
 		{
-			return;
+			while (true)
+			{
+				// Ask user for input until no. of players between 2 and 6 is selected
+				System.out.println("\nPlayer " + (i + 1) + ", please select your character:\n1. MISS SCARLET\n2. PROFESSOR PLUM\n"
+						+ "3. MRS. PEACOCK\n4. REVEREND MR. GREEN\n5. COLONEL MUSTARD\n6. MRS. WHITE\n");
+				@SuppressWarnings("resource")
+				Scanner scanner = new Scanner(System.in);
+				int playerChoice = scanner.nextInt();
+				
+				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
+				{
+					this.players.get(i).giveSuspectPawn(new SuspectPawn(playerChoice, slots.get(i), colors[playerChoice-1]));
+					this.players.get(i).getSuspectPawn().movePawn(buttons[init_x[playerChoice-1]][init_y[playerChoice-1]]);
+					this.players.get(i).getSuspectPawn().getSuspectButton().setBackground(colors[playerChoice-1]);
+					System.out.println("Player " + (i+1) + " is " + players.get(i).getSuspectPawn().getName() + " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
+					break;
+				}
+				else
+				{
+					System.out.println("Please enter a number between 1 and " + players.size());
+				}
+			}
 		}
+
 		
-		this.players.get(3).giveSuspectPawn(new SuspectPawn(4, slots.get(300), Color.MAGENTA));
-		this.players.get(3).getSuspectPawn().movePawn(buttons[23][12]);
-		this.players.get(3).getSuspectPawn().getSuspectButton().setBackground(Color.MAGENTA);
-		
-		if (this.players.size() <= 4)
-		{
-			return;
-		}
-		
-		this.players.get(4).giveSuspectPawn(new SuspectPawn(4, slots.get(300), Color.WHITE));
-		this.players.get(4).getSuspectPawn().movePawn(buttons[15][23]);
-		this.players.get(4).getSuspectPawn().getSuspectButton().setBackground(Color.WHITE);
-		
-		if (this.players.size() <= 5)
-		{
-			return;
-		}
-		
-		this.players.get(5).giveSuspectPawn(new SuspectPawn(4, slots.get(300), Color.PINK));
-		this.players.get(5).getSuspectPawn().movePawn(buttons[0][16]);
-		this.players.get(5).getSuspectPawn().getSuspectButton().setBackground(Color.PINK);
 	}
 	
 	public boolean canPlayerMove(int playerTurn, int diceScore)
@@ -436,13 +492,22 @@ public class Board implements ActionListener
 		int a = java.lang.Math.abs(newX - this.x);
 		int b = java.lang.Math.abs(newY - this.y);
 		
-		if(a + b <= diceScore)
+		if(a + b > diceScore)
 		{
-			return true;
+			System.out.println("Your dice score is not high enough to move here");
+			return false;
 		}
 		
-		System.out.println("The distance of this position is greater than your dice roll");
-		return false;
+		for (int i = 0; i < players.size(); i++)
+		{
+			if(this.x == players.get(i).getSuspectPawn().getX() && this.y == players.get(i).getSuspectPawn().getY())
+			{
+				System.out.println("Another player is already in that position");
+				return false;
+			}
+		}
+			
+		return true;
 	}
 	
 	public void showNoteBook(int playerTurn){

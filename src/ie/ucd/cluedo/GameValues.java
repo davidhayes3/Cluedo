@@ -41,8 +41,8 @@ public final class GameValues
 	public static final int NUM_CARDS_IN_PLAY = NUM_CARDS_IN_DECK - NUM_MURDER_CARDS;
 	
 	// List of constants needed for board
-	public static final int BOARD_WIDTH = 25;
-	public static final int BOARD_HEIGHT = 25;
+	public static final int BOARD_WIDTH = 24;
+	public static final int BOARD_HEIGHT = 24;
 	public static final int BUTTON_PIXEL_WIDTH = 21;
 	public static final int BUTTON_PIXEL_HEIGHT = 21;
 	
@@ -51,6 +51,11 @@ public final class GameValues
 	public static final int DIES_BUTTON_PRESS = 2;
 	public static final int END_TURN_BUTTON_PRESS = 3;
 	public static final int NOTEBOOK_BUTTON_PRESS = 4; 
+	public static final int DOOR_BUTTON_PRESS = 5; 
+	
+	// Hash map for button colors
+	
+
 	
 	// List of all possible suspects, weapons and rooms 
 	public static final ArrayList<Name> gameList = new ArrayList<Name>(EnumSet.allOf(Name.class));

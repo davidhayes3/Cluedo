@@ -1,6 +1,9 @@
 package ie.ucd.cluedo;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,12 +17,12 @@ public class Game
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	int numPlayers;
 	boolean gameOver = false;
-	int playerTurn = 0;
+	int playerTurn;
 	
 	// Game Constructor
 	public Game()
 	{
-		
+		this.playerTurn = 0;
 	}
 	
 	// Method Implementations
@@ -63,16 +66,26 @@ public class Game
 	
 	
 	// Turn for a player
-	public boolean Turn()
+	public void gameTurns()
 	{
+		Map<Color, String> colorMap = new HashMap<Color, String>();
+		colorMap.put(Color.RED, "Red");  
+	    colorMap.put(Color.BLUE, "Blue");
+	    colorMap.put(Color.GREEN, "Green");
+	    colorMap.put(Color.MAGENTA, "Magenta");
+	    colorMap.put(Color.WHITE, "White");
+	    colorMap.put(Color.PINK, "Pink");
+		
 		int buttonPress = 0;
 		int trackButtonPress = 0;
 		int numButtonPressed = 0;
 		int diceScore = 0;
+		boolean gameOver = false;
 		
-		System.out.println("\nPlayer " + (playerTurn + 1) + "'s turn");
+		System.out.println("\n\nGame begins");
+		System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
 
-		while (true)
+		while (!gameOver)
 		{
 			Thread.yield();			
 			buttonPress = gameBoard.detectButtonPress();
@@ -91,22 +104,27 @@ public class Game
 					continue;
 				}
 				
-				if (numButtonPressed == BOARD_BUTTON_PRESS)
+				else if (numButtonPressed == BOARD_BUTTON_PRESS)
 				{
 					diceScore = gameBoard.movePawn(playerTurn, diceScore);
 					continue;
 				}
 				
-				if (numButtonPressed == END_TURN_BUTTON_PRESS)
+				else if (numButtonPressed == END_TURN_BUTTON_PRESS)
 				{
+					System.out.println(players.get(playerTurn).getSuspectPawn().getName() + " ended their move.");
 					playerTurn = (playerTurn + 1) % numPlayers;
-					System.out.println("\nPlayer " + (playerTurn + 1) + "'s turn");
+					System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
 				}
 				
-				if (numButtonPressed == NOTEBOOK_BUTTON_PRESS)
+				else if (numButtonPressed == NOTEBOOK_BUTTON_PRESS)
 				{
 					gameBoard.showNoteBook(playerTurn);
-					System.out.println("Player " + playerTurn + " ended their move.");
+					
+				}
+				else if (numButtonPressed == DOOR_BUTTON_PRESS)
+				{
+					diceScore = gameBoard.movePawn(playerTurn, diceScore);
 					
 				}
 			}
@@ -161,10 +179,6 @@ public class Game
 		{
 			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
 			System.out.printf("Pawn: %s\n\n", players.get(i).getSuspectPawn().getName());
-
-			Slot temp = players.get(i).getPosition();
-			System.out.printf("Pawn Location: (%d, %d)\n", temp.getXPosition(), temp.getYPosition());
-			//System.out.printf("Pawn Location: (%d, %d)\n", players.get(i).getPosition());//.getXPosition(), players.get(i).getPosition().getYPosition());
 		}
 	}
 	

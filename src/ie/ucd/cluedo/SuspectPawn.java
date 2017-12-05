@@ -29,6 +29,7 @@ public class SuspectPawn extends Pawn
 		this.playerX = newPosition.getXpos();
 		this.playerY = newPosition.getYpos();
 	}
+	
 	//Alternative to the method above
 	public void movePawns(int x, int y)
 	{
@@ -42,7 +43,8 @@ public class SuspectPawn extends Pawn
 	public int getY(){
 		return this.playerY;
 	}
-	public BoardButton getSuspectButton(){
+	public BoardButton getSuspectButton()
+	{
 		return suspectButton;
 		
 	}
@@ -52,8 +54,8 @@ public class SuspectPawn extends Pawn
 		this.pawnPosition = newPosition;
 	}
 	
-	public Color getColor(){
-		return pawnColour;
-		
+	public Color getColor()
+	{
+		return this.pawnColour;	
 	}
 }
