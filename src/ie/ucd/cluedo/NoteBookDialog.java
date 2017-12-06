@@ -10,12 +10,12 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class NoteBookDialog extends JDialog implements ActionListener{
+public class NotebookDialog extends JDialog implements ActionListener{
 	
 	String playerNotes; 
 	JLabel label;
 	
-	public NoteBookDialog(Frame board, String title) 
+	public NotebookDialog(Frame board, String title) 
 	{
 		super(board, title);
 		this.setSize(300,300);

@@ -1,8 +1,5 @@
 package ie.ucd.cluedo;
 
-import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
-import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
-
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -11,21 +8,22 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import static ie.ucd.cluedo.GameValues.*;
 
 @SuppressWarnings("serial")
-public class DoorButton extends Button
+public class SecretButton extends Button
 {	
 	
 	ImageIcon image;
 
-	public DoorButton(int col, int row) 
+	public SecretButton(int col, int row) 
 	{
 
 		super(col, row);
 			
 		try 
 		{
-			this.image = new ImageIcon(ImageIO.read(new File("C:\\Users\\Admin\\Documents\\5th Year\\Software Engineering\\RoomDoor.jpg")));
+			image = new ImageIcon(ImageIO.read(new File("C:\\Users\\Admin\\Documents\\5th Year\\Software Engineering\\RoomStairs.jpg")));
 		} 
 		catch (IOException e) 
 		{
@@ -47,4 +45,5 @@ public class DoorButton extends Button
 		this.setIcon(this.image);
 	}
 }
+
 

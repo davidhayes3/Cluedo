@@ -14,6 +14,7 @@ public class Game
 	// Game attributes
 	ArrayList<Player> players = new ArrayList<Player>(6);
 	Board gameBoard;
+	Board1 gameBoard1;
 	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	int numPlayers;
 	boolean gameOver = false;
@@ -26,12 +27,6 @@ public class Game
 	}
 	
 	// Method Implementations
-	
-	// Make board
-	public void makeBoard()
-	{
-		 this.gameBoard = new Board(this.players);
-	}
 	
 	// Get number of players
 	@SuppressWarnings("resource")
@@ -65,6 +60,61 @@ public class Game
 	}
 	
 	
+	// Create suspect pawns
+	
+	public void getCharacters()
+	{		
+		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
+
+		
+		Map<Color, String> colorMap = new HashMap<Color, String>();
+		colorMap.put(Color.RED, "Red");  
+	    colorMap.put(Color.BLUE, "Blue");
+	    colorMap.put(Color.GREEN, "Green");
+	    colorMap.put(Color.MAGENTA, "Magenta");
+	    colorMap.put(Color.WHITE, "White");
+	    colorMap.put(Color.PINK, "Pink");
+		
+		for (int i = 0; i < players.size(); i++)
+		{
+			while (true)
+			{
+				// Ask user for input until no. of players between 2 and 6 is selected
+				System.out.println("\nPlayer " + (i + 1) + ", please select your character:\n1. MISS SCARLET\n2. PROFESSOR PLUM\n"
+						+ "3. MRS. PEACOCK\n4. REVEREND MR. GREEN\n5. COLONEL MUSTARD\n6. MRS. WHITE\n");
+				@SuppressWarnings("resource")
+				Scanner scanner = new Scanner(System.in);
+				int playerChoice = scanner.nextInt();
+				
+				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
+				{
+					this.players.get(i).giveSuspectPawn(new SuspectPawn(playerChoice, colors[playerChoice-1]));
+					System.out.println("Player " + (i+1) + " is " + players.get(i).getSuspectPawn().getName() + " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
+					break;
+				}
+				else
+				{
+					System.out.println("Please enter a number between 1 and " + players.size());
+				}
+			}
+		}
+	}
+
+	
+	
+	// Make board
+	public void makeBoard()
+	{
+		 this.gameBoard = new Board(this.players);
+	}
+	
+	// Make board
+	public void makeBoard1()
+	{
+		 this.gameBoard1 = new Board1(this.players);
+	}
+	
+	
 	// Turn for a player
 	public void gameTurns()
 	{
@@ -86,11 +136,9 @@ public class Game
 		System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
 
 		while (!gameOver)
-		{
-			Thread.yield();			
+		{			
 			buttonPress = gameBoard.detectButtonPress();
-			numButtonPressed = gameBoard.getButtonPressed();
-			
+			numButtonPressed = gameBoard.getButtonPressed();		
 			
 			if (buttonPress - trackButtonPress == 1)
 			{	
@@ -128,6 +176,9 @@ public class Game
 					
 				}
 			}
+			
+			Thread.yield();
+			
 		}							
 	}
 
@@ -210,4 +261,6 @@ public class Game
 			System.out.println("\n");
 		}
 	}
+	
+
 }

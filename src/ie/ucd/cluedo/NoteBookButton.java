@@ -3,10 +3,10 @@ package ie.ucd.cluedo;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-public class NoteBookButton extends JButton{
+public class NotebookButton extends JButton{
 	
 	JDialog dialog;
-	public NoteBookButton(JDialog dialog){
+	public NotebookButton(JDialog dialog){
 		this.setText("NoteBook");
 		this.dialog = dialog;
 		this.setBounds(550,150, 100, 50);

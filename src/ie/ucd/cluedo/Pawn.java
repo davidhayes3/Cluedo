@@ -11,7 +11,7 @@ public abstract class Pawn
 	public Slot pawnPosition;
 	
 	// Pawn constructor
-	public Pawn(int pawnIndex, Slot pawnPosition)
+	public Pawn(int pawnIndex)
 	{
 
 		// Decide type of pawn based on index number of pawn

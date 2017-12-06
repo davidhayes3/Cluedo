@@ -1,38 +1,36 @@
 package ie.ucd.cluedo;
 
 
+import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
+import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
 
-public class BoardButton extends JButton
+@SuppressWarnings("serial")
+public class BoardButton extends Button
 {
 
-	public int x;
-	public int y;
-	public static int col;
-	public static int row;
+	Color defaultColor = Color.YELLOW;
 	
-	public BoardButton(int col, int row) {
-		this.x = 21*col;
-		this.y = 21*row;
-		this.col = col;
-		this.row = row;
-		this.setBounds(x,y, 21, 21);
-		this.setBackground(Color.YELLOW);
-		Font font = new Font("Courier", Font.BOLD,10);
-		this.setFont(font);
+	public BoardButton(int col, int row) 
+	{
+
+		super(col, row);
+		
+		this.setBackground(this.defaultColor);
+
 	}
 	
-	public int getXpos(){
-		return x/21;
-		
+	public void changeColor(Color newColor)
+	{
+		this.setBackground(newColor);
 	}
-	public int getYpos(){
-		return y/21;
-		
+	
+	public void resetDefault()
+	{
+		this.setBackground(this.defaultColor);
 	}
-	public void reset(){
-	this.setBackground(Color.yellow);
-	}
-	}
+
+}

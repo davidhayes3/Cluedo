@@ -2,10 +2,9 @@ package ie.ucd.cluedo;
 
 public class Slot 
 {
-	
 	// Slot attributes
-	public int x;
-	public int y;
+	int x;
+	int y;
 	
 	// Slot constructor
 	public Slot(int x, int y)

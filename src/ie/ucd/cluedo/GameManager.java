@@ -9,11 +9,14 @@ public class GameManager {
 		System.out.println("NEW GAME\n\n");
 		
 		Cluedo = new Game();
+		
 		Cluedo.getNumPlayers();
 			
 		Cluedo.printMurderDetails();
 			
 		Cluedo.makePlayers();
+		
+		Cluedo.getCharacters();
 		
 		Cluedo.createDeck();
 		Cluedo.printDeckInPlayDetails();
@@ -21,9 +24,9 @@ public class GameManager {
 		Cluedo.allocateCards();
 		Cluedo.printCardAllocation();
 						
-		Cluedo.makeBoard();
+		Cluedo.makeBoard1();
 		
-		Cluedo.gameTurns();
+		//Cluedo.gameTurns();
 
 		System.out.println("\n\nGAME OVER\n\n");
 
