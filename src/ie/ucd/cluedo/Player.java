@@ -49,9 +49,4 @@ public class Player
 		return this.playerPawn;
 	}
 	
-	// Returns the entire contents to date of the player's notebook
-	public String inspectNotebook()
-	{
-		return this.playerNotebook.getContents();
-	}	
 }

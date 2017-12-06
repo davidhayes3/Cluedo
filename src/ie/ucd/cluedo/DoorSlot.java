@@ -12,4 +12,9 @@ public class DoorSlot extends Slot
 		this.doorButton = doorButton;
 	}	
 	
+	public DoorButton getButton()
+	{
+		return this.doorButton;
+	}
+	
 }

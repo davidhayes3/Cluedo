@@ -1,16 +1,16 @@
 package ie.ucd.cluedo;
 
-public class Slot 
+public abstract class Slot 
 {
 	// Slot attributes
 	int x;
 	int y;
 	
 	// Slot constructor
-	public Slot(int x, int y)
+	public Slot(int row, int col)
 	{
-		this.x = x;
-		this.y = y;
+		this.x = col;
+		this.y = row;
 	}
 	
 	// Returns x co-ordinate of slot
@@ -24,5 +24,7 @@ public class Slot
 	{
 		return this.y;
 	}
+	
+	public abstract Button getButton();
 	
 }

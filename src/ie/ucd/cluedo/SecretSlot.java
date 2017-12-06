@@ -11,4 +11,9 @@ public class SecretSlot extends Slot
 		this.secretButton = secretButton;
 	}
 	
+	public SecretButton getButton()
+	{
+		return this.secretButton;
+	}
+	
 }

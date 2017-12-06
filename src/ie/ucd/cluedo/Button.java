@@ -3,7 +3,6 @@ package ie.ucd.cluedo;
 import static ie.ucd.cluedo.GameValues.*;
 
 import java.awt.Color;
-import java.awt.Font;
 
 import javax.swing.JButton;
 
@@ -14,7 +13,7 @@ public class Button extends JButton
 	public Button(int col, int row) 
 	{
 		
-		this.setBounds(BUTTON_PIXEL_WIDTH * row, BUTTON_PIXEL_HEIGHT * col, BUTTON_PIXEL_WIDTH, BUTTON_PIXEL_HEIGHT);
+		this.setBounds( BUTTON_PIXEL_WIDTH * row, BUTTON_PIXEL_HEIGHT * col, BUTTON_PIXEL_WIDTH, BUTTON_PIXEL_HEIGHT );
 				
 	}
 	

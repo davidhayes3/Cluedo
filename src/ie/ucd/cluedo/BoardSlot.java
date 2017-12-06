@@ -10,4 +10,9 @@ public class BoardSlot extends Slot
 		
 		this.boardButton = boardButton;
 	}
+	
+	public BoardButton getButton()
+	{
+		return this.boardButton;
+	}
 }

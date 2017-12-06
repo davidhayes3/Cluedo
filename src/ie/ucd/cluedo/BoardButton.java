@@ -1,12 +1,6 @@
 package ie.ucd.cluedo;
 
-
-import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
-import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
-
 import java.awt.Color;
-import java.awt.Font;
-import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class BoardButton extends Button

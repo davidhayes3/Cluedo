@@ -1,10 +1,12 @@
 package ie.ucd.cluedo;
 
-public class GameManager {
+public class GameManager 
+{
 	
 	static Game Cluedo;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		
 		System.out.println("NEW GAME\n\n");
 		
@@ -24,9 +26,9 @@ public class GameManager {
 		Cluedo.allocateCards();
 		Cluedo.printCardAllocation();
 						
-		Cluedo.makeBoard1();
+		Cluedo.makeBoard();
 		
-		//Cluedo.gameTurns();
+		Cluedo.gameTurns();
 
 		System.out.println("\n\nGAME OVER\n\n");
 

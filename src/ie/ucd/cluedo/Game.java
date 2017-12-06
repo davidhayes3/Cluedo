@@ -12,18 +12,19 @@ import static ie.ucd.cluedo.GameValues.*;
 public class Game 
 {
 	// Game attributes
-	ArrayList<Player> players = new ArrayList<Player>(6);
+	ArrayList<Player> players;
 	Board gameBoard;
-	Board1 gameBoard1;
-	ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
+	ArrayList<Card> cardDeck;
 	int numPlayers;
-	boolean gameOver = false;
-	int playerTurn;
 	
 	// Game Constructor
 	public Game()
 	{
-		this.playerTurn = 0;
+		this.players = new ArrayList<Player>(MAX_NUM_PLAYERS);
+		
+		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
+		
+		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	}
 	
 	// Method Implementations
@@ -99,19 +100,11 @@ public class Game
 			}
 		}
 	}
-
-	
 	
 	// Make board
 	public void makeBoard()
 	{
 		 this.gameBoard = new Board(this.players);
-	}
-	
-	// Make board
-	public void makeBoard1()
-	{
-		 this.gameBoard1 = new Board1(this.players);
 	}
 	
 	
@@ -125,63 +118,166 @@ public class Game
 	    colorMap.put(Color.MAGENTA, "Magenta");
 	    colorMap.put(Color.WHITE, "White");
 	    colorMap.put(Color.PINK, "Pink");
-		
-		int buttonPress = 0;
-		int trackButtonPress = 0;
-		int numButtonPressed = 0;
-		int diceScore = 0;
-		boolean gameOver = false;
-		
+	    
+	    int playerTurn = 0;
+	    boolean gameOver = false;
+
 		System.out.println("\n\nGame begins");
-		System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
 
 		while (!gameOver)
 		{			
-			buttonPress = gameBoard.detectButtonPress();
-			numButtonPressed = gameBoard.getButtonPressed();		
+			int diceScore = 0;
 			
-			if (buttonPress - trackButtonPress == 1)
-			{	
+			System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
+			
+			Scanner scanner = new Scanner(System.in);
+			System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nMake Hypothesis [h],"
+					+ "\nMake Accusation [a]\nFinish Move [f]\nOption: " );
+			String playerChoice = scanner.nextLine();
+			
+			switch (playerChoice)
+			{
+				case "r":	diceScore = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
+							playerMove(diceScore, playerTurn);
+							break;
+			
+				case "h":	//hypothesis();
+							break;
+			
+				case "a":	//accusation();
+							gameOver = true;
+							break;
 				
-				trackButtonPress++;
+				case "f":	playerTurn = (playerTurn + 1) % this.numPlayers;
+							break;
 				
-				if (numButtonPressed == DIES_BUTTON_PRESS)
-				{
-					diceScore = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
-					System.out.println("Dice score: " + diceScore);
-					continue;
-				}
-				
-				else if (numButtonPressed == BOARD_BUTTON_PRESS)
-				{
-					diceScore = gameBoard.movePawn(playerTurn, diceScore);
-					continue;
-				}
-				
-				else if (numButtonPressed == END_TURN_BUTTON_PRESS)
-				{
-					System.out.println(players.get(playerTurn).getSuspectPawn().getName() + " ended their move.");
-					playerTurn = (playerTurn + 1) % numPlayers;
-					System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
-				}
-				
-				else if (numButtonPressed == NOTEBOOK_BUTTON_PRESS)
-				{
-					gameBoard.showNoteBook(playerTurn);
-					
-				}
-				else if (numButtonPressed == DOOR_BUTTON_PRESS)
-				{
-					diceScore = gameBoard.movePawn(playerTurn, diceScore);
-					
-				}
+				default:	System.out.println("Please enter a valid option");
+							break;
 			}
-			
-			Thread.yield();
-			
-		}							
+		}
 	}
 
+	private void playerMove(int diceScore, int playerTurn)
+	{
+		System.out.printf("\nYour dice score is " + diceScore + "\n");
+		
+		int movesRemaining = diceScore;
+		int newCol, newRow;
+
+		while (movesRemaining > 0)
+		{
+			System.out.printf("You have " + movesRemaining + " moves remaining.");		
+				
+			Scanner scanner = new Scanner(System.in);
+			System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
+			String playerChoice = scanner.nextLine();				
+				
+			switch (playerChoice)
+			{
+				case "u":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() - 1;
+							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
+				
+							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
+							{
+								System.out.println("That position is outside the board");
+								continue;
+							}
+							
+							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
+							{
+								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+						
+							else
+							{
+								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+								movesRemaining--;
+							}
+								
+							break;
+				
+				case "d":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() + 1;
+							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
+				
+							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
+							{
+								System.out.println("That position is outside the board");
+								continue;
+							}
+					
+							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
+							{
+								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+			
+							else
+							{
+								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+								movesRemaining--;
+							}
+								
+							break;
+				
+				case "l":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
+							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() - 1;
+		
+							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
+							{
+								System.out.println("That position is outside the board");
+								continue;
+							}
+		
+							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
+							{
+								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+
+							else
+							{
+								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+								movesRemaining--;
+							}
+					
+							break;								
+					
+				case "r":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
+							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() + 1;
+
+							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
+							{
+								System.out.println("That position is outside the board");
+								continue;
+							}
+
+							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
+							{
+								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+
+							else
+							{
+								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+								movesRemaining--;
+							}
+		
+							break;
+				
+				case "f":	movesRemaining = 0;
+							break;
+					
+				default:	System.out.println("Please enter a valid option");
+							break;
+								
+			}
+		}
+		
+		System.out.printf("\nYou have used all your moves");
+
+	}
 	
 	// Creates deck of cards with all cards except murder cards
 	public void createDeck()
