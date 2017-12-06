@@ -132,7 +132,7 @@ public class Game
 			
 			Scanner scanner = new Scanner(System.in);
 			System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nMake Hypothesis [h],"
-					+ "\nMake Accusation [a]\nFinish Move [f]\nOption: " );
+					+ "\nMake Accusation [a]\nFinish Move [f]\nView Notebook [n]\nOption: " );
 			String playerChoice = scanner.nextLine();
 			
 			switch (playerChoice)
@@ -141,14 +141,17 @@ public class Game
 							playerMove(diceScore, playerTurn);
 							break;
 			
-				case "h":	//hypothesis();
+				case "h":	// hypothesis();
 							break;
 			
-				case "a":	//accusation();
+				case "a":	// accusation();
 							gameOver = true;
 							break;
 				
 				case "f":	playerTurn = (playerTurn + 1) % this.numPlayers;
+							break;
+							
+				case "n":	
 							break;
 				
 				default:	System.out.println("Please enter a valid option");
@@ -163,6 +166,7 @@ public class Game
 		
 		int movesRemaining = diceScore;
 		int newCol, newRow;
+		boolean slotOccupied = false;
 
 		while (movesRemaining > 0)
 		{
@@ -176,16 +180,31 @@ public class Game
 			{
 				case "u":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() - 1;
 							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
-				
+							
+							for (Player p: players)
+							{
+								if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[newRow][newCol])
+								{
+									slotOccupied = true;
+								}
+							}
+							
 							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
 							{
 								System.out.println("That position is outside the board");
 								continue;
 							}
-							
+
 							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
 							{
 								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+							
+							else if (slotOccupied)
+							{
+								System.out.println("Cannot move to a space occupied by another player");
+								slotOccupied = false;
 								continue;
 							}
 						
@@ -200,6 +219,14 @@ public class Game
 				case "d":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() + 1;
 							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
 				
+							for (Player p: players)
+							{
+								if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[newRow][newCol])
+								{
+									slotOccupied = true;
+								}
+							}
+							
 							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
 							{
 								System.out.println("That position is outside the board");
@@ -209,6 +236,13 @@ public class Game
 							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
 							{
 								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+							
+							else if (slotOccupied)
+							{
+								System.out.println("Cannot move to a space occupied by another player");
+								slotOccupied = false;
 								continue;
 							}
 			
@@ -223,6 +257,14 @@ public class Game
 				case "l":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
 							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() - 1;
 		
+							for (Player p: players)
+							{
+								if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[newRow][newCol])
+								{
+									slotOccupied = true;
+								}
+							}
+							
 							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
 							{
 								System.out.println("That position is outside the board");
@@ -232,6 +274,13 @@ public class Game
 							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
 							{
 								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+							
+							else if (slotOccupied)
+							{
+								System.out.println("Cannot move to a space occupied by another player");
+								slotOccupied = false;
 								continue;
 							}
 
@@ -246,6 +295,14 @@ public class Game
 				case "r":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
 							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() + 1;
 
+							for (Player p: players)
+							{
+								if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[newRow][newCol])
+								{
+									slotOccupied = true;
+								}
+							}
+							
 							if (newRow < 0 || newRow > 23 || newCol < 0 || newCol > 23)
 							{
 								System.out.println("That position is outside the board");
@@ -255,6 +312,13 @@ public class Game
 							else if (this.gameBoard.getSlots()[newRow][newCol] == null)
 							{
 								System.out.println("Cannot access a room through a wall");
+								continue;
+							}
+							
+							else if (slotOccupied)
+							{
+								System.out.println("Cannot move to a space occupied by another player");
+								slotOccupied = false;
 								continue;
 							}
 
