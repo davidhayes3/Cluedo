@@ -14,17 +14,17 @@ public class GameManager
 		
 		Cluedo.getNumPlayers();
 			
-		Cluedo.printMurderDetails();
+		//Cluedo.printMurderDetails();
 			
 		Cluedo.makePlayers();
 		
 		Cluedo.getCharacters();
 		
 		Cluedo.createDeck();
-		Cluedo.printDeckInPlayDetails();
+		//Cluedo.printDeckInPlayDetails();
 		
 		Cluedo.allocateCards();
-		Cluedo.printCardAllocation();
+		//Cluedo.printCardAllocation();
 						
 		Cluedo.makeBoard();
 		

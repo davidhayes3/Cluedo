@@ -132,21 +132,13 @@ public class Game
 			
 			System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
 			
-			if (hasRolled)
-			{
-				afterRollMove(); 
-			}
-			
-			else
-			{
-				beforeRollMove();
-				hasRolled = true;
-			}
+			hasRolled = (hasRolled) ? afterRollMove(hasRolled) : beforeRollMove(hasRolled);
 			
 		}
 	}
 	
-	private void beforeRollMove()
+	@SuppressWarnings("resource")
+	private boolean beforeRollMove(boolean hasRolled)
 	{
 		int diceScore;
 		
@@ -159,30 +151,30 @@ public class Game
 		{
 			case "r":	diceScore = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
 						playerMove(diceScore, playerTurn);
-						break;
+						return true;
 		
 			case "h":	// hypothesis();
-						break;
+						return false;
 		
 			case "a":	// accusation();
 						this.gameOver = true;
-						break;
+						return false;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
-						break;
+						return false;
 						
 			case "n":	
-						break;
+						return false;
 			
 			default:	System.out.println("Please enter a valid option");
-						break;
+						return false;
 		}
 	}
 	
-	private void afterRollMove()
+	@SuppressWarnings("resource")
+	private boolean afterRollMove(boolean hasRolled)
 	{
-		int diceScore;
-		
+
 		Scanner scanner = new Scanner(System.in);
 		System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h],"
 				+ "\nMake Accusation [a]\nFinish Move [f]\nView Notebook [n]\nOption: " );
@@ -191,20 +183,20 @@ public class Game
 		switch (playerChoice)
 		{
 			case "h":	// hypothesis();
-						break;
+						return true;
 		
 			case "a":	// accusation();
 						this.gameOver = true;
-						break;
+						return true;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
-						break;
+						return false;
 						
 			case "n":	
-						break;
+						return true;
 			
 			default:	System.out.println("Please enter a valid option");
-						break;
+						return true;
 		}
 	}
 
@@ -213,122 +205,127 @@ public class Game
 		System.out.printf("\nYour dice score is " + diceScore + "\n");
 		
 		int movesRemaining = diceScore;
-		int newCol, newRow;
-		boolean canMove;
-		String playerChoice;
 
 		while (movesRemaining > 0)
 		{
-			System.out.printf("You have " + movesRemaining + " moves remaining.");		
-				
-			Scanner scanner = new Scanner(System.in);
 			
-			if (this.players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
+			System.out.printf("You have " + movesRemaining + " moves remaining.");		
+			
+			if (this.players.get(this.playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
 			{
-				System.out.printf("\nLeave Room [l]\nAccess Secret Passage [s]\nOption: " );				
-				playerChoice = scanner.nextLine();	
+				movesRemaining = roomMove(movesRemaining);
 			}
 			
 			else
 			{
-				System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
-				playerChoice = scanner.nextLine();	
-			}
-			
-				
-			switch (playerChoice)
-			{
-				case "u":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() - 1;
-							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
-							
-							canMove = canMove(newCol, newRow);
-							
-							if (!canMove)
-							{
-								continue;
-							}
-						
-							else
-							{
-								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
-								movesRemaining--;
-								break;
-							}
-				
-				case "d":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() + 1;
-							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
-				
-							canMove = canMove(newCol, newRow);
-							
-							if (!canMove)
-							{
-								continue;
-							}
-						
-							else
-							{
-								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
-								movesRemaining--;
-								break;
-							}
-				
-				case "l":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
-							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() - 1;
-		
-							canMove = canMove(newCol, newRow);
-							
-							if (!canMove)
-							{
-								continue;
-							}
-						
-							else
-							{
-								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
-								movesRemaining--;
-								break;
-							}							
-					
-				case "r":	newRow = this.players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
-							newCol = this.players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() + 1;
-
-							canMove = canMove(newCol, newRow);
-							
-							if (!canMove)
-							{
-								continue;
-							}
-						
-							else
-							{
-								players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
-								movesRemaining--;
-								break;
-							}
-				
-				case "f":	movesRemaining = 0;
-							break;
-					
-				default:	System.out.println("Please enter a valid option");
-							break;
-								
-			}
+				movesRemaining = normalMove(movesRemaining);
+			}	
 		}
 		
-		System.out.printf("\nYou have used all your moves");
+		System.out.printf("\nYour moves are finished for this turn");
 
 	}
 	
+	@SuppressWarnings({ "resource", "unused" })
+	private int roomMove(int movesRemaining)
+	{
+		String playerChoice;
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.printf("\nLeave Room [l]\nAccess Secret Passage [s]\nOption: " );				
+		playerChoice = scanner.nextLine();	
+		
+		return movesRemaining;
+	}
+	
+	@SuppressWarnings("resource")
+	private int normalMove(int movesRemaining)
+	{
+		
+		int newCol, newRow;
+		boolean canMove;
+		String playerChoice;
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
+		playerChoice = scanner.nextLine();	
+				
+		switch (playerChoice)
+		{
+			
+			case "u":	newRow = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getYPosition() - 1;
+						newCol = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getXPosition();
+						
+						canMove = canMove(newCol, newRow);
+					
+						if (canMove)
+						{
+							players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+							movesRemaining--;
+						}
+						
+						return movesRemaining;
+			
+			case "d":	newRow = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getYPosition() + 1;
+						newCol = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getXPosition();
+			
+						canMove = canMove(newCol, newRow);
+					
+						if (canMove)
+						{
+							players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+							movesRemaining--;
+						}
+						
+						return movesRemaining;
+			
+			case "l":	newRow = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getYPosition();
+						newCol = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getXPosition() - 1;
+	
+						canMove = canMove(newCol, newRow);
+						
+						if (canMove)
+						{
+							players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+							movesRemaining--;
+						}	
+						
+						return movesRemaining;
+				
+			case "r":	newRow = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getYPosition();
+						newCol = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getXPosition() + 1;
+
+						canMove = canMove(newCol, newRow);
+	
+						if (canMove)
+						{
+							players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
+							movesRemaining--;
+						}
+						
+						return movesRemaining;
+			
+			case "f":	movesRemaining = 0;
+						return movesRemaining;
+				
+			default:	System.out.println("Please enter a valid option");
+						return movesRemaining;
+							
+		}
+	}
+	
+
+
+
 	private boolean canMove(int newCol, int newRow)
 	{
 		
 		boolean slotOccupied = false;
-		boolean canMove = false;
 		
 		if (newRow < 0 || newRow > BOARD_HEIGHT - 1 || newCol < 0 || newCol > BOARD_WIDTH - 1)
 		{
 			System.out.println("That position is outside the board");
-			return canMove;
+			return false;
 		}
 		
 		for (Player p: this.players)
@@ -342,19 +339,18 @@ public class Game
 		if (this.gameBoard.getSlots()[newRow][newCol] == null)
 		{
 			System.out.println("Cannot access a room through a wall");
-			return canMove;
+			return false;
 		}
 		
 		else if (slotOccupied)
 		{
 			System.out.println("Cannot move to a space occupied by another player");
-			return canMove;
+			return false;
 		}
 		
 		else
 		{
-			canMove = true;
-			return canMove;
+			return true;
 		}
 	}
 	

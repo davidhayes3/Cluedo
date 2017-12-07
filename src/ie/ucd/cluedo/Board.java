@@ -135,7 +135,7 @@ public class Board
 			
 		Board.add(boardLabel);
 		Board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Board.setSize(700, 533);
+		Board.setSize(BOARD_WIDTH * BUTTON_PIXEL_WIDTH, 533);
 		Board.setResizable(false);
 		Board.setLocationRelativeTo(null);
 		Board.setVisible(true);
