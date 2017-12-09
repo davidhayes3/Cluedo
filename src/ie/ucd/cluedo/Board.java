@@ -22,13 +22,7 @@ public class Board
 	
 	ArrayList<WeaponPawn> weaponPawns;
 	ArrayList<SuspectPawn> playerPawns;
-	
-	Slot[][] boardSlots;
-		
-	BoardButton[][] boardButtons = new BoardButton[BOARD_WIDTH][BOARD_HEIGHT]; 
-	DoorButton[][] doorButtons = new DoorButton[BOARD_WIDTH][BOARD_HEIGHT]; 
-	SecretButton[][] secretButtons = new SecretButton[BOARD_WIDTH][BOARD_HEIGHT];
-		
+	Slot[][] boardSlots;		
 		
 	// Board Constructor 
 	public Board(ArrayList<Player> players) 
@@ -47,29 +41,11 @@ public class Board
 	public void gui() 
 	{
 			
-		// Make frame for board
+		// Initialize frame for board
 			
-		JFrame Board = new JFrame("Welcome to Cluedo");
-		Board.setLayout(null);
-
-		// Get background image for JFrame
-			
-		ImageIcon image = null;
-			
-		try 
-		{
-			image = new ImageIcon(ImageIO.read(new File("C:\\Users\\Admin\\Documents\\5th Year\\Software Engineering\\CluedoBoard3.png")));
-		} 
-		catch (IOException e) 
-		{
-			System.out.println("Error");
-		}
-
-		JLabel boardLabel = new JLabel(image);
-		boardLabel.setBounds(0, 0, BOARD_WIDTH * BUTTON_PIXEL_WIDTH, BOARD_HEIGHT * BUTTON_PIXEL_HEIGHT);
-			
+		JFrame Board = new JFrame("Cluedo");
 		
-		boardSlots = new Slot[BOARD_WIDTH][BOARD_HEIGHT];
+		// Create Board Slots
 			
 		int[][] slotPositions = new int[][]
 		{
@@ -99,6 +75,8 @@ public class Board
 			{ 3, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 3 }
 		};
 		
+		boardSlots = new Slot[BOARD_WIDTH][BOARD_HEIGHT];
+		
 		for (int i = 0; i < BOARD_WIDTH; i++)
 		{
 			for (int j = 0; j < 24; j++)
@@ -108,19 +86,16 @@ public class Board
 				{
 					case 0:		break;
 						   
-					case 1: 	boardButtons[i][j] = new BoardButton(i, j);
-								boardSlots[i][j] = new BoardSlot(i, j, boardButtons[i][j]);
-								Board.add(boardButtons[i][j]);
+					case 1: 	boardSlots[i][j] = new BoardSlot(i, j, new BoardButton(i, j));
+								Board.add(boardSlots[i][j].getButton());
 								break;
 						
-					case 2: 	doorButtons[i][j] = new DoorButton(i, j);
-								boardSlots[i][j] = new DoorSlot(i, j, doorButtons[i][j]);
-								Board.add(doorButtons[i][j]);
+					case 2: 	boardSlots[i][j] = new DoorSlot(i, j, new DoorButton(i, j));
+								Board.add(boardSlots[i][j].getButton());
 								break;
 								
-					case 3: 	secretButtons[i][j] = new SecretButton(i, j);
-								boardSlots[i][j] = new SecretSlot(i, j, secretButtons[i][j]);
-								Board.add(secretButtons[i][j]);
+					case 3: 	boardSlots[i][j] = new SecretSlot(i, j, new SecretButton(i, j));
+								Board.add(boardSlots[i][j].getButton());
 								break;
 								
 					default: 	System.out.println("Nothing happened with slot");
@@ -130,14 +105,26 @@ public class Board
 			}
 		}		
 	
-						
-		// Finish rest of board
+		// Get background image for JFrame
 			
+		ImageIcon image = null;
+			
+		try 
+		{
+			image = new ImageIcon(ImageIO.read(new File("C:\\Users\\Admin\\Documents\\5th Year\\Software Engineering\\CluedoBoard3.png")));
+		} 
+		catch (IOException e) 
+		{
+			System.out.println("Error");
+		}
+
+		JLabel boardLabel = new JLabel(image);
+		boardLabel.setBounds(0, 0, BOARD_WIDTH * BUTTON_PIXEL_WIDTH, BOARD_HEIGHT * BUTTON_PIXEL_HEIGHT);
+		
 		Board.add(boardLabel);
 		Board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Board.setSize(BOARD_WIDTH * BUTTON_PIXEL_WIDTH, 533);
+		Board.setSize(BOARD_WIDTH * BUTTON_PIXEL_WIDTH + 6, BOARD_HEIGHT * BUTTON_PIXEL_HEIGHT + 29);
 		Board.setResizable(false);
-		Board.setLocationRelativeTo(null);
 		Board.setVisible(true);
 	}
 
