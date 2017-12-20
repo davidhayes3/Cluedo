@@ -49,4 +49,9 @@ public class Player
 		return this.playerPawn;
 	}
 	
+	// Returns notebook assigned to player
+	public Notebook getNotebook()
+	{
+		return this.playerNotebook;
+	}
 }

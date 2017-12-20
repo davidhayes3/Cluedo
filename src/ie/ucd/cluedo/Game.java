@@ -153,7 +153,16 @@ public class Game
 						playerMove(diceScore, playerTurn);
 						return true;
 		
-			case "h":	// hypothesis();
+			case "h":	
+						System.out.printf("\nWhat suspect is in your accusation: " );
+						int suspectHypothesis = scanner.nextInt();
+						System.out.printf("\nWhat weapon is in your accusation: " );
+						int weaponHypothesis = scanner.nextInt();
+						System.out.printf("\nWhat Suspect is in your accusation: " );
+						int roomHypothesis = scanner.nextInt();
+						
+						Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
+						playerHypothesis.checkPlayersCards(players, playerTurn);
 						return false;
 		
 			case "a":	// accusation();
@@ -163,7 +172,7 @@ public class Game
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
 						return false;
 						
-			case "n":	
+			case "n":	System.out.println("Your Notebook: \n" + players.get(playerTurn).getNotebook().getContents());
 						return false;
 			
 			default:	System.out.println("Please enter a valid option");
