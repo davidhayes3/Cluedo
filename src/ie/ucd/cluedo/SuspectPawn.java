@@ -26,7 +26,7 @@ public class SuspectPawn extends Pawn
 	{
 		if(this.pawnPosition != null)
 		{
-			this.pawnPosition.getButton().resetDefaultColor();
+			this.pawnPosition.getButton().resetDefault();
 		}
 		
 		this.pawnPosition = newPosition;

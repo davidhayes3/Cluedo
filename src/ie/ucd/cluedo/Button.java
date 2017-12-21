@@ -7,7 +7,7 @@ import java.awt.Color;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
-public class Button extends JButton
+public abstract class Button extends JButton
 {
 	
 	public Button(int col, int row) 
@@ -22,9 +22,6 @@ public class Button extends JButton
 		this.setBackground(newColor);
 	}
 	
-	public void resetDefaultColor()
-	{
-		this.setBackground(Color.yellow);
-	}
+	public abstract void resetDefault();
 
 }

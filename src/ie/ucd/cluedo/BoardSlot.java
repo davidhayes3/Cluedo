@@ -15,4 +15,10 @@ public class BoardSlot extends Slot
 	{
 		return this.boardButton;
 	}
+
+	@Override
+	public int getRoomNumber() 
+	{
+		return 0;
+	}
 }

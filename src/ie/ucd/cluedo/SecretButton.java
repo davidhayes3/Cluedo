@@ -23,7 +23,7 @@ public class SecretButton extends Button
 			
 		try 
 		{
-			image = new ImageIcon(ImageIO.read(new File("C:\\Users\\Admin\\Documents\\5th Year\\Software Engineering\\RoomStairs.jpg")));
+			image = new ImageIcon(ImageIO.read(new File("RoomStairs.jpg")));
 		} 
 		catch (IOException e) 
 		{

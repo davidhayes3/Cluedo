@@ -11,6 +11,7 @@ import static ie.ucd.cluedo.GameValues.*;
 
 public class Game 
 {
+	
 	// Game attributes
 	ArrayList<Player> players;
 	Board gameBoard;
@@ -23,10 +24,11 @@ public class Game
 	public Game()
 	{
 		this.players = new ArrayList<Player>(MAX_NUM_PLAYERS);
-		
+		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 		
-		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
+	    this.playerTurn = 0;
+	    this.gameOver = false;
 	}
 	
 	// Method Implementations
@@ -68,7 +70,6 @@ public class Game
 	public void getCharacters()
 	{		
 		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
-
 		
 		Map<Color, String> colorMap = new HashMap<Color, String>();
 		colorMap.put(Color.RED, "Red");  
@@ -92,12 +93,12 @@ public class Game
 				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
 				{
 					this.players.get(i).giveSuspectPawn(new SuspectPawn(playerChoice, colors[playerChoice-1]));
-					System.out.println("Player " + (i+1) + " is " + players.get(i).getSuspectPawn().getName() + " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
+					System.out.println("Player " + (i+1) + " is " + this.players.get(i).getSuspectPawn().getName() + " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
 					break;
 				}
 				else
 				{
-					System.out.println("Please enter a number between 1 and " + players.size());
+					System.out.println("Please enter a number between 1 and " + this.players.size());
 				}
 			}
 		}
@@ -121,8 +122,6 @@ public class Game
 	    colorMap.put(Color.WHITE, "White");
 	    colorMap.put(Color.PINK, "Pink");
 	    
-	    this.playerTurn = 0;
-	    this.gameOver = false;
 		boolean hasRolled = false;
 
 		System.out.println("\n\nGame begins");
@@ -135,6 +134,8 @@ public class Game
 			hasRolled = (hasRolled) ? afterRollMove(hasRolled) : beforeRollMove(hasRolled);
 			
 		}
+		
+		System.out.println("\n\nGAME OVER");
 	}
 	
 	@SuppressWarnings("resource")
@@ -149,8 +150,7 @@ public class Game
 		
 		switch (playerChoice)
 		{
-			case "r":	diceScore = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
-						playerMove(diceScore, playerTurn);
+			case "r":	playerMovement();
 						return true;
 		
 			case "h":	
@@ -172,7 +172,7 @@ public class Game
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
 						return false;
 						
-			case "n":	System.out.println("Your Notebook: \n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
 						return false;
 			
 			default:	System.out.println("Please enter a valid option");
@@ -209,8 +209,11 @@ public class Game
 		}
 	}
 
-	private void playerMove(int diceScore, int playerTurn)
+	private void playerMovement()
 	{
+		
+		int diceScore = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
+		
 		System.out.printf("\nYour dice score is " + diceScore + "\n");
 		
 		int movesRemaining = diceScore;
@@ -218,37 +221,144 @@ public class Game
 		while (movesRemaining > 0)
 		{
 			
-			System.out.printf("You have " + movesRemaining + " moves remaining.");		
+			System.out.printf("You have " + movesRemaining + " moves remaining.");
 			
-			if (this.players.get(this.playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
+			Slot currentSlot = this.players.get(this.playerTurn).getSuspectPawn().getPosition();
+			
+			if (currentSlot instanceof BoardSlot)
 			{
-				movesRemaining = roomMove(movesRemaining);
+				movesRemaining = boardMove(movesRemaining);
 			}
 			
-			else
+			else if (currentSlot instanceof RoomSlot)
 			{
-				movesRemaining = normalMove(movesRemaining);
-			}	
+				
+				if (currentSlot.getRoomNumber() == 1 || currentSlot.getRoomNumber() == 3 || currentSlot.getRoomNumber() == 5 || currentSlot.getRoomNumber() == 7)
+				{
+					movesRemaining = secretRoomMove(movesRemaining);
+				}
+				
+				else
+				{
+					movesRemaining = normalRoomMove(movesRemaining);
+				}
+				
+			}
+			
+			else if (currentSlot instanceof DoorSlot)
+			{
+				movesRemaining = boardMove(movesRemaining);
+			}
+			
 		}
 		
 		System.out.printf("\nYour moves are finished for this turn");
 
 	}
 	
-	@SuppressWarnings({ "resource", "unused" })
-	private int roomMove(int movesRemaining)
+
+	
+	@SuppressWarnings("resource")
+	private int normalRoomMove(int movesRemaining)
 	{
+		
 		String playerChoice;
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.printf("\nLeave Room [l]\nAccess Secret Passage [s]\nOption: " );				
-		playerChoice = scanner.nextLine();	
+		System.out.printf("\nLeave Room [l]\nStay in room [s]\nOption: " );				
+		playerChoice = scanner.nextLine();
+		
+		switch (playerChoice)
+		{
+		
+			case "l":	Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber());
+			
+						players.get(playerTurn).getSuspectPawn().movePosition(doorSlot);
+	
+						break;
+						
+			
+			case "s":	movesRemaining = 0;
+						break;
+			
+			default:	break;
+		
+		}
 		
 		return movesRemaining;
 	}
 	
+	@SuppressWarnings({ "resource" })
+	private int secretRoomMove(int movesRemaining)
+	{
+		
+		String playerChoice;
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.printf("\nLeave Room [l]\nStay in room [s]\nAccess Secret Passage [p]\nOption: " );				
+		playerChoice = scanner.nextLine();
+		
+		switch (playerChoice)
+		{
+		
+			case "l":	Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber());
+				
+						players.get(playerTurn).getSuspectPawn().movePosition(doorSlot);
+				
+						break;
+						
+			case "s":	movesRemaining = 0;
+						break;
+						
+			case "p":	Slot secretSlot = getSecretSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber());
+				
+						players.get(playerTurn).getSuspectPawn().movePosition(secretSlot);
+			
+						movesRemaining--;
+			
+			default:	break;
+		
+		}
+		
+		return movesRemaining;
+	}
+	
+	private Slot getSecretSlot(int roomNumber)
+	{
+		switch(roomNumber)
+		{
+		
+			case 1:		return getRoomSlot(7);
+			
+			case 3:		return getRoomSlot(5);
+					
+			case 5: 	return getRoomSlot(3);
+					
+			case 7:		return getRoomSlot(1);
+					
+			default:	return null;
+			
+		}
+	}
+	
+	
+	private Slot getDoorSlot(int roomNumber) 
+	{
+		ArrayList<DoorSlot> doorSlots = this.gameBoard.getDoorSlots();
+		
+		for (DoorSlot ds: doorSlots)
+		{
+			if (ds.getRoomNumber() == roomNumber)
+			{
+				return this.gameBoard.getSlots()[ds.getYPosition()][ds.getXPosition()];
+			}
+		}
+		
+		return null;
+	}
+	
 	@SuppressWarnings("resource")
-	private int normalMove(int movesRemaining)
+	private int boardMove(int movesRemaining)
 	{
 		
 		int newCol, newRow;
@@ -273,6 +383,13 @@ public class Game
 							movesRemaining--;
 						}
 						
+						if (players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
+						{
+							Slot roomSlot = getRoomSlot(players.get(this.playerTurn).getSuspectPawn().getPosition().getRoomNumber());
+							
+							players.get(this.playerTurn).getSuspectPawn().movePosition(roomSlot);
+						}
+						
 						return movesRemaining;
 			
 			case "d":	newRow = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getYPosition() + 1;
@@ -286,6 +403,13 @@ public class Game
 							movesRemaining--;
 						}
 						
+						if (players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
+						{
+							Slot roomSlot = getRoomSlot(players.get(this.playerTurn).getSuspectPawn().getPosition().getRoomNumber());
+							
+							players.get(this.playerTurn).getSuspectPawn().movePosition(roomSlot);
+						}
+						
 						return movesRemaining;
 			
 			case "l":	newRow = this.players.get(this.playerTurn).getSuspectPawn().getPosition().getYPosition();
@@ -297,7 +421,14 @@ public class Game
 						{
 							players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
 							movesRemaining--;
-						}	
+						}
+						
+						if (players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
+						{
+							Slot roomSlot = getRoomSlot(players.get(this.playerTurn).getSuspectPawn().getPosition().getRoomNumber());
+							
+							players.get(this.playerTurn).getSuspectPawn().movePosition(roomSlot);
+						}
 						
 						return movesRemaining;
 				
@@ -310,6 +441,13 @@ public class Game
 						{
 							players.get(playerTurn).getSuspectPawn().movePosition(this.gameBoard.getSlots()[newRow][newCol]);
 							movesRemaining--;
+						}
+						
+						if (players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
+						{
+							Slot roomSlot = getRoomSlot(players.get(this.playerTurn).getSuspectPawn().getPosition().getRoomNumber());
+							
+							players.get(this.playerTurn).getSuspectPawn().movePosition(roomSlot);
 						}
 						
 						return movesRemaining;
@@ -325,43 +463,70 @@ public class Game
 	
 
 
-
 	private boolean canMove(int newCol, int newRow)
 	{
-		
-		boolean slotOccupied = false;
 		
 		if (newRow < 0 || newRow > BOARD_HEIGHT - 1 || newCol < 0 || newCol > BOARD_WIDTH - 1)
 		{
 			System.out.println("That position is outside the board");
 			return false;
 		}
-		
-		for (Player p: this.players)
-		{
-			if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[newRow][newCol])
-			{
-				slotOccupied = true;
-			}
-		}
 
-		if (this.gameBoard.getSlots()[newRow][newCol] == null)
+		else if (this.gameBoard.getSlots()[newRow][newCol] == null || this.gameBoard.getSlots()[newRow][newCol] instanceof RoomSlot)
 		{
 			System.out.println("Cannot access a room through a wall");
 			return false;
 		}
 		
-		else if (slotOccupied)
-		{
-			System.out.println("Cannot move to a space occupied by another player");
-			return false;
-		}
-		
 		else
 		{
-			return true;
+			for (Player p: this.players)
+			{
+				if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[newRow][newCol])
+				{
+					System.out.println("Cannot move to a space occupied by another player");
+					return false;
+				}
+			}
 		}
+
+		return true;
+	
+	}		
+	
+	
+	
+	private Slot getRoomSlot(int roomNumber)
+	{
+		boolean slotOccupied;
+		
+		ArrayList<RoomSlot> roomSlots = this.gameBoard.getRoomSlots();
+		
+		for (RoomSlot rs: roomSlots)
+		{
+			slotOccupied = false;
+			
+			if (rs.getRoomNumber() == roomNumber)
+			{
+				for (Player p: this.players)
+				{
+					if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					{
+						slotOccupied = true;
+						break;
+					}
+				}
+				
+				if (!slotOccupied)
+				{
+					return this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
+				}
+			}
+		}
+		
+		return null;
 	}
+	
 	
 	// Creates deck of cards with all cards except murder cards
 	public void createDeck()
@@ -378,6 +543,10 @@ public class Game
 			}
 		}
 	}
+	
+	
+	
+	
 	
 	// Allocates the deck of cards created among all players, giving one at a time to each player starting with player 1, player 2...
 	public void allocateCards() 

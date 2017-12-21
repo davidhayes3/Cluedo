@@ -25,7 +25,7 @@ public class DoorButton extends Button
 			
 		try 
 		{
-			this.image = new ImageIcon(ImageIO.read(new File("C:\\Users\\Admin\\Documents\\5th Year\\Software Engineering\\RoomDoor.jpg")));
+			this.image = new ImageIcon(ImageIO.read(new File("RoomDoor.jpg")));
 		} 
 		catch (IOException e) 
 		{

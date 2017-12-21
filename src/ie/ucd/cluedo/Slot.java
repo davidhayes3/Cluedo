@@ -25,6 +25,7 @@ public abstract class Slot
 		return this.y;
 	}
 	
+	public abstract int getRoomNumber();
 	public abstract Button getButton();
-	
+
 }
