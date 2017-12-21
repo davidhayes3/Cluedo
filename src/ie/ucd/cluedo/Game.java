@@ -36,7 +36,11 @@ public class Game
 		this.accusationManager = new AccusationManager();
 	}
 	
-	// Method Implementations
+	
+	
+	/***************************************************************/
+	/*  Public Method Implementations
+	/***************************************************************/
 	
 	// Get number of players
 	@SuppressWarnings("resource")
@@ -71,7 +75,6 @@ public class Game
 	
 	
 	// Create suspect pawns
-	
 	public void getCharacters()
 	{		
 		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
@@ -116,6 +119,7 @@ public class Game
 	}
 	
 	
+	
 	// Turn for a player
 	public void gameTurns()
 	{
@@ -128,29 +132,86 @@ public class Game
 	    colorMap.put(Color.PINK, "Pink");
 	    
 		boolean hasRolled = false;
+		int currentRoom;
 
 		System.out.println("\n\nGame begins");
 
 		while (!gameOver)
 		{			
 			
+			currentRoom = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
+			
 			System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
 			
-			hasRolled = (hasRolled) ? afterRollMove(hasRolled) : beforeRollMove(hasRolled);
+			if (hasRolled)
+			{
+				
+				if (currentRoom == 0)
+				{
+					hasRolled = afterRollMove(hasRolled);
+				}
+				
+				else
+				{
+					hasRolled = afterRollMoveInRoom(hasRolled);
+				}
+				
+			}
+			
+			else
+			{
+				
+				if (currentRoom == 0)
+				{
+					hasRolled = beforeRollMove(hasRolled);
+				}
+				
+				else
+				{
+					hasRolled = beforeRollMoveInRoom(hasRolled);
+				}
+				
+			}
 			
 		}
 		
 		System.out.println("\n\nGAME OVER");
 	}
 	
+	
+	
 	@SuppressWarnings("resource")
 	private boolean beforeRollMove(boolean hasRolled)
 	{
-		int diceScore;
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Notebook [n]\nFinish Move [f]\nOption: " );
+		String playerChoice = scanner.nextLine();
 		
+		switch (playerChoice)
+		{
+			case "r":	playerMovement();
+						return true;
+			
+			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+						return hasRolled;
+			
+			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+						return false;
+			
+			default:	System.out.println("Please enter a valid option");
+						return hasRolled;
+		}
+	}
+	
+	
+	@SuppressWarnings("resource")
+	private boolean beforeRollMoveInRoom(boolean hasRolled)
+	{
+
 		Scanner scanner = new Scanner(System.in);
 		System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nMake Hypothesis [h],"
-				+ "\nMake Accusation [a]\nFinish Move [f]\nView Notebook [n]\nOption: " );
+				+ "\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: " );
 		String playerChoice = scanner.nextLine();
 		
 		switch (playerChoice)
@@ -159,49 +220,72 @@ public class Game
 						return true;
 		
 			case "h":	hypothesis();
-
-						return false;
+						return hasRolled;
 		
 			case "a":	accusation();
-						return false;
+						return hasRolled;
+			
+			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
 						return false;
-						
-			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
-						return false;
 			
 			default:	System.out.println("Please enter a valid option");
-						return false;
+						return hasRolled;
 		}
 	}
 	
+
 	@SuppressWarnings("resource")
 	private boolean afterRollMove(boolean hasRolled)
 	{
 
 		Scanner scanner = new Scanner(System.in);
+		System.out.printf("\nWhat do you want to do?\nView Notebook [n]\nFinish Move [f]\nOption: ");
+		String playerChoice = scanner.nextLine();
+		
+		switch (playerChoice)
+		{
+			
+			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+						return hasRolled;			
+			
+			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+						return false;
+			
+			default:	System.out.println("Please enter a valid option");
+						return hasRolled;
+		}
+	}
+	
+	
+	@SuppressWarnings("resource")
+	private boolean afterRollMoveInRoom(boolean hasRolled)
+	{
+
+		Scanner scanner = new Scanner(System.in);
 		System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h],"
-				+ "\nMake Accusation [a]\nFinish Move [f]\nView Notebook [n]\nOption: " );
+				+ "\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 		String playerChoice = scanner.nextLine();
 		
 		switch (playerChoice)
 		{
 			case "h":	hypothesis();
-						return true;
+						return hasRolled;
 		
 			case "a":	accusation();
 						this.gameOver = true;
-						return true;
+						return hasRolled;
+			
+			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+						return hasRolled;			
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
 						return false;
-						
-			case "n":	
-						return true;
 			
 			default:	System.out.println("Please enter a valid option");
-						return true;
+						return hasRolled;
 		}
 	}
 
@@ -252,7 +336,6 @@ public class Game
 
 	}
 	
-
 	
 	@SuppressWarnings("resource")
 	private int normalRoomMove(int movesRemaining)
@@ -318,6 +401,39 @@ public class Game
 		
 		return movesRemaining;
 	}
+	
+	
+	private Slot getRoomSlot(int roomNumber)
+	{
+		boolean slotOccupied;
+		
+		ArrayList<RoomSlot> roomSlots = this.gameBoard.getRoomSlots();
+		
+		for (RoomSlot rs: roomSlots)
+		{
+			slotOccupied = false;
+			
+			if (rs.getRoomNumber() == roomNumber)
+			{
+				for (Player p: this.players)
+				{
+					if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					{
+						slotOccupied = true;
+						break;
+					}
+				}
+				
+				if (!slotOccupied)
+				{
+					return this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	
 	private Slot getSecretSlot(int roomNumber)
 	{
@@ -492,36 +608,7 @@ public class Game
 	
 	
 	
-	private Slot getRoomSlot(int roomNumber)
-	{
-		boolean slotOccupied;
-		
-		ArrayList<RoomSlot> roomSlots = this.gameBoard.getRoomSlots();
-		
-		for (RoomSlot rs: roomSlots)
-		{
-			slotOccupied = false;
-			
-			if (rs.getRoomNumber() == roomNumber)
-			{
-				for (Player p: this.players)
-				{
-					if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
-					{
-						slotOccupied = true;
-						break;
-					}
-				}
-				
-				if (!slotOccupied)
-				{
-					return this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
-				}
-			}
-		}
-		
-		return null;
-	}
+
 	
 	
 	// Creates deck of cards with all cards except murder cards
@@ -559,6 +646,108 @@ public class Game
 			}
 		}
 	}
+	
+	
+	// Game Logic: hypotheses, accusations, etc.
+	
+	
+	// Hypothesis
+	@SuppressWarnings("resource")
+	public void hypothesis()
+	{
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("What suspect is in your hypothesis: " );
+		for (int i = 0; i < 6; i++)
+		{
+			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+		}
+		
+		int suspectHypothesis = scanner.nextInt();
+		
+		System.out.println("What weapon is in your hypothesis: " );
+		for (int i = 6; i < 12; i++)
+		{
+			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+		}
+		
+		int weaponHypothesis = scanner.nextInt();
+		
+		// Room
+		int roomHypothesis = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
+
+		Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
+		
+		hypothesisManager.checkPlayersCards(playerHypothesis, playerTurn);
+
+	}
+	
+	
+	// Accusation
+	public void accusation()
+	{
+		boolean winnerAlright;
+		int currentRoom = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
+				
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.printf("\nWhat suspect is in your accusation: " );
+		for (int i = 0; i < 6; i++)
+		{
+			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+		}
+		
+		int suspectAccusation = scanner.nextInt();
+		
+		System.out.printf("\nWhat weapon is in your accusation: " );
+		for (int i = 6; i < 12; i++)
+		{
+			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+		}
+		
+		int weaponAccusation = scanner.nextInt();
+		
+		// Room Accusation
+		int roomAccusation = currentRoom;
+
+		Accusation playerAccusation = new Accusation(suspectAccusation, weaponAccusation, roomAccusation);
+		
+		winnerAlright = accusationManager.checkEnvelope(playerAccusation);
+		
+		if (winnerAlright)
+		{
+			this.gameOver = true;
+		}
+		
+		else
+		{
+			players.remove(playerTurn);
+			this.numPlayers--;
+			this.playerTurn = this.playerTurn % this.numPlayers;
+			
+			if (numPlayers == 1)
+			{
+				System.out.println("There is only one player left\n \n");
+				this.gameOver = true;
+			}
+		}
+
+	}
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	// Other Methods
+	
 	
 	// Print details of murder for this game
 	public void printMurderDetails()
@@ -616,66 +805,5 @@ public class Game
 		}
 	}
 
-	//Method to handle the player hypothesis
-		public void hypothesis(){
-			@SuppressWarnings("resource")
-			Scanner scanner = new Scanner(System.in);
-			
-			System.out.println("What suspect is in your hypothesis: " );
-			for (int i = 0; i < 6; i++)
-			{
-				System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
-			}
-			int suspectHypothesis = scanner.nextInt();
-			
-			System.out.println("What weapon is in your hypothesis: " );
-			
-			for (int i = 6; i < 12; i++)
-			{
-				System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
-			}
-			int weaponHypothesis = scanner.nextInt();
-			
-			System.out.println("What Suspect is in your hypothesis: " );
-			for (int i = 12; i < NUM_CARDS_IN_DECK; i++)
-			{
-				System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
-			}
-			int roomHypothesis = scanner.nextInt();
 
-			Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
-			hypothesisManager.checkPlayersCards(playerHypothesis, playerTurn);
-
-		}
-		
-		public void accusation(){
-			boolean winnerAlright;
-			@SuppressWarnings("resource")
-			Scanner scanner = new Scanner(System.in);
-			
-			System.out.printf("\nWhat suspect is in your accusation: " );
-			int suspectAccusation = scanner.nextInt();
-			System.out.printf("\nWhat weapon is in your accusation: " );
-			int weaponAccusation = scanner.nextInt();
-			System.out.printf("\nWhat Suspect is in your accusation: " );
-			int roomAccusation = scanner.nextInt();
-
-			Accusation playerAccusation = new Accusation(suspectAccusation, weaponAccusation, roomAccusation);
-			winnerAlright = accusationManager.checkEnvelope(playerAccusation);
-			if(winnerAlright)
-			{
-				gameOver = true;
-			}
-			else
-			{
-				players.remove(playerTurn);
-				numPlayers--;
-				this.playerTurn = (this.playerTurn) % this.numPlayers;
-				if(numPlayers==1){
-					System.out.println("There is only one player left\n \n");
-					gameOver = true;
-				}
-			}
-
-		}
 }

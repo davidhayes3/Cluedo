@@ -14,7 +14,7 @@ public class GameManager
 		
 		Cluedo.getNumPlayers();
 			
-		//Cluedo.printMurderDetails();
+		Cluedo.printMurderDetails();
 			
 		Cluedo.makePlayers();
 		
@@ -23,19 +23,12 @@ public class GameManager
 		Cluedo.createDeck();
 		
 		Cluedo.createFullDeck();
-		//Cluedo.printDeckInPlayDetails();
 		
 		Cluedo.allocateCards();
-		//Cluedo.printCardAllocation();
 						
 		Cluedo.makeBoard();
 		
-		
 		Cluedo.gameTurns();
-
-		
-		
-		System.out.println("\n\nGAME OVER\n\n");
 
 	}
 
