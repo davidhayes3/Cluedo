@@ -16,19 +16,24 @@ public class Game
 	ArrayList<Player> players;
 	Board gameBoard;
 	ArrayList<Card> cardDeck;
+	ArrayList<Card> fullCardDeck;
 	int numPlayers;
 	boolean gameOver;
 	int playerTurn;
+	HypothesisManager hypothesisManager;
+	AccusationManager accusationManager;
 	
 	// Game Constructor
 	public Game()
 	{
 		this.players = new ArrayList<Player>(MAX_NUM_PLAYERS);
 		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
-		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
+		this.fullCardDeck = new ArrayList<Card>(NUM_CARDS_IN_DECK);
 		
 	    this.playerTurn = 0;
 	    this.gameOver = false;
+		this.hypothesisManager = new HypothesisManager(this.players);
+		this.accusationManager = new AccusationManager();
 	}
 	
 	// Method Implementations
@@ -153,20 +158,11 @@ public class Game
 			case "r":	playerMovement();
 						return true;
 		
-			case "h":	
-						System.out.printf("\nWhat suspect is in your accusation: " );
-						int suspectHypothesis = scanner.nextInt();
-						System.out.printf("\nWhat weapon is in your accusation: " );
-						int weaponHypothesis = scanner.nextInt();
-						System.out.printf("\nWhat Suspect is in your accusation: " );
-						int roomHypothesis = scanner.nextInt();
-						
-						Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
-						playerHypothesis.checkPlayersCards(players, playerTurn);
+			case "h":	hypothesis();
+
 						return false;
 		
-			case "a":	// accusation();
-						this.gameOver = true;
+			case "a":	accusation();
 						return false;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -191,10 +187,10 @@ public class Game
 		
 		switch (playerChoice)
 		{
-			case "h":	// hypothesis();
+			case "h":	hypothesis();
 						return true;
 		
-			case "a":	// accusation();
+			case "a":	accusation();
 						this.gameOver = true;
 						return true;
 			
@@ -611,5 +607,75 @@ public class Game
 		}
 	}
 	
+	public void createFullDeck()
+	{
+		for (int i = 0; i < NUM_CARDS_IN_DECK; i++)
+		{
 
+				this.fullCardDeck.add(new Card(i));
+		}
+	}
+
+	//Method to handle the player hypothesis
+		public void hypothesis(){
+			@SuppressWarnings("resource")
+			Scanner scanner = new Scanner(System.in);
+			
+			System.out.println("What suspect is in your hypothesis: " );
+			for (int i = 0; i < 6; i++)
+			{
+				System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+			}
+			int suspectHypothesis = scanner.nextInt();
+			
+			System.out.println("What weapon is in your hypothesis: " );
+			
+			for (int i = 6; i < 12; i++)
+			{
+				System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+			}
+			int weaponHypothesis = scanner.nextInt();
+			
+			System.out.println("What Suspect is in your hypothesis: " );
+			for (int i = 12; i < NUM_CARDS_IN_DECK; i++)
+			{
+				System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+			}
+			int roomHypothesis = scanner.nextInt();
+
+			Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
+			hypothesisManager.checkPlayersCards(playerHypothesis, playerTurn);
+
+		}
+		
+		public void accusation(){
+			boolean winnerAlright;
+			@SuppressWarnings("resource")
+			Scanner scanner = new Scanner(System.in);
+			
+			System.out.printf("\nWhat suspect is in your accusation: " );
+			int suspectAccusation = scanner.nextInt();
+			System.out.printf("\nWhat weapon is in your accusation: " );
+			int weaponAccusation = scanner.nextInt();
+			System.out.printf("\nWhat Suspect is in your accusation: " );
+			int roomAccusation = scanner.nextInt();
+
+			Accusation playerAccusation = new Accusation(suspectAccusation, weaponAccusation, roomAccusation);
+			winnerAlright = accusationManager.checkEnvelope(playerAccusation);
+			if(winnerAlright)
+			{
+				gameOver = true;
+			}
+			else
+			{
+				players.remove(playerTurn);
+				numPlayers--;
+				this.playerTurn = (this.playerTurn) % this.numPlayers;
+				if(numPlayers==1){
+					System.out.println("There is only one player left\n \n");
+					gameOver = true;
+				}
+			}
+
+		}
 }

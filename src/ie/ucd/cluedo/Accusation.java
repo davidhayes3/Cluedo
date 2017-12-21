@@ -1,17 +1,14 @@
 package ie.ucd.cluedo;
 
-import java.util.ArrayList;
-
-
-public class Hypothesis {
-
+public class Accusation {
 	
 	private int suspectHypothesis;
 	private int weaponHypothesis;
 	private int roomHypothesis;
 	
 	//Need to change to get room player is in
-	public Hypothesis(int suspectHypothesis, int weaponHypothesis, int roomHypothesis){
+	public Accusation(int suspectHypothesis, int weaponHypothesis, int roomHypothesis){
+		
 		this.suspectHypothesis = suspectHypothesis;
 		this.weaponHypothesis = weaponHypothesis;
 		this.roomHypothesis = roomHypothesis;
@@ -29,5 +26,4 @@ public class Hypothesis {
 	public int getRoom(){
 		return roomHypothesis;
 	}
-
 }

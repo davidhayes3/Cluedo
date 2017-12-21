@@ -21,6 +21,8 @@ public class GameManager
 		Cluedo.getCharacters();
 		
 		Cluedo.createDeck();
+		
+		Cluedo.createFullDeck();
 		//Cluedo.printDeckInPlayDetails();
 		
 		Cluedo.allocateCards();
@@ -28,8 +30,11 @@ public class GameManager
 						
 		Cluedo.makeBoard();
 		
+		
 		Cluedo.gameTurns();
 
+		
+		
 		System.out.println("\n\nGAME OVER\n\n");
 
 	}
