@@ -1,6 +1,8 @@
 package ie.ucd.cluedo;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import static ie.ucd.cluedo.GameValues.*;
 
 public class AccusationManager 
@@ -13,6 +15,64 @@ public class AccusationManager
 	{
 		this.players = players;	
 	}
+	
+	
+	
+	// Accusation
+	public boolean simulateAccusation(int playerTurn, int numPlayers, boolean gameOver)
+	{
+		boolean winnerAlright;
+		int currentRoom = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
+				
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.printf("\nWhat suspect is in your accusation: " );
+		for (int i = 0; i < 6; i++)
+		{
+			System.out.println("[" + i + "]" + gameList.get(i));
+		}
+		
+		int suspectAccusation = scanner.nextInt();
+		
+		System.out.printf("\nWhat weapon is in your accusation: " );
+		for (int i = 6; i < 12; i++)
+		{
+			System.out.println("[" + i + "]" + gameList.get(i));
+		}
+		
+		int weaponAccusation = scanner.nextInt();
+		
+		// Room Accusation
+		int roomAccusation = currentRoom + NUM_SUSPECTS + NUM_WEAPONS - 1;
+		
+		
+		Accusation playerAccusation = new Accusation(suspectAccusation, weaponAccusation, roomAccusation);
+		
+		winnerAlright = checkEnvelope(playerAccusation, playerTurn);
+		
+		if (winnerAlright)
+		{
+			gameOver = true;
+		}
+		
+		else
+		{
+			players.remove(playerTurn);
+			
+			if (numPlayers == 1)
+			{
+				System.out.println("There is only one player left\n \n");
+				gameOver = true;
+			}
+		}
+		
+		return gameOver;
+
+	}
+	
+	
+	
 	
 	public boolean checkEnvelope(Accusation accusation, int playerTurn)
 	{

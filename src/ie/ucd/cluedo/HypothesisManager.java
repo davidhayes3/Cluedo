@@ -1,6 +1,7 @@
 package ie.ucd.cluedo;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static ie.ucd.cluedo.GameValues.*;
 
@@ -16,6 +17,41 @@ public class HypothesisManager
 		this.players = players;	
 	
 	}
+	
+	
+	
+	public void simulateHypothesis(int playerTurn)
+	{
+
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("What suspect is in your hypothesis: " );
+		for (int i = 0; i < 6; i++)
+		{
+			System.out.println("[" + i + "]" + gameList.get(i));
+		}
+		
+		int suspectHypothesis = scanner.nextInt();
+		
+		System.out.println("What weapon is in your hypothesis: " );
+		for (int i = 6; i < 12; i++)
+		{
+			System.out.println("[" + i + "]" + gameList.get(i));
+		}
+		
+		int weaponHypothesis = scanner.nextInt();
+		
+		// Room
+		int roomHypothesis = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber() + NUM_SUSPECTS + NUM_WEAPONS - 1;
+		Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
+		
+		checkPlayersCards(playerHypothesis, playerTurn);
+
+	}
+	
+	
+	
 	
 	public void checkPlayersCards(Hypothesis hypothesis, int playerTurn)
 	{
