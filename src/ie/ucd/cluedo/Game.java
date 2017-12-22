@@ -16,7 +16,6 @@ public class Game
 	ArrayList<Player> players;
 	Board gameBoard;
 	ArrayList<Card> cardDeck;
-	ArrayList<Card> fullCardDeck;
 	int numPlayers;
 	boolean gameOver;
 	int playerTurn;
@@ -28,7 +27,6 @@ public class Game
 	{
 		this.players = new ArrayList<Player>(MAX_NUM_PLAYERS);
 		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
-		this.fullCardDeck = new ArrayList<Card>(NUM_CARDS_IN_DECK);
 		
 	    this.playerTurn = 0;
 	    this.gameOver = false;
@@ -47,11 +45,20 @@ public class Game
 	@SuppressWarnings("resource")
 	public void getNumPlayers()
 	{	
+		// Ask user for input until no. of players between 2 and 6 is selected
+		System.out.println("Welcome to Cluedo. Please enter the number of players (2-6):");
+		
 		while (true)
 		{
-			// Ask user for input until no. of players between 2 and 6 is selected
-			System.out.println("Welcome to Cluedo. Please enter the number of players (2-6):");
+			
 			Scanner scanner = new Scanner(System.in);
+			
+			while (!scanner.hasNextInt())
+			{
+				scanner.next();
+				System.out.println("Please enter an integer value between 2 and 6 (inclusive):");
+			}
+			
 			this.numPlayers = scanner.nextInt();
 				
 			if (this.numPlayers >= MIN_NUM_PLAYERS && this.numPlayers <= MAX_NUM_PLAYERS)
@@ -60,7 +67,7 @@ public class Game
 			}
 			else
 			{
-				System.out.println("Please enter a number between 2 and 6");
+				System.out.println("Please enter an integer value between 2 and 6 (inclusive)");
 			}
 		}
 	}
@@ -76,6 +83,7 @@ public class Game
 	
 	
 	// Create suspect pawns
+	@SuppressWarnings("resource")
 	public void getCharacters()
 	{		
 		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
@@ -90,13 +98,22 @@ public class Game
 		
 		for (int i = 0; i < players.size(); i++)
 		{
+			
+			// Ask user for input until no. of players between 2 and 6 is selected
+			System.out.println("\nPlayer " + (i + 1) + ", please select your character:\n1. MISS SCARLET\n2. PROFESSOR PLUM\n"
+					+ "3. MRS. PEACOCK\n4. REVEREND MR. GREEN\n5. COLONEL MUSTARD\n6. MRS. WHITE\n");
+			
 			while (true)
 			{
-				// Ask user for input until no. of players between 2 and 6 is selected
-				System.out.println("\nPlayer " + (i + 1) + ", please select your character:\n1. MISS SCARLET\n2. PROFESSOR PLUM\n"
-						+ "3. MRS. PEACOCK\n4. REVEREND MR. GREEN\n5. COLONEL MUSTARD\n6. MRS. WHITE\n");
-				@SuppressWarnings("resource")
+				
 				Scanner scanner = new Scanner(System.in);
+				
+				while (!scanner.hasNextInt())
+				{
+					scanner.next();
+					System.out.println("Please enter an integer value between 1 and 6 (inclusive): ");
+				}
+				
 				int playerChoice = scanner.nextInt();
 				
 				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
@@ -107,7 +124,7 @@ public class Game
 				}
 				else
 				{
-					System.out.println("Please enter a number between 1 and " + this.players.size());
+					System.out.println("Please enter an integer value between 1 and 6 (inclusive): ");
 				}
 			}
 		}
@@ -118,6 +135,43 @@ public class Game
 	{
 		 this.gameBoard = new Board(this.players);
 	}
+	
+	// Creates deck of cards with all cards except murder cards
+	public void createDeck()
+	{
+		for (int i = 0; i < NUM_CARDS_IN_DECK; i++)
+		{
+			if (i == murderSuspectIndex || i == murderWeaponIndex || i == murderRoomIndex)
+			{
+				continue;
+			}
+			else
+			{
+				this.cardDeck.add(new Card(i));
+			}
+		}
+	}
+	
+	// Allocates the deck of cards created among all players, giving one at a time to each player starting with player 1, player 2...
+	public void allocateCards() 
+	{
+		int playerNumber = 0;
+		
+		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
+		{
+			this.players.get(playerNumber++).giveCard(this.cardDeck.get(i));
+			
+			if (playerNumber == players.size())
+			{
+				playerNumber = 0;
+			}
+		}
+		for(int j = 0; j < numPlayers; j++)
+		{
+			this.players.get(j).giveHand(new PlayerHand(players.get(j)));
+		}
+	}
+		
 	
 	
 	
@@ -623,45 +677,6 @@ public class Game
 
 	
 	
-	// Creates deck of cards with all cards except murder cards
-	public void createDeck()
-	{
-		for (int i = 0; i < NUM_CARDS_IN_DECK; i++)
-		{
-			if (i == murderSuspectIndex || i == murderWeaponIndex || i == murderRoomIndex)
-			{
-				continue;
-			}
-			else
-			{
-				this.cardDeck.add(new Card(i));
-			}
-		}
-	}
-	
-	
-	
-	
-	
-	// Allocates the deck of cards created among all players, giving one at a time to each player starting with player 1, player 2...
-	public void allocateCards() 
-	{
-		int playerNumber = 0;
-		
-		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
-		{
-			this.players.get(playerNumber++).giveCard(this.cardDeck.get(i));
-			
-			if (playerNumber == players.size())
-			{
-				playerNumber = 0;
-			}
-		}
-		for(int j = 0; j < numPlayers; j++)
-		{
-			this.players.get(j).giveHand(new PlayerHand(players.get(j)));
-		}
-	}
 	
 	
 	// Game Logic: hypotheses, accusations, etc.
@@ -677,7 +692,7 @@ public class Game
 		System.out.println("What suspect is in your hypothesis: " );
 		for (int i = 0; i < 6; i++)
 		{
-			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+			System.out.println("[" + i + "]" + gameList.get(i));
 		}
 		
 		int suspectHypothesis = scanner.nextInt();
@@ -685,7 +700,7 @@ public class Game
 		System.out.println("What weapon is in your hypothesis: " );
 		for (int i = 6; i < 12; i++)
 		{
-			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+			System.out.println("[" + i + "]" + gameList.get(i));
 		}
 		
 		int weaponHypothesis = scanner.nextInt();
@@ -711,7 +726,7 @@ public class Game
 		System.out.printf("\nWhat suspect is in your accusation: " );
 		for (int i = 0; i < 6; i++)
 		{
-			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+			System.out.println("[" + i + "]" + gameList.get(i));
 		}
 		
 		int suspectAccusation = scanner.nextInt();
@@ -719,7 +734,7 @@ public class Game
 		System.out.printf("\nWhat weapon is in your accusation: " );
 		for (int i = 6; i < 12; i++)
 		{
-			System.out.println("[" + i + "]" + fullCardDeck.get(i).getName());
+			System.out.println("[" + i + "]" + gameList.get(i));
 		}
 		
 		int weaponAccusation = scanner.nextInt();
@@ -791,15 +806,6 @@ public class Game
 		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
 		{
 			System.out.printf("Type: %s, Name: %s\n", cardDeck.get(i).getType(), cardDeck.get(i).getName());
-		}
-	}
-	
-	public void createFullDeck()
-	{
-		for (int i = 0; i < NUM_CARDS_IN_DECK; i++)
-		{
-
-				this.fullCardDeck.add(new Card(i));
 		}
 	}
 	

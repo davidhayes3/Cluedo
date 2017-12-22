@@ -22,8 +22,6 @@ public class GameManager
 		
 		Cluedo.createDeck();
 		
-		Cluedo.createFullDeck();
-		
 		Cluedo.allocateCards();
 						
 		Cluedo.makeBoard();

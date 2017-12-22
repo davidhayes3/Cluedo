@@ -32,8 +32,11 @@ public class Board
 
 		this.weaponPawns = new ArrayList<WeaponPawn>();
 		this.playerPawns = new ArrayList<SuspectPawn>();
+		this.boardSlots = new Slot[BOARD_WIDTH][BOARD_HEIGHT];
 		this.roomSlots = new ArrayList<RoomSlot>();
 		this.doorSlots = new ArrayList<DoorSlot>();
+		
+		makeSlots();
 		
 		gui();
 		
@@ -41,16 +44,12 @@ public class Board
 		
 	}
 
-	// Method which creates GUI
-	public void gui() 
+	
+	public void makeSlots() 
 	{
-			
-		// Initialize frame for board
-			
-		JFrame Board = new JFrame("Cluedo");
-		
+
 		// Create Board Slots
-			
+		
 		int[][] slotPositions = new int[][]
 		{
 			{ 3, 0, 4, 4, 4, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 4, 4, 4, 0, 3 },
@@ -78,7 +77,7 @@ public class Board
 			{ 0, 0, 4, 4, 4, 0, 0, 1, 1, 0, 0, 4, 4, 0, 0, 1, 1, 0, 0, 4, 4, 0, 0, 0 },
 			{ 3, 0, 4, 4, 4, 0, 0, 1, 1, 0, 4, 4, 4, 4, 0, 1, 1, 0, 4, 4, 4, 4, 0, 3 }
 		};
-		
+	
 		int[][] roomPositions = new int[][]
 		{
 			{ 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 },
@@ -106,8 +105,6 @@ public class Board
 			{ 5, 5, 5, 5, 5, 5, 5, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 7, 7, 7, 7, 7, 7, 7 },
 			{ 5, 5, 5, 5, 5, 5, 5, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 7, 7, 7, 7, 7, 7, 7 }
 		};
-
-		boardSlots = new Slot[BOARD_WIDTH][BOARD_HEIGHT];
 		
 		for (int row = 0; row < BOARD_HEIGHT; row++)
 		{
@@ -120,36 +117,52 @@ public class Board
 					
 					case 0:		break;
 						   
-					case 1: 	boardSlots[row][col] = new BoardSlot(row, col, new BoardButton(row, col));
-								Board.add(boardSlots[row][col].getButton());
+					case 1: 	this.boardSlots[row][col] = new BoardSlot(row, col, new BoardButton(row, col));
 								break;
 						
-					case 2:		boardSlots[row][col] = new DoorSlot(row, col, roomPositions[row][col], new DoorButton(row, col));
-								this.doorSlots.add((DoorSlot) boardSlots[row][col]);
-								Board.add(boardSlots[row][col].getButton());
+					case 2:		this.boardSlots[row][col] = new DoorSlot(row, col, roomPositions[row][col], new DoorButton(row, col));
+								this.doorSlots.add((DoorSlot) this.boardSlots[row][col]);
 								break;
 								
-					case 3: 	boardSlots[row][col] = new SecretSlot(row, col, roomPositions[row][col], new SecretButton(row, col));
-								Board.add(boardSlots[row][col].getButton());
+					case 3: 	this.boardSlots[row][col] = new SecretSlot(row, col, roomPositions[row][col], new SecretButton(row, col));
 								break;
 								
-					case 4:		boardSlots[row][col] = new RoomSlot(row, col, roomPositions[row][col], new RoomButton(row, col));
-								this.roomSlots.add((RoomSlot) boardSlots[row][col]);
-								Board.add(boardSlots[row][col].getButton());
+					case 4:		this.boardSlots[row][col] = new RoomSlot(row, col, roomPositions[row][col], new RoomButton(row, col));
+								this.roomSlots.add((RoomSlot) this.boardSlots[row][col]);
 								break;
 								
 					default: 	System.out.println("Error reading slot matrix");
 								break;
 				
+				}		
+			}
+		}	
+	}
+	
+	
+	// Method which creates GUI
+	public void gui() 
+	{
+			
+		// Initialize frame for board
+			
+		JFrame Board = new JFrame("Cluedo");
+		
+
+		for (int row = 0; row < BOARD_HEIGHT; row++)
+		{
+			
+			for (int col = 0; col < BOARD_WIDTH; col++)
+			{
+				
+				if (boardSlots[row][col] != null)
+				{	
+					Board.add(this.boardSlots[row][col].getButton());
 				}
 					
 			}
 		
-		}	
-		
-		
-		
-		
+		}		
 	
 		// Get background image for JFrame
 			
