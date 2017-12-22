@@ -10,7 +10,8 @@ public class Player
 	private ArrayList<Card> playerCards = new ArrayList<Card>();
 	private SuspectPawn playerPawn;
 	private Notebook playerNotebook;
-
+	public PlayerHand playerHand;
+	
 	// Player constructor
 	// Arguments: player number, suspect pawn allocated to player, notebook assigned to player, cards assigned to player later
 	public Player(int playerNumber, Notebook playerNotebook)
@@ -53,5 +54,17 @@ public class Player
 	public Notebook getNotebook()
 	{
 		return this.playerNotebook;
+	}
+	
+	public PlayerHand giveHand(PlayerHand playerHand)
+	{	
+		this.playerHand = playerHand;
+		return playerHand;	
+	}
+	
+	public PlayerHand getPlayerHand()
+	{
+		return this.playerHand;
+		
 	}
 }

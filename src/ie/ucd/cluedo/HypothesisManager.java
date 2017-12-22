@@ -73,15 +73,15 @@ public class HypothesisManager
 	{
 		
 		// Two entries for accuser
-		accuser.getNotebook().makeEntry(" I formulated the hypothesis " + gameList.get(suspectHypothesis) + 
+		accuser.getNotebook().makeEntry("I formulated the hypothesis " + gameList.get(suspectHypothesis) + 
 								 ", " + gameList.get(weaponHypothesis) + ", " + gameList.get(roomHypothesis) + ".");
-		accuser.getNotebook().makeEntry(refuter.getSuspectPawn().getName() + " refuted the hypothesis with the card " + cardShown.getName());
+		accuser.getNotebook().makeEntry(refuter.getSuspectPawn().getName() + " refuted the hypothesis with the card " + cardShown.getName()+ ".");
 		
 		// Two entries for refuter
 		refuter.getNotebook().makeEntry(accuser.getSuspectPawn().getName() + " formulated the hypothesis " + gameList.get(suspectHypothesis) + 
 				 ", " + gameList.get(weaponHypothesis) + ", " + gameList.get(roomHypothesis) + ".");
 		
-		refuter.getNotebook().makeEntry("I refuted " + accuser.getSuspectPawn().getName() + "'s hypothesis with the card " + cardShown.getName());
+		refuter.getNotebook().makeEntry("I refuted " + accuser.getSuspectPawn().getName() + "'s hypothesis with the card " + cardShown.getName()+ ".");
 		
 		for (int i = 0; i < players.size(); i++)
 		{
@@ -93,11 +93,10 @@ public class HypothesisManager
 			
 			else
 			{
-				players.get(i).getNotebook().makeEntry(accuser.getSuspectPawn().getName() + "made the hypothesis " + gameList.get(suspectHypothesis) 
-				+ ", " + gameList.get(weaponHypothesis) + ", " + gameList.get(roomHypothesis) + ". "+ refuter.getSuspectPawn().getName() 
-				+ " refuted the hyothesis.");
+				players.get(i).getNotebook().makeEntry(accuser.getSuspectPawn().getName() + " made the hypothesis " + gameList.get(suspectHypothesis) 
+				+ ", " + gameList.get(weaponHypothesis) + ", " + gameList.get(roomHypothesis) + ".");
 				
-				players.get(i).getNotebook().makeEntry(refuter.getSuspectPawn().getName() + "refuted the hypothesis showing the card" + cardShown.getName());
+				players.get(i).getNotebook().makeEntry(refuter.getSuspectPawn().getName() + " refuted the hypothesis.");
 			}				
 		}
 	}

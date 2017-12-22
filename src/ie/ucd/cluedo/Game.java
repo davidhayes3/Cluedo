@@ -194,11 +194,10 @@ public class Game
 			case "r":	playerMovement();
 						return true;
 						
-			case "c":	//showPlayerCards();
+			case "c":	showCards();
 						return hasRolled;
 			
-			case "n":	// getNotebookContents(playerTurn);
-						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	showNotebook();
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -224,7 +223,7 @@ public class Game
 			case "r":	playerMovement();
 						return true;
 						
-			case "c":	//showPlayerCards();
+			case "c":	showCards();
 						return hasRolled;
 		
 			case "h":	hypothesis();
@@ -233,8 +232,7 @@ public class Game
 			case "a":	accusation();
 						return hasRolled;
 			
-			case "n":	// getNotebookContents(playerTurn);
-						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	showNotebook();
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -257,11 +255,10 @@ public class Game
 		switch (playerChoice)
 		{
 			
-			case "c":	//showPlayerCards();
+			case "c":	showCards();
 						return hasRolled;
 		
-			case "n":	// getNotebookContents(playerTurn);
-						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	showNotebook();
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -287,14 +284,13 @@ public class Game
 			case "h":	hypothesis();
 						return hasRolled;
 						
-			case "c":	//showPlayerCards();
+			case "c":	showCards();
 						return hasRolled;
 		
 			case "a":	accusation();
 						return hasRolled;
 			
-			case "n":	// getNotebookContents(playerTurn);
-						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	showNotebook();
 						return hasRolled;			
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -661,6 +657,10 @@ public class Game
 				playerNumber = 0;
 			}
 		}
+		for(int j = 0; j < numPlayers; j++)
+		{
+			this.players.get(j).giveHand(new PlayerHand(players.get(j)));
+		}
 	}
 	
 	
@@ -802,6 +802,16 @@ public class Game
 				this.fullCardDeck.add(new Card(i));
 		}
 	}
+	
+	public void showCards()
+	{
+		players.get(this.playerTurn).getPlayerHand().showHand();
 
+	}
+	
+	public void showNotebook()
+	{
+		players.get(playerTurn).getNotebook().showNoteBook();
+	}
 
 }

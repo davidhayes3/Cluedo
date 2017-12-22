@@ -67,7 +67,7 @@ public class AccusationManager
 			else
 			{
 				players.get(i).getNotebook().makeEntry(accuser.getSuspectPawn().getName() + " made an accusation with the cards " 
-						+ gameList.get(suspectAccusation) + gameList.get(weaponAccusation) + gameList.get(roomAccusation));
+						+ gameList.get(suspectAccusation) + "," + gameList.get(weaponAccusation) + "," + gameList.get(roomAccusation) + ".");
 			}
 			
 		}
