@@ -32,8 +32,9 @@ public class Game
 		
 	    this.playerTurn = 0;
 	    this.gameOver = false;
+		
 		this.hypothesisManager = new HypothesisManager(this.players);
-		this.accusationManager = new AccusationManager();
+		this.accusationManager = new AccusationManager(this.players);
 	}
 	
 	
@@ -185,15 +186,19 @@ public class Game
 	{
 
 		Scanner scanner = new Scanner(System.in);
-		System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Notebook [n]\nFinish Move [f]\nOption: " );
+		System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: " );
 		String playerChoice = scanner.nextLine();
 		
 		switch (playerChoice)
 		{
 			case "r":	playerMovement();
 						return true;
+						
+			case "c":	//showPlayerCards();
+						return hasRolled;
 			
-			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	// getNotebookContents(playerTurn);
+						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -218,6 +223,9 @@ public class Game
 		{
 			case "r":	playerMovement();
 						return true;
+						
+			case "c":	//showPlayerCards();
+						return hasRolled;
 		
 			case "h":	hypothesis();
 						return hasRolled;
@@ -225,7 +233,8 @@ public class Game
 			case "a":	accusation();
 						return hasRolled;
 			
-			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	// getNotebookContents(playerTurn);
+						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -248,8 +257,12 @@ public class Game
 		switch (playerChoice)
 		{
 			
-			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
-						return hasRolled;			
+			case "c":	//showPlayerCards();
+						return hasRolled;
+		
+			case "n":	// getNotebookContents(playerTurn);
+						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
 						return false;
@@ -273,12 +286,15 @@ public class Game
 		{
 			case "h":	hypothesis();
 						return hasRolled;
+						
+			case "c":	//showPlayerCards();
+						return hasRolled;
 		
 			case "a":	accusation();
-						this.gameOver = true;
 						return hasRolled;
 			
-			case "n":	System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
+			case "n":	// getNotebookContents(playerTurn);
+						System.out.println("Your Notebook:\n" + players.get(playerTurn).getNotebook().getContents());
 						return hasRolled;			
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -655,7 +671,7 @@ public class Game
 	@SuppressWarnings("resource")
 	public void hypothesis()
 	{
-		
+
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.println("What suspect is in your hypothesis: " );
@@ -675,8 +691,7 @@ public class Game
 		int weaponHypothesis = scanner.nextInt();
 		
 		// Room
-		int roomHypothesis = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
-
+		int roomHypothesis = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber() + NUM_SUSPECTS + NUM_WEAPONS - 1;
 		Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
 		
 		hypothesisManager.checkPlayersCards(playerHypothesis, playerTurn);
@@ -710,11 +725,12 @@ public class Game
 		int weaponAccusation = scanner.nextInt();
 		
 		// Room Accusation
-		int roomAccusation = currentRoom;
-
+		int roomAccusation = currentRoom + NUM_SUSPECTS + NUM_WEAPONS - 1;
+		
+		
 		Accusation playerAccusation = new Accusation(suspectAccusation, weaponAccusation, roomAccusation);
 		
-		winnerAlright = accusationManager.checkEnvelope(playerAccusation);
+		winnerAlright = accusationManager.checkEnvelope(playerAccusation, this.playerTurn);
 		
 		if (winnerAlright)
 		{
@@ -775,24 +791,6 @@ public class Game
 		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
 		{
 			System.out.printf("Type: %s, Name: %s\n", cardDeck.get(i).getType(), cardDeck.get(i).getName());
-		}
-	}
-	
-	// Print cards allocated to each player
-	public void printCardAllocation()
-	{
-		System.out.printf("\n\nCARD ALLOCATION:\n\n");
-	
-		for (int i = 0; i < players.size(); i++)
-		{
-			System.out.printf("Player %d Cards:\n", players.get(i).getPlayerNumber());
-		
-			for (int n = 0; n < players.get(i).getCards().size(); n++)
-			{
-				System.out.println(players.get(i).getCards().get(n).getName());
-			}
-			
-			System.out.println("\n");
 		}
 	}
 	
