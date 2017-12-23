@@ -14,9 +14,9 @@ public class GameManager
 		
 		Cluedo.getNumPlayers();
 			
-		Cluedo.printMurderDetails();
-			
 		Cluedo.makePlayers();
+		
+		Cluedo.makeBoard();
 		
 		Cluedo.getCharacters();
 		
@@ -24,7 +24,7 @@ public class GameManager
 		
 		Cluedo.allocateCards();
 						
-		Cluedo.makeBoard();
+
 		
 		Cluedo.gameTurns();
 

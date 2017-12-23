@@ -10,11 +10,13 @@ public class HypothesisManager
 {
 	
 	ArrayList<Player> players;
+	Board gameBoard;
 	
-	public HypothesisManager(ArrayList<Player> players)
+	public HypothesisManager(ArrayList<Player> players, Board gameBoard)
 	{
 		
 		this.players = players;	
+		this.gameBoard = gameBoard;
 	
 	}
 	
@@ -44,12 +46,106 @@ public class HypothesisManager
 		
 		// Room
 		int roomHypothesis = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber() + NUM_SUSPECTS + NUM_WEAPONS - 1;
+		
 		Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
 		
 		checkPlayersCards(playerHypothesis, playerTurn);
+		
+		moveSuspectPawn(suspectHypothesis, roomHypothesis);
 
 	}
 	
+	
+	public void moveSuspectPawn(int suspectHypothesis, int roomHypothesis)
+	{
+		
+		Slot roomSlot = getRoomSlot(roomHypothesis, suspectHypothesis);
+		
+		for (int i = 0; i < this.players.size(); i++)
+		{
+			if (this.players.get(i).getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
+			{
+				players.get(i).getSuspectPawn().movePosition(roomSlot);
+				return;
+			}
+		}
+		
+		this.gameBoard.getSuspectPawns().get(suspectHypothesis).movePosition(roomSlot);
+	}
+
+	private Slot getRoomSlot(int roomHypothesis, int suspectHypothesis)
+	{
+		boolean slotOccupied;
+		
+		ArrayList<RoomSlot> roomSlots = this.gameBoard.getRoomSlots();
+		
+		for (RoomSlot rs: roomSlots)
+		{
+			slotOccupied = false;
+			
+			if (rs.getRoomNumber() == roomHypothesis - 11)
+			{
+				for (Player p: this.players)
+				{
+					if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					{
+						slotOccupied = true;
+						break;
+					}
+				}
+				
+				for (int i = 0; i < NUM_SUSPECTS; i++)
+				{
+					if (this.gameBoard.getSuspectPawns().get(i).getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					{
+						slotOccupied = true;
+						break;
+					}
+				}
+				
+				if (!slotOccupied)
+				{
+					return this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/*private Slot getRoomSlot(int roomNumber)
+	{
+
+		ArrayList<RoomSlot> roomSlots = this.gameBoard.getRoomSlots();
+		
+		for (RoomSlot rs: roomSlots)
+		{
+
+			if (rs.getRoomNumber() == roomNumber - 11)
+			{
+				for (int i = 0; i < NUM_SUSPECTS; i++)
+				{
+					if (this.gameBoard.getSuspectPawns().get(i).getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					{
+						break;
+					}
+				}
+					
+				for (Player p: this.players)
+				{
+					if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					{
+						break;
+					}
+				}
+			}
+				
+			return this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
+			
+		}
+		
+		return null;
+	}*/
 	
 	
 	

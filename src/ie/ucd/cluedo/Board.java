@@ -3,9 +3,12 @@ package ie.ucd.cluedo;
 
 import static ie.ucd.cluedo.GameValues.*;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -21,17 +24,17 @@ public class Board
 	//Board Attributes
 	
 	ArrayList<WeaponPawn> weaponPawns;
-	ArrayList<SuspectPawn> playerPawns;
+	ArrayList<SuspectPawn> suspectPawns;
 	Slot[][] boardSlots;		
 	ArrayList<RoomSlot> roomSlots;
 	ArrayList<DoorSlot> doorSlots;
 		
 	// Board Constructor 
-	public Board(ArrayList<Player> players) 
+	public Board() 
 	{	
 
 		this.weaponPawns = new ArrayList<WeaponPawn>();
-		this.playerPawns = new ArrayList<SuspectPawn>();
+		this.suspectPawns = new ArrayList<SuspectPawn>();
 		this.boardSlots = new Slot[BOARD_WIDTH][BOARD_HEIGHT];
 		this.roomSlots = new ArrayList<RoomSlot>();
 		this.doorSlots = new ArrayList<DoorSlot>();
@@ -40,7 +43,7 @@ public class Board
 		
 		gui();
 		
-		positionSuspectPawns(players);
+		makeSuspectPawns();
 		
 	}
 
@@ -189,16 +192,24 @@ public class Board
 
 	
 	// Place pawns at starting positions
-	public void positionSuspectPawns(ArrayList<Player> players)
+	public void makeSuspectPawns()
 	{
+		
 		int[] x0 = {9, 14, 23, 23, 15, 0};
 		int[] y0 = {0, 0, 5, 12, 23, 16};
+		
+		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
 				
-		for (int i = 0; i < players.size(); i++)
+		for (int i = 1; i <= NUM_SUSPECTS; i++)
 		{
-			playerPawns.add(players.get(i).getSuspectPawn());
-			players.get(i).getSuspectPawn().movePosition(this.boardSlots[y0[i]][x0[i]]);
+			this.suspectPawns.add(new SuspectPawn(i, colors[i-1]));
+			this.suspectPawns.get(i-1).movePosition(this.boardSlots[y0[i-1]][x0[i-1]]);
 		}
+	}
+	
+	public ArrayList<SuspectPawn> getSuspectPawns()
+	{
+		return this.suspectPawns;
 	}
 	
 	public Slot[][] getSlots()

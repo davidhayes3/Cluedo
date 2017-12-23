@@ -25,13 +25,13 @@ public class Game
 	// Game Constructor
 	public Game()
 	{
+		
 		this.players = new ArrayList<Player>(MAX_NUM_PLAYERS);
 		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 		
 	    this.playerTurn = 0;
 	    this.gameOver = false;
-		
-		
+			
 	}
 	
 	
@@ -80,13 +80,18 @@ public class Game
 		}
 	}
 	
+	// Make board
+	public void makeBoard()
+	{
+		 this.gameBoard = new Board();
+	}
+	
 	
 	// Create suspect pawns
 	@SuppressWarnings("resource")
 	public void getCharacters()
 	{		
-		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
-		
+
 		Map<Color, String> colorMap = new HashMap<Color, String>();
 		colorMap.put(Color.RED, "Red");  
 	    colorMap.put(Color.BLUE, "Blue");
@@ -95,7 +100,7 @@ public class Game
 	    colorMap.put(Color.WHITE, "White");
 	    colorMap.put(Color.PINK, "Pink");
 		
-		for (int i = 0; i < players.size(); i++)
+		for (int i = 0; i < this.players.size(); i++)
 		{
 			
 			// Ask user for input until no. of players between 2 and 6 is selected
@@ -117,8 +122,8 @@ public class Game
 				
 				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
 				{
-					this.players.get(i).giveSuspectPawn(new SuspectPawn(playerChoice, colors[playerChoice-1]));
-					System.out.println("Player " + (i+1) + " is " + this.players.get(i).getSuspectPawn().getName() + " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
+					this.players.get(i).giveSuspectPawn(this.gameBoard.getSuspectPawns().get(playerChoice - 1));
+					System.out.println("Player " + (i + 1) + " is " + this.players.get(i).getSuspectPawn().getName() + " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
 					break;
 				}
 				else
@@ -128,12 +133,7 @@ public class Game
 			}
 		}
 	}
-	
-	// Make board
-	public void makeBoard()
-	{
-		 this.gameBoard = new Board(this.players);
-	}
+
 	
 	// Creates deck of cards with all cards except murder cards
 	public void createDeck()
@@ -170,13 +170,11 @@ public class Game
 			this.players.get(j).giveHand(new PlayerHand(players.get(j)));
 		}
 	}
-		
-	
-	
 	
 	// Turn for a player
 	public void gameTurns()
 	{
+		
 		Map<Color, String> colorMap = new HashMap<Color, String>();
 		colorMap.put(Color.RED, "Red");  
 	    colorMap.put(Color.BLUE, "Blue");

@@ -4,14 +4,16 @@ import java.awt.Color;
 
 public class SuspectPawn extends Pawn  
 {
-	Slot pawnPosition;
+	public Slot pawnPosition;
 	public BoardButton suspectButton;
 	public Color pawnColor;
+	int pawnIndex;
 	
 	// SuspectPawn constructor
 	public SuspectPawn(int pawnIndex, Color pawnColor)
 	{
 		super(pawnIndex);
+		this.pawnIndex = pawnIndex;
 		this.pawnColor = pawnColor;
 	}
 	
@@ -37,4 +39,10 @@ public class SuspectPawn extends Pawn
 	{
 		return this.pawnColor;	
 	}
+	
+	public int getPawnIndex()
+	{
+		return this.pawnIndex;
+	}
+	
 }

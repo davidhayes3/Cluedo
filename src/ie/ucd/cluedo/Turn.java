@@ -34,6 +34,7 @@ public class Turn
 		
 		switch (playerChoice)
 		{
+			
 			case "r":	MoveChoice move = new MoveChoice(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
 						move.chooseMove();
 						return true;
@@ -49,6 +50,7 @@ public class Turn
 			
 			default:	System.out.println("Please enter a valid option");
 						return hasRolled;
+		
 		}
 	}
 	
@@ -64,6 +66,7 @@ public class Turn
 		
 		switch (playerChoice)
 		{
+			
 			case "r":	move = new MoveChoice(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
 						move.chooseMove();
 						return true;
@@ -71,14 +74,16 @@ public class Turn
 			case "c":	this.players.get(this.playerTurn).getPlayerHand().showHand();
 						return hasRolled;
 		
-			case "h":	hypothesisManager = new HypothesisManager(this.players);
+			case "h":	hypothesisManager = new HypothesisManager(this.players, this.gameBoard);
 						hypothesisManager.simulateHypothesis(this.playerTurn);
 						return hasRolled;
 		
 			case "a":	accusationManager = new AccusationManager(this.players);
 						this.gameOver = accusationManager.simulateAccusation(this.playerTurn, this.numPlayers, this.gameOver);
+						
 						this.numPlayers--;
 						this.playerTurn = this.playerTurn % this.numPlayers;
+						
 						return hasRolled;
 			
 			case "n":	this.players.get(playerTurn).getNotebook().showNoteBook();
@@ -89,6 +94,7 @@ public class Turn
 			
 			default:	System.out.println("Please enter a valid option");
 						return hasRolled;
+		
 		}
 	}
 	
@@ -130,7 +136,7 @@ public class Turn
 		
 		switch (playerChoice)
 		{
-			case "h":	hypothesisManager = new HypothesisManager(this.players);
+			case "h":	hypothesisManager = new HypothesisManager(this.players, this.gameBoard);
 						hypothesisManager.simulateHypothesis(this.playerTurn);
 						return hasRolled;
 						
@@ -139,8 +145,10 @@ public class Turn
 		
 			case "a":	accusationManager = new AccusationManager(this.players);
 						this.gameOver = accusationManager.simulateAccusation(this.playerTurn, this.numPlayers, this.gameOver);
+						
 						this.numPlayers--;
 						this.playerTurn = this.playerTurn % this.numPlayers;
+						
 						return hasRolled;
 			
 			case "n":	this.players.get(playerTurn).getNotebook().showNoteBook();
