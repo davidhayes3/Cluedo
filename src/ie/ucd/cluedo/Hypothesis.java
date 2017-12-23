@@ -1,29 +1,49 @@
+/***************************************************************/ 
+/* Hypothesis Class
+/* 
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
-public class Hypothesis {
 
+public class Hypothesis 
+{
 	
+	// Attributes
 	private int suspectHypothesis;
 	private int weaponHypothesis;
 	private int roomHypothesis;
 	
-	//Need to change to get room player is in
-	public Hypothesis(int suspectHypothesis, int weaponHypothesis, int roomHypothesis){
+	
+	// Constructor
+	public Hypothesis(int suspectHypothesis, int weaponHypothesis, int roomHypothesis)
+	{
 		this.suspectHypothesis = suspectHypothesis;
 		this.weaponHypothesis = weaponHypothesis;
-		this.roomHypothesis = roomHypothesis;
-		
+		this.roomHypothesis = roomHypothesis;	
 	}
 	
-	public int getSuspect(){
-		return suspectHypothesis;
+	
+	/* Public Methods */
+	
+	
+	// getSuspect() method
+	public int getSuspect()
+	{
+		return this.suspectHypothesis;
 	}
 	
-	public int getWeapon(){
-		return weaponHypothesis;
+	
+	// getWeapon() method
+	public int getWeapon()
+	{
+		return this.weaponHypothesis;
 	}
 
-	public int getRoom(){
+	
+	// getRoom() method
+	public int getRoom()
+	{
 		return roomHypothesis;
 	}
 

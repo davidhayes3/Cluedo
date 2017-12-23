@@ -1,21 +1,37 @@
+/***************************************************************/
+/* BoardSlot Class
+/* 
+/* Represents a corridor slot
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 public class BoardSlot extends Slot
 {
+	
+	// Attributes
 	BoardButton boardButton;
 	
-	public BoardSlot(int x, int y, BoardButton boardButton)
+	
+	// Constructor
+	public BoardSlot(int row, int col, BoardButton boardButton)
 	{
-		super(x, y);
+		super(row, col);
 		
 		this.boardButton = boardButton;
 	}
 	
+	
+	/* Public Methods */
+	
+	
+	// getButton() method
 	public BoardButton getButton()
 	{
 		return this.boardButton;
 	}
 
+	// Overrides abstract method, room number is 0 to make for simpler logic later
 	@Override
 	public int getRoomNumber() 
 	{

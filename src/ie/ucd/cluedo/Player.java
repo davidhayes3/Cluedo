@@ -1,3 +1,9 @@
+/***************************************************************/
+/* Player Class
+/* 
+/* Represents a player of the Cluedo game
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import java.util.ArrayList;
@@ -5,66 +11,77 @@ import java.util.ArrayList;
 public class Player 
 {
 
-	// Attributes of player 
+	// Attributes 
 	private int playerNumber;
 	private ArrayList<Card> playerCards = new ArrayList<Card>();
 	private SuspectPawn playerPawn;
 	private Notebook playerNotebook;
 	public PlayerHand playerHand;
 	
-	// Player constructor
-	// Arguments: player number, suspect pawn allocated to player, notebook assigned to player, cards assigned to player later
+	
+	// Constructor, playerNumber and playerNotebook initialized
 	public Player(int playerNumber, Notebook playerNotebook)
 	{
 		this.playerNumber = playerNumber;
 		this.playerNotebook = playerNotebook;
 	}
 	
-	// Returns player's number
+	
+	/* Public Methods */
+	
+	
+	// getPlayerNumber() method
 	public int getPlayerNumber()
 	{
 		return this.playerNumber;
 	}
 	
-	// Allocates a single card to a player
+	
+	// giveCard() method, allocates a single card to a player
 	public void giveCard(Card card)
 	{
 		this.playerCards.add(card);
 	}
 	
-	// Returns the list of cards held by a player. Used to refute hypotheses
+	
+	// getCards() method
 	public ArrayList<Card> getCards()
 	{
 		return this.playerCards;
 	}
 	
-	// Assigns suspect pawn to player
+	
+	// giveSuspectPawn() method
 	public void giveSuspectPawn(SuspectPawn playerPawn)
 	{
 		this.playerPawn = playerPawn;
 	}
 	
-	// Returns suspect pawn assigned to player
+	
+	// getSuspectPawn() method
 	public SuspectPawn getSuspectPawn()
 	{
 		return this.playerPawn;
 	}
 	
-	// Returns notebook assigned to player
+	
+	// getNotebook() method
 	public Notebook getNotebook()
 	{
 		return this.playerNotebook;
 	}
 	
-	public PlayerHand giveHand(PlayerHand playerHand)
+	
+	// giveHand() method
+	public void giveHand(PlayerHand playerHand)
 	{	
 		this.playerHand = playerHand;
-		return playerHand;	
 	}
 	
-	public PlayerHand getPlayerHand()
+	
+	// getPlayerHand() method
+	public PlayerHand getHand()
 	{
 		return this.playerHand;
-		
 	}
 }

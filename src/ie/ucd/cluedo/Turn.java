@@ -42,10 +42,10 @@ public class Turn
 						move.chooseMove(players, this.playerTurn, gameBoard);
 						return true;
 						
-			case "c":	players.get(this.playerTurn).getPlayerHand().showHand();
+			case "c":	players.get(this.playerTurn).getHand().showHand();
 						return hasRolled;
 			
-			case "n":	players.get(this.playerTurn).getNotebook().showNoteBook();
+			case "n":	players.get(this.playerTurn).getNotebook().showNotebook();
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();
@@ -89,10 +89,10 @@ public class Turn
 						
 						return hasRolled;
 						
-			case "c":	players.get(this.playerTurn).getPlayerHand().showHand();
+			case "c":	players.get(this.playerTurn).getHand().showHand();
 						return hasRolled;
 			
-			case "n":	players.get(playerTurn).getNotebook().showNoteBook();
+			case "n":	players.get(playerTurn).getNotebook().showNotebook();
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();
@@ -114,10 +114,10 @@ public class Turn
 		switch (playerChoice)
 		{
 			
-			case "c":	players.get(this.playerTurn).getPlayerHand().showHand();
+			case "c":	players.get(this.playerTurn).getHand().showHand();
 						return hasRolled;
 		
-			case "n":	players.get(playerTurn).getNotebook().showNoteBook();
+			case "n":	players.get(playerTurn).getNotebook().showNotebook();
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();
@@ -153,10 +153,10 @@ public class Turn
 						
 						return hasRolled;
 						
-			case "c":	players.get(this.playerTurn).getPlayerHand().showHand();
+			case "c":	players.get(this.playerTurn).getHand().showHand();
 						return hasRolled;
 			
-			case "n":	players.get(playerTurn).getNotebook().showNoteBook();
+			case "n":	players.get(playerTurn).getNotebook().showNotebook();
 						return hasRolled;			
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();

@@ -147,6 +147,7 @@ public class AccusationManager
 	private void moveSuspectPawn(ArrayList <Player> players, Board gameBoard, int suspectAccusation, int roomAccusation)
 	{
 		
+		// Checks if any of the players already have the suspect of the accusation, and if it's already in that room
 		for (int i = 0; i < players.size(); i++)
 		{
 			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectAccusation)
@@ -158,7 +159,7 @@ public class AccusationManager
 			}
 		}
 		
-		
+		// Checks if any of the suspect pawns that are unallocated to a player have the suspect of the accusation, and if it's in the accusation room
 		for (int j = 0; j < gameBoard.getSuspectPawns().size(); j++)
 		{
 			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectAccusation)
@@ -170,9 +171,10 @@ public class AccusationManager
 			}
 		}
 		
-		
+		// Finds a free slot in the accusation room
 		Slot roomSlot = getRoomSlot(players, gameBoard, roomAccusation);
 
+		// If any of the players have the suspect, move it to roomSlot
 		for (int i = 0; i < players.size(); i++)
 		{
 			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectAccusation)
@@ -182,7 +184,7 @@ public class AccusationManager
 			}
 		}
 		
-		
+		// Otherwise, the suspect pawn is not allocated to a player, so find it in the Board's pawn list and move it to roomSlot
 		for (int j = 0; j < gameBoard.getSuspectPawns().size(); j++)
 		{
 			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectAccusation)
@@ -193,13 +195,17 @@ public class AccusationManager
 		}
 			
 	}
-
+	
+	// getRoomSlot() Method
+	// Purpose: Finds a free slot in the room of the accusation 
 	private Slot getRoomSlot(ArrayList<Player> players, Board gameBoard, int roomAccusation)
 	{
+		
 		boolean slotOccupied;
 		
 		ArrayList<RoomSlot> roomSlots = gameBoard.getRoomSlots();
 		
+		// Find all roomSlots that are in the room of the accusation
 		for (RoomSlot rs: roomSlots)
 		{
 			slotOccupied = false;
@@ -207,29 +213,34 @@ public class AccusationManager
 			if (rs.getRoomNumber() == roomAccusation - NUM_SUSPECTS - NUM_WEAPONS + 1)
 			{
 				
+				// Check if any of the players have suspect pawns in that room, if so, discard these slots
 				for (Player p: players)
 				{
-					if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[rs.getRow()][rs.getCol()])
 					{
 						slotOccupied = true;
 						break;
 					}
 				}
 				
+				// Check if any of the unallocated suspect pawns are in that room, if so, discard these slots
 				for (int i = 0; i < gameBoard.getSuspectPawns().size(); i++)
 				{
-					if (gameBoard.getSuspectPawns().get(i).getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					if (gameBoard.getSuspectPawns().get(i).getPosition() == gameBoard.getSlots()[rs.getRow()][rs.getCol()])
 					{
 						slotOccupied = true;
 						break;
 					}
 				}
 				
+				// If a slot passes the two above checks, return it as a viable slot
 				if (!slotOccupied)
 				{
-					return gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
+					return gameBoard.getSlots()[rs.getRow()][rs.getCol()];
 				}
+				
 			}
+		
 		}
 		
 		return null;

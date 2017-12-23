@@ -1,3 +1,9 @@
+/***************************************************************/
+/* SecretButton Class
+/* 
+/* Represents the GUI button for a secret passage slot
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import java.awt.Color;
@@ -12,32 +18,42 @@ import javax.swing.ImageIcon;
 public class SecretButton extends Button
 {	
 	
+	// Attributes
 	ImageIcon image;
 
-	public SecretButton(int col, int row) 
+	
+	// Constructor
+	public SecretButton(int row, int col) 
 	{
 
-		super(col, row);
+		super(row, col);
 			
+		// Set image
 		try 
 		{
 			image = new ImageIcon(ImageIO.read(new File("RoomStairs.jpg")));
 		} 
 		catch (IOException e) 
 		{
-			System.out.println("Error");
+			System.out.println("Error reading image");
 		}
 			
 		this.setIcon(this.image);
 	
 	}
 	
+	
+	/* Public Methods */
+	
+	
+	// changeColor() method
 	public void changeColor(Color newColor)
 	{
-		this.setIcon(null);
 		this.setBackground(newColor);
 	}
 	
+	
+	// resetDefault() method
 	public void resetDefault()
 	{
 		this.setIcon(this.image);

@@ -52,7 +52,7 @@ public class MoveTypeTest {
 	public void testBoardMove() {
 		testPlayer.getSuspectPawn().movePosition(this.testBoard.getSlots()[0][9]);
 		int output = testMoveType.boardMove(players, 0, testBoard, 8, "l");
-		int outputXPosition = testPlayer.getSuspectPawn().getPosition().getXPosition();
+		int outputXPosition = testPlayer.getSuspectPawn().getPosition().getCol();
 		assertEquals("The moves have been decremented correctly", 7,output);
 		assertEquals("The x position update is correct", 8, outputXPosition);
 		

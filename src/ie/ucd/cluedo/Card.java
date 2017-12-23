@@ -1,18 +1,28 @@
+/***************************************************************/
+/* Card Class
+/* 
+/* Represent a card held by a player
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import static ie.ucd.cluedo.GameValues.*;
 
+
 public class Card 
 {	
 	
-	// Attributes of card
+	// Attributes
 	private CardType cardType;
 	private Name cardName;
 	public int cardIndex;
-	// Card constructor
+	
+	
+	// Constructor
 	public Card(int cardIndex)
 	{
 		this.cardIndex = cardIndex;
+		
 		// Decide type of card based on index number of card
 		if (cardIndex < NUM_SUSPECTS)
 		{
@@ -30,19 +40,28 @@ public class Card
 		this.cardName = gameList.get(cardIndex);
 	}
 	
-	// Returns type of card
+	
+	/* Public Methods */ 
+	
+	
+	// getType() method
 	public CardType getType()
 	{
 		return this.cardType;
 	}
 	
-	// Returns name of card
+	
+	// getName() method
 	public Name getName()
 	{
 		return this.cardName;
 	}
 	
-	public int getCardIndex(){
+	
+	// getCardIndex()
+	public int getCardIndex()
+	{
 		return this.cardIndex;
 	}
+	
 }

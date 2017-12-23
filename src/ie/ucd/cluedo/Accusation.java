@@ -26,21 +26,24 @@ public class Accusation
 	/* Public Methods */
 	
 	
+	// getSuspect() method
 	public int getSuspect()
 	{
-		return suspectHypothesis;
+		return this.suspectHypothesis;
 	}
 	
 	
+	// getWeapon() method
 	public int getWeapon()
 	{
-		return weaponHypothesis;
+		return this.weaponHypothesis;
 	}
 
 	
+	// getRoom() method
 	public int getRoom()
 	{
-		return roomHypothesis;
+		return this.roomHypothesis;
 	}
 	
 }

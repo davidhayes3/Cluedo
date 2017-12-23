@@ -93,8 +93,8 @@ public class MoveType
 		switch (playerChoice)
 		{
 			
-			case "u":	newRow = currentPosition.getYPosition() - 1;
-						newCol = currentPosition.getXPosition();
+			case "u":	newRow = currentPosition.getRow() - 1;
+						newCol = currentPosition.getCol();
 						
 						// Checks if player can move to indicated postion of preference
 						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
@@ -119,8 +119,8 @@ public class MoveType
 						return movesRemaining;
 			
 			
-			case "d":	newRow = currentPosition.getYPosition() + 1;
-						newCol = currentPosition.getXPosition();
+			case "d":	newRow = currentPosition.getRow() + 1;
+						newCol = currentPosition.getCol();
 			
 						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
 					
@@ -140,8 +140,8 @@ public class MoveType
 						return movesRemaining;
 			
 			
-			case "l":	newRow = currentPosition.getYPosition();
-						newCol = currentPosition.getXPosition() - 1;
+			case "l":	newRow = currentPosition.getRow();
+						newCol = currentPosition.getCol() - 1;
 	
 						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
 						
@@ -161,8 +161,8 @@ public class MoveType
 						return movesRemaining;
 				
 			
-			case "r":	newRow = currentPosition.getYPosition();
-						newCol = currentPosition.getXPosition() + 1;
+			case "r":	newRow = currentPosition.getRow();
+						newCol = currentPosition.getCol() + 1;
 
 						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
 	
@@ -293,7 +293,7 @@ public class MoveType
 				// Check if any players have suspect pawns at the slot in question. If so, discard slot 
 				for (Player p: players)
 				{
-					if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[rs.getRow()][rs.getCol()])
 					{
 						slotOccupied = true;
 						break;
@@ -303,7 +303,7 @@ public class MoveType
 				// Check if any remaining suspect pawns are at the slot in question. If so, discard slot 
 				for (SuspectPawn s: gameBoard.getSuspectPawns())
 				{
-					if (s.getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					if (s.getPosition() == gameBoard.getSlots()[rs.getRow()][rs.getCol()])
 					{
 						slotOccupied = true;
 						break;
@@ -313,7 +313,7 @@ public class MoveType
 				// Return the first free slot in room found
 				if (!slotOccupied)
 				{
-					return gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
+					return gameBoard.getSlots()[rs.getRow()][rs.getCol()];
 				}
 			
 			}
@@ -335,7 +335,7 @@ public class MoveType
 		{
 			if (ds.getRoomNumber() == roomNumber)
 			{
-				return gameBoard.getSlots()[ds.getYPosition()][ds.getXPosition()];
+				return gameBoard.getSlots()[ds.getRow()][ds.getCol()];
 			}
 		}
 		
