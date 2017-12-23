@@ -49,8 +49,8 @@ public class Turn
 		switch (playerChoice)
 		{
 			
-			case "r":	move = new Movement(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
-						move.chooseMove();
+			case "r":	move = new Movement();
+						move.chooseMove(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
 						return true;
 						
 			case "c":	this.players.get(this.playerTurn).getPlayerHand().showHand();
@@ -79,8 +79,8 @@ public class Turn
 		switch (playerChoice)
 		{
 			
-			case "r":	move = new Movement(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
-						move.chooseMove();
+			case "r":	move = new Movement();
+						move.chooseMove(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
 						return true;
 						
 			case "c":	this.players.get(this.playerTurn).getPlayerHand().showHand();

@@ -262,7 +262,7 @@ public class Game
 				{
 					
 					Scanner scanner = new Scanner(System.in);
-					System.out.printf("\nWhat do you want to do?\\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
+					System.out.printf("\nWhat do you want to do?\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.afterRollMove(hasRolled, playerChoice);
 				
@@ -272,7 +272,7 @@ public class Game
 				{
 
 					Scanner scanner = new Scanner(System.in);
-					System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h]\nView Cards [c]\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: ");
+					System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h]\nMake Accusation [a]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.afterRollMoveInRoom(hasRolled, playerChoice);
 					
@@ -297,7 +297,7 @@ public class Game
 				{
 					
 					Scanner scanner = new Scanner(System.in);
-					System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: " );
+					System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nMake Hypothesis [h]\nMake Accusation [a]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.beforeRollMoveInRoom(hasRolled,playerChoice);				
 				

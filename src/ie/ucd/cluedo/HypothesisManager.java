@@ -146,6 +146,7 @@ public class HypothesisManager
 		int roomHypothesis = hypothesis.getRoom();
 		
 		int i = playerTurn - 1;
+		i = (i < 0) ? (i + numPlayers) : i;
 		
 		while (i != playerTurn)
 		{

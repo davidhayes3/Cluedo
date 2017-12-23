@@ -18,21 +18,14 @@ public class Movement
 	
 	// Attributes
 	
-	ArrayList<Player> players;
-	int playerTurn;
-	int numPlayers;
-	Board gameBoard;
-	MoveType typemove;
+	MoveType moveType;
 	
 	
 	// Constructor
 	
-	public Movement(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard) 
+	public Movement() 
 	{
-		this.players = players;
-		this.playerTurn = playerTurn;
-		this.numPlayers = numPlayers;
-		this.gameBoard = gameBoard;
+		moveType = new MoveType();
 	}
 	
 	
@@ -44,10 +37,11 @@ public class Movement
 	// Input: None
 	// Output: numPlayers, the number of players in the game
 	@SuppressWarnings("resource")
-	public void chooseMove()
+	public void chooseMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard)
 	{
 		
-		MoveType moveType = new MoveType(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
+		String playerChoice;
+		Scanner scanner;
 		int diceScore = ThreadLocalRandom.current().nextInt(MIN_DIES_SCORE, MAX_DIES_SCORE + 1);
 		int movesRemaining = diceScore;
 		
@@ -58,16 +52,16 @@ public class Movement
 			
 			System.out.printf("You have " + movesRemaining + " moves remaining.");
 			
-			Slot currentSlot = this.players.get(this.playerTurn).getSuspectPawn().getPosition();
+			Slot currentSlot = players.get(playerTurn).getSuspectPawn().getPosition();
 			
 			if (currentSlot instanceof BoardSlot)
 			{
 				
-				Scanner scanner = new Scanner(System.in);
+				scanner = new Scanner(System.in);
 				
 				System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
-				String playerChoice = scanner.nextLine();	
-				movesRemaining = moveType.boardMove(movesRemaining, playerChoice);
+				playerChoice = scanner.nextLine();	
+				movesRemaining = moveType.boardMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);
 				
 			}
 			
@@ -77,19 +71,22 @@ public class Movement
 				if (currentSlot.getRoomNumber() == 1 || currentSlot.getRoomNumber() == 3 || currentSlot.getRoomNumber() == 5 || currentSlot.getRoomNumber() == 7)
 				{
 					
-					String playerChoice;
-					Scanner scanner = new Scanner(System.in);
+					scanner = new Scanner(System.in);
 					
 					System.out.printf("\nLeave Room [l]\nStay in room [s]\nAccess Secret Passage [p]\nOption: " );				
 					playerChoice = scanner.nextLine();
-					movesRemaining = typemove.secretRoomMove(movesRemaining, playerChoice);				
+					movesRemaining = moveType.secretRoomMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);	
 					
 				}
 				
 				else
 				{
+	
+					scanner = new Scanner(System.in);
 					
-					movesRemaining = moveType.normalRoomMove(movesRemaining);
+					System.out.printf("\nLeave Room [l]\nStay in room [s]\nOption: " );				
+					playerChoice = scanner.nextLine();
+					movesRemaining = moveType.normalRoomMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);
 				
 				}
 				
@@ -98,11 +95,11 @@ public class Movement
 			else if (currentSlot instanceof DoorSlot)
 			{
 				
-				Scanner scanner = new Scanner(System.in);
+				scanner = new Scanner(System.in);
 
 				System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
-				String playerChoice = scanner.nextLine();	
-				movesRemaining = moveType.boardMove(movesRemaining, playerChoice);
+				playerChoice = scanner.nextLine();	
+				movesRemaining = moveType.boardMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);
 			
 			}
 			
