@@ -9,20 +9,16 @@ import static ie.ucd.cluedo.GameValues.*;
 public class HypothesisManager 
 {
 	
-	ArrayList<Player> players;
-	Board gameBoard;
+	Hypothesis hypothesis;
 	
-	public HypothesisManager(ArrayList<Player> players, Board gameBoard)
+	public HypothesisManager()
 	{
-		
-		this.players = players;	
-		this.gameBoard = gameBoard;
 	
 	}
 	
 	
 	
-	public void simulateHypothesis(int playerTurn, int numPlayers)
+	public void simulateHypothesis(ArrayList<Player> players, Board gameBoard, int playerTurn)
 	{
 
 		@SuppressWarnings("resource")
@@ -45,23 +41,23 @@ public class HypothesisManager
 		int weaponHypothesis = scanner.nextInt();
 		
 		// Room
-		int roomHypothesis = this.players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber() + NUM_SUSPECTS + NUM_WEAPONS - 1;
+		int roomHypothesis = players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber() + NUM_SUSPECTS + NUM_WEAPONS - 1;
 		
 		Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
 		
-		checkPlayersCards(playerHypothesis, playerTurn, numPlayers);
+		checkPlayersCards(players, playerHypothesis, playerTurn);
 		
-		moveSuspectPawn(suspectHypothesis, roomHypothesis);
+		moveSuspectPawn(players, gameBoard, suspectHypothesis, roomHypothesis);
 
 	}
 	
 	
-	private void moveSuspectPawn(int suspectHypothesis, int roomHypothesis)
+	private void moveSuspectPawn(ArrayList <Player> players, Board gameBoard, int suspectHypothesis, int roomHypothesis)
 	{
 		
 		Player pl = null;
 				
-		for (Player p: this.players)
+		for (Player p: players)
 		{
 			if (p.getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
 			{
@@ -74,33 +70,33 @@ public class HypothesisManager
 			}
 		}
 		
-		if (this.gameBoard.getSuspectPawns().get(suspectHypothesis).getPosition().getRoomNumber() == roomHypothesis - 11)
+		if (gameBoard.getSuspectPawns().get(suspectHypothesis).getPosition().getRoomNumber() == roomHypothesis - 11)
 		{
 			return;
 		}
 			
 		else
 		{
-			Slot roomSlot = getRoomSlot(roomHypothesis, suspectHypothesis);
+			Slot roomSlot = getRoomSlot(players, gameBoard, roomHypothesis);
 	
-			for (int i = 0; i < this.players.size(); i++)
+			for (int i = 0; i < players.size(); i++)
 			{
-				if (this.players.get(i).getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
+				if (players.get(i).getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
 				{	
 					players.get(i).getSuspectPawn().movePosition(roomSlot);
 					return;
 				}
 			}
 		
-			this.gameBoard.getSuspectPawns().get(suspectHypothesis).movePosition(roomSlot);
+			gameBoard.getSuspectPawns().get(suspectHypothesis).movePosition(roomSlot);
 		}
 	}
 
-	private Slot getRoomSlot(int roomHypothesis, int suspectHypothesis)
+	private Slot getRoomSlot(ArrayList<Player> players, Board gameBoard, int roomHypothesis)
 	{
 		boolean slotOccupied;
 		
-		ArrayList<RoomSlot> roomSlots = this.gameBoard.getRoomSlots();
+		ArrayList<RoomSlot> roomSlots = gameBoard.getRoomSlots();
 		
 		for (RoomSlot rs: roomSlots)
 		{
@@ -108,9 +104,9 @@ public class HypothesisManager
 			
 			if (rs.getRoomNumber() == roomHypothesis - 11)
 			{
-				for (Player p: this.players)
+				for (Player p: players)
 				{
-					if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
 					{
 						slotOccupied = true;
 						break;
@@ -119,7 +115,7 @@ public class HypothesisManager
 				
 				for (int i = 0; i < NUM_SUSPECTS; i++)
 				{
-					if (this.gameBoard.getSuspectPawns().get(i).getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					if (gameBoard.getSuspectPawns().get(i).getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
 					{
 						slotOccupied = true;
 						break;
@@ -128,7 +124,7 @@ public class HypothesisManager
 				
 				if (!slotOccupied)
 				{
-					return this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
+					return gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
 				}
 			}
 		}
@@ -136,7 +132,7 @@ public class HypothesisManager
 		return null;
 	}
 	
-	private void checkPlayersCards(Hypothesis hypothesis, int playerTurn, int numPlayers)
+	private void checkPlayersCards(ArrayList<Player> players, Hypothesis hypothesis, int playerTurn)
 	{
 		
 		ArrayList<Card> playerCards;
@@ -146,7 +142,7 @@ public class HypothesisManager
 		int roomHypothesis = hypothesis.getRoom();
 		
 		int i = playerTurn - 1;
-		i = (i < 0) ? (i + numPlayers) : i;
+		i = (i < 0) ? (i + players.size()) : i;
 		
 		while (i != playerTurn)
 		{
@@ -158,35 +154,35 @@ public class HypothesisManager
 					if (playerCards.get(j).getCardIndex() == suspectHypothesis)
 					{
 						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis");
-						updateNotebook(players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
+						updateNotebook(players, players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
 						return;
 					}
 
 					else if (playerCards.get(j).getCardIndex() == weaponHypothesis)
 					{
 						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis");
-						updateNotebook(players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
+						updateNotebook(players, players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
 						return;
 					}
 				
 					else if (playerCards.get(j).getCardIndex() == roomHypothesis)
 					{
 						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis");
-						updateNotebook(players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
+						updateNotebook(players, players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
 						return;
 					}
 
 				}
 				
 				i--;
-				i = (i < 0) ? (i + numPlayers) : i;
+				i = (i < 0) ? (i + players.size()) : i;
 		}
 		
 		System.out.println("The hypothesis was not refuted");
 		
 	}
 	
-	public void updateNotebook(Player accuser, Player refuter, Card cardShown, int suspectHypothesis, int weaponHypothesis, int roomHypothesis)
+	public void updateNotebook(ArrayList<Player> players, Player accuser, Player refuter, Card cardShown, int suspectHypothesis, int weaponHypothesis, int roomHypothesis)
 	{
 		
 		// Two entries for accuser

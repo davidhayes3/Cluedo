@@ -45,7 +45,7 @@ public class TurnTest {
 		gameOver = false;
 		playerTurn = 0;
 		testBoard = new Board();
-		testTurn = new Turn(players, playerTurn, numPlayers, testBoard, gameOver);
+		testTurn = new Turn(playerTurn, gameOver);
 	}
 
 	@After
@@ -55,44 +55,29 @@ public class TurnTest {
 	@Test
 	public void testBeforeRollMove() {
 		boolean hasRolled = false;
-		boolean output = testTurn.beforeRollMove(hasRolled, "n");
+		boolean output = testTurn.beforeRollMove(players, testBoard, hasRolled, "n");
 		assertEquals("Test that the player is able to pick an option before they have rolled", false, output);
 	}
 
 	@Test
 	public void testBeforeRollMoveInRoom() {
 		boolean hasRolled = false;
-		boolean output = testTurn.beforeRollMoveInRoom(hasRolled, "f");
+		boolean output = testTurn.beforeRollMoveInRoom(players, testBoard, hasRolled, "f");
 		assertEquals("Test that the player is able to pick an option before they have rolled and are in a room", false, output);
 	}
 
 	@Test
 	public void testAfterRollMove() {
 		boolean hasRolled = false;
-		boolean output = testTurn.afterRollMove(hasRolled, "n");
+		boolean output = testTurn.afterRollMove(players, testBoard, hasRolled, "n");
 		assertEquals("Test that the player is able to pick an option after they have rolled", false, output);
 	}
 
 	@Test
 	public void testAfterRollMoveInRoom() {
 		boolean hasRolled = false;
-		boolean output = testTurn.afterRollMoveInRoom(hasRolled, "n");
+		boolean output = testTurn.afterRollMoveInRoom(players, testBoard, hasRolled, "n");
 		assertEquals("Test that the player is able to pick an option after they have rolled in the room", false, output);	
-		}
-
-	/*@Test
-	public void testGetPlayerTurn() {
-		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testGetNumPlayers() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetGameOver() {
-		fail("Not yet implemented");
-	}
-*/
 }

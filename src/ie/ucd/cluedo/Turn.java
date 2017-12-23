@@ -14,7 +14,6 @@ public class Turn
 	// Attributes
 	
 	int playerTurn;
-	int numPlayers;
 	boolean gameOver;
 	Movement move;
 	HypothesisManager hypothesisManager;
@@ -22,11 +21,10 @@ public class Turn
 	
 	
 	// Constructor
-	public Turn(int playerTurn, int numPlayers, boolean gameOver) 
+	public Turn(int playerTurn, boolean gameOver) 
 	{
 
 		this.playerTurn = playerTurn;
-		this.numPlayers = numPlayers;
 		this.gameOver = gameOver;
 	
 	}
@@ -46,7 +44,7 @@ public class Turn
 		{
 			
 			case "r":	move = new Movement();
-						move.chooseMove(players, this.playerTurn, this.numPlayers, gameBoard);
+						move.chooseMove(players, this.playerTurn, gameBoard);
 						return true;
 						
 			case "c":	players.get(this.playerTurn).getPlayerHand().showHand();
@@ -55,7 +53,7 @@ public class Turn
 			case "n":	players.get(this.playerTurn).getNotebook().showNoteBook();
 						return hasRolled;
 			
-			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();
 						return false;
 			
 			default:	System.out.println("Please enter a valid option");
@@ -76,29 +74,28 @@ public class Turn
 		{
 			
 			case "r":	move = new Movement();
-						move.chooseMove(players, this.playerTurn, this.numPlayers, gameBoard);
+						move.chooseMove(players, this.playerTurn, gameBoard);
 						return true;
 						
 			case "c":	players.get(this.playerTurn).getPlayerHand().showHand();
 						return hasRolled;
 		
-			case "h":	hypothesisManager = new HypothesisManager(players, gameBoard);
-						hypothesisManager.simulateHypothesis(this.playerTurn, this.numPlayers);
-						this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+			case "h":	hypothesisManager = new HypothesisManager();
+						hypothesisManager.simulateHypothesis(players, gameBoard, this.playerTurn);
+						this.playerTurn = (this.playerTurn + 1) % players.size();
 						return false;
 		
-			case "a":	accusationManager = new AccusationManager(players);
-						this.gameOver = accusationManager.simulateAccusation(this.playerTurn, this.numPlayers, this.gameOver);
+			case "a":	accusationManager = new AccusationManager();
+						this.gameOver = accusationManager.simulateAccusation(players, this.playerTurn, this.gameOver);
 						
-						this.numPlayers--;
-						this.playerTurn = this.playerTurn % this.numPlayers;
+						this.playerTurn = this.playerTurn % players.size();
 						
 						return hasRolled;
 			
 			case "n":	players.get(playerTurn).getNotebook().showNoteBook();
 						return hasRolled;
 			
-			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();
 						return false;
 			
 			default:	System.out.println("Please enter a valid option");
@@ -124,7 +121,7 @@ public class Turn
 			case "n":	players.get(playerTurn).getNotebook().showNoteBook();
 						return hasRolled;
 			
-			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();
 						return false;
 			
 			default:	System.out.println("Please enter a valid option");
@@ -143,26 +140,25 @@ public class Turn
 		
 		switch (playerChoice)
 		{
-			case "h":	hypothesisManager = new HypothesisManager(players, gameBoard);
-						hypothesisManager.simulateHypothesis(this.playerTurn, this.numPlayers);
-						this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+			case "h":	hypothesisManager = new HypothesisManager();
+						hypothesisManager.simulateHypothesis(players, gameBoard, this.playerTurn);
+						this.playerTurn = (this.playerTurn + 1) % players.size();
 						return false;
 						
 			case "c":	players.get(this.playerTurn).getPlayerHand().showHand();
 						return hasRolled;
 		
-			case "a":	accusationManager = new AccusationManager(players);
-						this.gameOver = accusationManager.simulateAccusation(this.playerTurn, this.numPlayers, this.gameOver);
-						
-						this.numPlayers--;
-						this.playerTurn = this.playerTurn % this.numPlayers;
+			case "a":	accusationManager = new AccusationManager();
+						this.gameOver = accusationManager.simulateAccusation(players, this.playerTurn, this.gameOver);
+			
+						this.playerTurn = this.playerTurn % players.size();
 						
 						return hasRolled;
 			
 			case "n":	players.get(playerTurn).getNotebook().showNoteBook();
 						return hasRolled;			
 			
-			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+			case "f":	this.playerTurn = (this.playerTurn + 1) % players.size();
 						return false;
 			
 			default:	System.out.println("Please enter a valid option");
@@ -176,13 +172,6 @@ public class Turn
 	public int getPlayerTurn()
 	{
 		return this.playerTurn;
-	}
-	
-	
-	// getNumPlayers() Method
-	public int getNumPlayers()
-	{
-		return this.numPlayers;
 	}
 	
 	

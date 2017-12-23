@@ -28,7 +28,6 @@ public class GameTest {
 	public void setUp() throws Exception {
 		
 		testGame = new Game();
-		testArray = new ArrayList<Player>();
 		testPlayers = new ArrayList<Player>();
 		
 	}
@@ -37,29 +36,20 @@ public class GameTest {
 	public void tearDown() throws Exception {
 	}
 
-	/*@Test
-	public void testGetNumPlayers() {
-
-	}*/
 
 	@Test
 	public void testMakePlayers() {
 
-		testPlayers = testGame.makePlayers(3, testArray);
+		testGame.makePlayers(3, testPlayers);
 		
 		assertEquals(1, testPlayers.get(0).getPlayerNumber());
 		assertEquals(2, testPlayers.get(1).getPlayerNumber());
 	}
 	
-	/*
-	@Test
-	public void testGetCharacters() {
-		fail("Not yet implemented");
-	}*/
-
 	@Test
 	public void testMakeBoard() {
-		fail("Not yet implemented");
+		Board testBoard = testGame.makeBoard();
+		assertTrue(testBoard instanceof Board);
 	}
 
 	@Test
@@ -70,28 +60,13 @@ public class GameTest {
 
 	@Test
 	public void testAllocateCards() {
-		testPlayers = testGame.makePlayers(3, testArray);
+		testGame.makePlayers(3, testPlayers);
 		ArrayList<Card> testDeck = testGame.createDeck();
-		testGame.allocateCards(testPlayers, 3);
+		testGame.allocateCards(testPlayers, testDeck);
 		
 		Card testCard;
 		testCard = testPlayers.get(1).getCards().get(1);
 		assertTrue(testCard instanceof Card);
-	}
-
-	@Test
-	public void testGameTurns() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testPrintMurderDetails() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testPrintDeckInPlayDetails() {
-		fail("Not yet implemented");
 	}
 
 }

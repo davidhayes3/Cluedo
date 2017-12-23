@@ -36,7 +36,7 @@ public class Movement
 	// Purpose: Allows the player to choose what type of move they want to make and updates movesRemaining accordingly
 	// Input: None
 	// Output: numPlayers, the number of players in the game
-	public void chooseMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard)
+	public void chooseMove(ArrayList<Player> players, int playerTurn, Board gameBoard)
 	{
 		
 		String playerChoice;
@@ -60,7 +60,7 @@ public class Movement
 				
 				System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
 				playerChoice = scanner.nextLine();	
-				movesRemaining = moveType.boardMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);
+				movesRemaining = moveType.boardMove(players, playerTurn, gameBoard, movesRemaining, playerChoice);
 				
 			}
 			
@@ -74,7 +74,7 @@ public class Movement
 					
 					System.out.printf("\nLeave Room [l]\nStay in room [s]\nAccess Secret Passage [p]\nOption: " );				
 					playerChoice = scanner.nextLine();
-					movesRemaining = moveType.secretRoomMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);	
+					movesRemaining = moveType.secretRoomMove(players, playerTurn, gameBoard, movesRemaining, playerChoice);	
 					
 				}
 				
@@ -85,7 +85,7 @@ public class Movement
 					
 					System.out.printf("\nLeave Room [l]\nStay in room [s]\nOption: " );				
 					playerChoice = scanner.nextLine();
-					movesRemaining = moveType.normalRoomMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);
+					movesRemaining = moveType.normalRoomMove(players, playerTurn, gameBoard, movesRemaining, playerChoice);
 				
 				}
 				
@@ -98,7 +98,7 @@ public class Movement
 
 				System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
 				playerChoice = scanner.nextLine();	
-				movesRemaining = moveType.boardMove(players, playerTurn, numPlayers, gameBoard, movesRemaining, playerChoice);
+				movesRemaining = moveType.boardMove(players, playerTurn, gameBoard, movesRemaining, playerChoice);
 			
 			}
 			

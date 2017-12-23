@@ -6,7 +6,6 @@
 
 package ie.ucd.cluedo;
 
-import static ie.ucd.cluedo.GameValues.MAX_NUM_PLAYERS;
 import java.util.ArrayList;
 
 public class GameManager 
@@ -21,9 +20,9 @@ public class GameManager
 	// Main
 	public static void main(String[] args) 
 	{
-	
+		
+		players = new ArrayList<Player>();
 		int numPlayers;
-		players = new ArrayList<Player>(MAX_NUM_PLAYERS);
 		
 		System.out.println("NEW GAME\n\n");
 		
@@ -41,7 +40,7 @@ public class GameManager
 		
 		Cluedo.allocateCards(players, cardDeck);
 		
-		Cluedo.gameTurns(players, gameBoard, numPlayers);
+		Cluedo.gameTurns(players, gameBoard);
 
 	}
 

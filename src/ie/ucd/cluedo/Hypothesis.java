@@ -1,8 +1,5 @@
 package ie.ucd.cluedo;
 
-import java.util.ArrayList;
-
-
 public class Hypothesis {
 
 	

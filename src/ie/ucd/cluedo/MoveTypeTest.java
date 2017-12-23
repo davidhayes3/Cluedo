@@ -34,7 +34,7 @@ public class MoveTypeTest {
 		testPlayer.giveSuspectPawn(testPawn);
 		players.add(testPlayer);
 		testBoard = new Board();
-		testMoveType = new MoveType(players, 0, 1, testBoard);
+		testMoveType = new MoveType();
 	}
 
 	@After
@@ -42,21 +42,16 @@ public class MoveTypeTest {
 	}
 
 	@Test
-	public void testNormalRoomMove() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testSecretRoomMove() {
 		testPlayer.getSuspectPawn().movePosition(this.testBoard.getSlots()[0][3]);
-		int output = testMoveType.secretRoomMove(8, "p");
+		int output = testMoveType.secretRoomMove(players, 0, testBoard, 8, "p");
 		assertEquals("", 7, output);
 	}
 
 	@Test
 	public void testBoardMove() {
 		testPlayer.getSuspectPawn().movePosition(this.testBoard.getSlots()[0][9]);
-		int output = testMoveType.boardMove(8, "l");
+		int output = testMoveType.boardMove(players, 0, testBoard, 8, "l");
 		int outputXPosition = testPlayer.getSuspectPawn().getPosition().getXPosition();
 		assertEquals("The moves have been decremented correctly", 7,output);
 		assertEquals("The x position update is correct", 8, outputXPosition);
@@ -65,8 +60,9 @@ public class MoveTypeTest {
 
 	@Test
 	public void testCanMove() {
-		boolean output = testMoveType.canMove(0, 7);
-		assertEquals("",true, output);
+		
+		boolean output = testMoveType.canMove(0, 7, testBoard, players);
+		assertEquals("", true, output);
 	}
 
 }

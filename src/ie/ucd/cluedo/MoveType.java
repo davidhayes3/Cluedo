@@ -4,8 +4,6 @@ import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
 import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
 public class MoveType 
 {
 	
@@ -16,7 +14,7 @@ public class MoveType
 	}
 	
 	
-	public int normalRoomMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard, int movesRemaining, String playerChoice)
+	public int normalRoomMove(ArrayList<Player> players, int playerTurn, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
 		switch (playerChoice)
@@ -24,6 +22,8 @@ public class MoveType
 		
 			case "l":	Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard);
 						players.get(playerTurn).getSuspectPawn().movePosition(doorSlot);
+						
+						movesRemaining--;
 	
 						break;
 						
@@ -38,15 +38,16 @@ public class MoveType
 		return movesRemaining;
 	}
 	
-	public int secretRoomMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard, int movesRemaining, String playerChoice)
+	public int secretRoomMove(ArrayList<Player> players, int playerTurn, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
 		switch (playerChoice)
 		{
 		
 			case "l":	Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard);
-				
 						players.get(playerTurn).getSuspectPawn().movePosition(doorSlot);
+						
+						movesRemaining--;
 				
 						break;
 						
@@ -54,7 +55,6 @@ public class MoveType
 						break;
 						
 			case "p":	Slot secretSlot = getSecretSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard, players);
-				
 						players.get(playerTurn).getSuspectPawn().movePosition(secretSlot);
 			
 						movesRemaining--;
@@ -67,7 +67,7 @@ public class MoveType
 	}
 	
 	
-	public int boardMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard, int movesRemaining, String playerChoice)
+	public int boardMove(ArrayList<Player> players, int playerTurn, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
 		int newCol, newRow;
@@ -172,13 +172,13 @@ public class MoveType
 		
 		if (newRow < 0 || newRow > BOARD_HEIGHT - 1 || newCol < 0 || newCol > BOARD_WIDTH - 1)
 		{
-			System.out.println("Illegal move");
+			System.out.println("That position is not on the board.");
 			return false;
 		}
 
 		else if (gameBoard.getSlots()[newRow][newCol] == null || gameBoard.getSlots()[newRow][newCol] instanceof RoomSlot)
 		{
-			System.out.println("Illegal move");
+			System.out.println("Illegal move.");
 			return false;
 		}
 		
@@ -188,7 +188,7 @@ public class MoveType
 			{
 				if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[newRow][newCol])
 				{
-					System.out.println("Illegal move");
+					System.out.println("There's already a player at that position.");
 					return false;
 				}
 			}

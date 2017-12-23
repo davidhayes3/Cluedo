@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+@SuppressWarnings("serial")
 public class PlayerHand extends JFrame {
 
 	JLabel label = new JLabel();
@@ -22,7 +23,7 @@ public class PlayerHand extends JFrame {
 		this.setTitle("Your Cards");
 		label.setVerticalAlignment(SwingConstants.TOP);
 		
-		for(int i = 0; i< playerHand.size(); i++)
+		for(int i = 0; i < playerHand.size(); i++)
 		{	
 			String string = playerHand.get(i).getName().toString();
 			label.setText(label.getText() + "<html>" + string +"<br/><html>");

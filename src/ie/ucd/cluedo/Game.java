@@ -84,6 +84,8 @@ public class Game
 	// Output: ArrayList players with all players of game
 	public ArrayList<Player> makePlayers(int numPlayers, ArrayList<Player> players)
 	{		
+		
+		
 		for (int i = 0; i < numPlayers; i++)
 		{
 			// Create player and assign player number and notebook
@@ -230,7 +232,7 @@ public class Game
 	// Input: ArrayList players, numPlayers
 	// Output: None
 	@SuppressWarnings("resource")
-	public void gameTurns(ArrayList<Player> players, Board gameBoard, int numPlayers)
+	public void gameTurns(ArrayList<Player> players, Board gameBoard)
 	{
 		
 		// HashMap to print color of player
@@ -252,7 +254,7 @@ public class Game
 		{			
 			
 			// Instantiate Turn object
-			Turn turn = new Turn(this.playerTurn, numPlayers, this.gameOver);
+			Turn turn = new Turn(this.playerTurn, this.gameOver);
 			
 			currentRoom = players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
 			
@@ -312,7 +314,6 @@ public class Game
 			
 			// Update key factors in game
 			this.playerTurn = turn.getPlayerTurn();
-			numPlayers = turn.getNumPlayers();
 			this.gameOver = turn.getGameOver();
 			
 		}

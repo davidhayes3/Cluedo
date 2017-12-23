@@ -1,8 +1,8 @@
 package ie.ucd.cluedo;
 
-import java.awt.*; 
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class Notebook extends JFrame
 {
 	JLabel label = new JLabel();

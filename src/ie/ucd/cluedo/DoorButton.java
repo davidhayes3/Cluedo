@@ -1,16 +1,11 @@
 package ie.ucd.cluedo;
 
-import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
-import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
-
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-
 
 @SuppressWarnings("serial")
 public class DoorButton extends Button
