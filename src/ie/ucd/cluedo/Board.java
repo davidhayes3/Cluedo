@@ -1,3 +1,9 @@
+/***************************************************************/
+/* Board Class
+/* 
+/* Creates the slots and suspectPawns involved in the game
+/* and board GUI
+/***************************************************************/
 
 package ie.ucd.cluedo;
 
@@ -19,19 +25,16 @@ import ie.ucd.cluedo.SecretButton;
 public class Board
 {
 	
-	//Board Attributes
-	
-	ArrayList<WeaponPawn> weaponPawns;
+	// Attributes
 	ArrayList<SuspectPawn> suspectPawns;
 	Slot[][] boardSlots;		
 	ArrayList<RoomSlot> roomSlots;
 	ArrayList<DoorSlot> doorSlots;
 		
-	// Board Constructor 
+	
+	// Constructor 
 	public Board() 
-	{	
-
-		this.weaponPawns = new ArrayList<WeaponPawn>();
+	{
 		this.suspectPawns = new ArrayList<SuspectPawn>();
 		this.boardSlots = new Slot[BOARD_WIDTH][BOARD_HEIGHT];
 		this.roomSlots = new ArrayList<RoomSlot>();
@@ -39,18 +42,21 @@ public class Board
 		
 		makeSlots();
 		
-		gui();
+		makeGui();
 		
-		makeSuspectPawns();
-		
+		makeSuspectPawns();	
 	}
 
 	
+	/* Public Methods */
+	
+	
+	// makesSlots() Method
+	// Purpose: Maps out game board in term of different types of slots needed for each
 	public void makeSlots() 
 	{
 
-		// Create Board Slots
-		
+		// Maps out board in terms of slots. Each number corresponds to a particular type of slot.
 		int[][] slotPositions = new int[][]
 		{
 			{ 3, 0, 4, 4, 4, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 4, 4, 4, 0, 3 },
@@ -79,6 +85,7 @@ public class Board
 			{ 3, 0, 4, 4, 4, 0, 0, 1, 1, 0, 4, 4, 4, 4, 0, 1, 1, 0, 4, 4, 4, 4, 0, 3 }
 		};
 	
+		// Maps out the board in terms of room numbers. Room number of 0 means a corridor slot
 		int[][] roomPositions = new int[][]
 		{
 			{ 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3 },
@@ -107,16 +114,19 @@ public class Board
 			{ 5, 5, 5, 5, 5, 5, 5, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 7, 7, 7, 7, 7, 7, 7 }
 		};
 		
+		
 		for (int row = 0; row < BOARD_HEIGHT; row++)
 		{
 			
 			for (int col = 0; col < BOARD_WIDTH; col++)
 			{
 				
+				// Create different type of slots depending on the value of slotPositions. Each type of slot has a button.
 				switch (slotPositions[row][col])
 				{
 					
-					case 0:		break;
+					case 0:		// Only 6 slots are placed in each room, there is no slots in the remainder of each room;
+								break;
 						   
 					case 1: 	this.boardSlots[row][col] = new BoardSlot(row, col, new BoardButton(row, col));
 								break;
@@ -128,7 +138,8 @@ public class Board
 					case 3: 	this.boardSlots[row][col] = new SecretSlot(row, col, roomPositions[row][col], new SecretButton(row, col));
 								break;
 								
-					case 4:		this.boardSlots[row][col] = new RoomSlot(row, col, roomPositions[row][col], new RoomButton(row, col));
+					case 4:		// 6 room slots are placed in each room to enable them to contain the max possible number of suspect pawns
+								this.boardSlots[row][col] = new RoomSlot(row, col, roomPositions[row][col], new RoomButton(row, col));
 								this.roomSlots.add((RoomSlot) this.boardSlots[row][col]);
 								break;
 								
@@ -141,15 +152,15 @@ public class Board
 	}
 	
 	
-	// Method which creates GUI
-	public void gui() 
+	// makeGui() Method
+	// Purpose: Creates JFame to visually represent board
+	public void makeGui() 
 	{
 			
-		// Initialize frame for board
-			
+		// Frame for board	
 		JFrame Board = new JFrame("Cluedo");
 		
-
+		// Add buttons to board for each position where there is a slot
 		for (int row = 0; row < BOARD_HEIGHT; row++)
 		{
 			
@@ -165,8 +176,7 @@ public class Board
 		
 		}		
 	
-		// Get background image for JFrame
-			
+		// Get background image for JFrame		
 		ImageIcon image = null;
 			
 		try 
@@ -175,58 +185,77 @@ public class Board
 		} 
 		catch (IOException e) 
 		{
-			System.out.println("Error");
+			System.out.println("Error reading image");
 		}
 
+		// Finalise JFrame
 		JLabel boardLabel = new JLabel(image);
 		boardLabel.setBounds(0, 0, BOARD_WIDTH * BUTTON_PIXEL_WIDTH, BOARD_HEIGHT * BUTTON_PIXEL_HEIGHT);
 		
 		Board.add(boardLabel);
 		Board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		// Set size for board with additions to account for JFrame outer
 		Board.setSize(BOARD_WIDTH * BUTTON_PIXEL_WIDTH + 6, BOARD_HEIGHT * BUTTON_PIXEL_HEIGHT + 29);
+		
 		Board.setResizable(false);
 		Board.setVisible(true);
 	}
 
 	
-	// Place pawns at starting positions
+	// makeSuspectPawns() Method
+	// Purpose: Creates suspect pawns for each game character and places them at set locations on board
 	public void makeSuspectPawns()
 	{
 		
+		// Initial locations for each suspect pawn is the same for every game
 		int[] x0 = {9, 14, 23, 23, 15, 0};
 		int[] y0 = {0, 0, 5, 12, 23, 16};
 		
+		// Color associated to each pawn
 		Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.PINK};
 				
-		for (int i = 1; i <= NUM_SUSPECTS; i++)
+		for (int i = 0; i < NUM_SUSPECTS; i++)
 		{
-			this.suspectPawns.add(new SuspectPawn(i, colors[i-1]));
-			this.suspectPawns.get(i-1).movePosition(this.boardSlots[y0[i-1]][x0[i-1]]);
+			// Create suspect pawns and position on board
+			this.suspectPawns.add(new SuspectPawn(i, colors[i]));
+			this.suspectPawns.get(i).movePosition(this.boardSlots[y0[i]][x0[i]]);
 		}
 	}
 	
+	
+	// getSuspectPawns() Method
 	public ArrayList<SuspectPawn> getSuspectPawns()
 	{
 		return this.suspectPawns;
 	}
 	
-	public void setSuspectPawns(ArrayList<SuspectPawn> suspectPawns)
+	
+	// addSuspectPawns() Method
+	public void addSuspectPawn(SuspectPawn suspectPawn)
 	{
-		this.suspectPawns = suspectPawns;
+		this.suspectPawns.add(suspectPawn);
 	}
 	
+	
+	// getSlots() Method
 	public Slot[][] getSlots()
 	{
 		return this.boardSlots;		
 	}
-	
+
+
+	// getRoomSlots() Method
 	public ArrayList<RoomSlot> getRoomSlots()
 	{
 		return this.roomSlots;		
 	}
 	
+	
+	// getDoorSlots() Method
 	public ArrayList<DoorSlot> getDoorSlots()
 	{
 		return this.doorSlots;		
 	}
+	
 }

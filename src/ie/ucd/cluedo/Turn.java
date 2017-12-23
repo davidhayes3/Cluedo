@@ -82,7 +82,7 @@ public class Turn
 						return false;
 		
 			case "a":	accusationManager = new AccusationManager();
-						this.gameOver = accusationManager.simulateAccusation(players, this.playerTurn, this.gameOver);
+						this.gameOver = accusationManager.simulateAccusation(players, gameBoard, this.playerTurn, this.gameOver);
 						
 						// playerTurn remains the same as an unsuccessful accusation shortens the length of players. playerTurn reset to 0 if needed 
 						this.playerTurn = this.playerTurn % players.size();
@@ -147,7 +147,7 @@ public class Turn
 						return false;
 						
 			case "a":	accusationManager = new AccusationManager();
-						this.gameOver = accusationManager.simulateAccusation(players, this.playerTurn, this.gameOver);
+						this.gameOver = accusationManager.simulateAccusation(players, gameBoard, this.playerTurn, this.gameOver);
 			
 						this.playerTurn = this.playerTurn % players.size();
 						

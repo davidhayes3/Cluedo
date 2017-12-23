@@ -1,8 +1,16 @@
+/***************************************************************/
+/* Game Values Class
+/* 
+/* Contains all enumeration types and constants for entire 
+/* project and generates the murder combination
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.concurrent.ThreadLocalRandom;
+
 
 public final class GameValues 
 {

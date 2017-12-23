@@ -1,3 +1,10 @@
+/***************************************************************/
+/* Hypothesis Manager Class
+/* 
+/* Implements the formulation and resulting actions arising from 
+/* hypotheses
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import java.util.ArrayList;
@@ -9,87 +16,118 @@ import static ie.ucd.cluedo.GameValues.*;
 public class HypothesisManager 
 {
 	
+	// Attributes
 	Hypothesis hypothesis;
 	
+	
+	// Constructor
 	public HypothesisManager()
 	{
 	
 	}
 	
 	
+	/* Public Methods */
 	
+	
+	// simulateHypothesis() Method
+	// Purpose: Implements a full hypothesis and makes the necessary board repositions
+	@SuppressWarnings("resource")
 	public void simulateHypothesis(ArrayList<Player> players, Board gameBoard, int playerTurn)
 	{
 
-		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.println("What suspect is in your hypothesis: " );
-		for (int i = 0; i < 6; i++)
+		// Get suspect in hypothesis
+		System.out.println("\nWhat suspect is in your hypothesis:");
+		for (int i = 0; i < NUM_SUSPECTS; i++)
 		{
-			System.out.println("[" + i + "]" + gameList.get(i));
+			System.out.println(i + ")" + gameList.get(i));
 		}
 		
 		int suspectHypothesis = scanner.nextInt();
 		
-		System.out.println("What weapon is in your hypothesis: " );
-		for (int i = 6; i < 12; i++)
+		
+		// Get weapon in hypothesis
+		System.out.println("\nWhat weapon is in your hypothesis:");
+		for (int i = 0; i < NUM_WEAPONS; i++)
 		{
-			System.out.println("[" + i + "]" + gameList.get(i));
+			System.out.println(i + ")" + gameList.get(i + NUM_SUSPECTS));
 		}
 		
-		int weaponHypothesis = scanner.nextInt();
+		int weaponHypothesis = scanner.nextInt() + NUM_SUSPECTS;
 		
-		// Room
-		int roomHypothesis = players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber() + NUM_SUSPECTS + NUM_WEAPONS - 1;
 		
+		// Room in hypothesis is the players current room
+		int currentRoom = players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
+		int roomHypothesis = currentRoom + NUM_SUSPECTS + NUM_WEAPONS - 1;
+		
+		
+		// Create hypothesis object
 		Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
 		
+		// Check cards of all players to see if any player refutes the hypothesis
 		checkPlayersCards(players, playerHypothesis, playerTurn);
 		
+		// Move the suspect pawn of the hypothesis to a new room
 		moveSuspectPawn(players, gameBoard, suspectHypothesis, roomHypothesis);
 
 	}
 	
 	
+	/* Private Methods */
+	
+	
+	// moveSuspectPawn() Method
+	// Purpose: Moves the suspect pawn of the of the suspect in the hypothesis to the room in the hypothesis 
 	private void moveSuspectPawn(ArrayList <Player> players, Board gameBoard, int suspectHypothesis, int roomHypothesis)
 	{
 		
-		Player pl = null;
-				
-		for (Player p: players)
+		for (int i = 0; i < players.size(); i++)
 		{
-			if (p.getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
+			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectHypothesis)
 			{
-				pl = p;
-				
-				if (pl.getSuspectPawn().getPosition().getRoomNumber() == roomHypothesis - 11)
+				if (players.get(i).getSuspectPawn().getPosition().getRoomNumber() == roomHypothesis - NUM_SUSPECTS - NUM_WEAPONS + 1)
 				{
 					return;
 				}
 			}
 		}
 		
-		if (gameBoard.getSuspectPawns().get(suspectHypothesis).getPosition().getRoomNumber() == roomHypothesis - 11)
+		
+		for (int j = 0; j < gameBoard.getSuspectPawns().size(); j++)
 		{
-			return;
-		}
-			
-		else
-		{
-			Slot roomSlot = getRoomSlot(players, gameBoard, roomHypothesis);
-	
-			for (int i = 0; i < players.size(); i++)
+			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectHypothesis)
 			{
-				if (players.get(i).getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
-				{	
-					players.get(i).getSuspectPawn().movePosition(roomSlot);
+				if (gameBoard.getSuspectPawns().get(j).getPosition().getRoomNumber() == roomHypothesis - NUM_SUSPECTS - NUM_WEAPONS + 1)
+				{
 					return;
 				}
 			}
-		
-			gameBoard.getSuspectPawns().get(suspectHypothesis).movePosition(roomSlot);
 		}
+		
+		
+		Slot roomSlot = getRoomSlot(players, gameBoard, roomHypothesis);
+
+		for (int i = 0; i < players.size(); i++)
+		{
+			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectHypothesis)
+			{	
+				players.get(i).getSuspectPawn().movePosition(roomSlot);
+				return;
+			}
+		}
+		
+		
+		for (int j = 0; j < gameBoard.getSuspectPawns().size(); j++)
+		{
+			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectHypothesis)
+			{
+				gameBoard.getSuspectPawns().get(j).movePosition(roomSlot);
+				return;
+			}
+		}
+			
 	}
 
 	private Slot getRoomSlot(ArrayList<Player> players, Board gameBoard, int roomHypothesis)
@@ -102,8 +140,9 @@ public class HypothesisManager
 		{
 			slotOccupied = false;
 			
-			if (rs.getRoomNumber() == roomHypothesis - 11)
+			if (rs.getRoomNumber() == roomHypothesis - NUM_SUSPECTS - NUM_WEAPONS + 1)
 			{
+				
 				for (Player p: players)
 				{
 					if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
@@ -113,7 +152,7 @@ public class HypothesisManager
 					}
 				}
 				
-				for (int i = 0; i < NUM_SUSPECTS; i++)
+				for (int i = 0; i < gameBoard.getSuspectPawns().size(); i++)
 				{
 					if (gameBoard.getSuspectPawns().get(i).getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
 					{

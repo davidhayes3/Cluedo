@@ -6,8 +6,7 @@
 
 package ie.ucd.cluedo;
 
-import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
-import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
+import static ie.ucd.cluedo.GameValues.*;
 
 import java.util.ArrayList;
 public class MoveType 
@@ -21,7 +20,6 @@ public class MoveType
 	
 	
 	/* Public Methods */
-	
 	
 	
 	// normalRoomMove() Method
@@ -81,6 +79,7 @@ public class MoveType
 		return movesRemaining;
 		
 	}
+	
 	
 	// boardMove() Method
 	// Purpose: Implements possible actions when in the corridor
@@ -252,29 +251,34 @@ public class MoveType
 	
 	}
 	
-	
+	// getSecretSlot() Method
+	// Purpose: Finds a free slot in the room at the other side of the secret passage
 	private Slot getSecretSlot(int roomNumber, Board gameBoard, ArrayList<Player> players)
 	{
 		
+		// Method can only be called from 4 rooms with a secret passage, so only 4 possible values of roomNumber
 		switch(roomNumber)
 		{
 		
-			case 1:		return getRoomSlot(7, gameBoard, players);
+			case 1:		return getRoomSlot(STUDY_ROOM_NUMBER, gameBoard, players);
 			
-			case 3:		return getRoomSlot(5, gameBoard, players);
+			case 3:		return getRoomSlot(LOUNGE_ROOM_NUMBER, gameBoard, players);
 					
-			case 5: 	return getRoomSlot(3, gameBoard, players);
+			case 5: 	return getRoomSlot(CONSERVATORY_ROOM_NUMBER, gameBoard, players);
 					
-			case 7:		return getRoomSlot(1, gameBoard, players);
+			case 7:		return getRoomSlot(KITCHEN_ROOM_NUMBER, gameBoard, players);
 					
 			default:	return null;
 			
 		}
+		
 	}
 	
-
+	// getRoomSlot() Method
+	// Purpose: Finds a free slot in the room the player is trying to enter
 	private Slot getRoomSlot(int roomNumber, Board gameBoard, ArrayList<Player> players)
 	{
+		
 		boolean slotOccupied;
 		
 		ArrayList<RoomSlot> roomSlots = gameBoard.getRoomSlots();
@@ -285,6 +289,8 @@ public class MoveType
 			
 			if (rs.getRoomNumber() == roomNumber)
 			{
+				
+				// Check if any players have suspect pawns at the slot in question. If so, discard slot 
 				for (Player p: players)
 				{
 					if (p.getSuspectPawn().getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
@@ -294,20 +300,35 @@ public class MoveType
 					}
 				}
 				
+				// Check if any remaining suspect pawns are at the slot in question. If so, discard slot 
+				for (SuspectPawn s: gameBoard.getSuspectPawns())
+				{
+					if (s.getPosition() == gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
+					{
+						slotOccupied = true;
+						break;
+					}				
+				}
+				
+				// Return the first free slot in room found
 				if (!slotOccupied)
 				{
 					return gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
 				}
+			
 			}
+		
 		}
 		
 		return null;
 	}
 	
 	
-	
+	// getDoorSlot() Method
+	// Purpose: Finds the slot of the door for a given room
 	private Slot getDoorSlot(int roomNumber, Board gameBoard) 
 	{
+		
 		ArrayList<DoorSlot> doorSlots = gameBoard.getDoorSlots();
 		
 		for (DoorSlot ds: doorSlots)
@@ -319,6 +340,7 @@ public class MoveType
 		}
 		
 		return null;
+		
 	}	
 	
 }

@@ -24,7 +24,7 @@ public abstract class Pawn
 			this.pawnType = PawnType.WEAPON;
 		}
 		
-		this.pawnName = gameList.get(pawnIndex-1);
+		this.pawnName = gameList.get(pawnIndex);
 	}
 	
 	// Returns type of pawn, suspect or weapon

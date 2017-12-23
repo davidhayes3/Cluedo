@@ -147,13 +147,12 @@ public class Game
 				
 				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
 				{
-					// If valid integer input, give corresponding suspectPawn to player
-					System.out.println("xxxxxxx player choice is " + playerChoice);
-					
+ 
 					for (int j = 0; j < suspectPawns.size(); j++)
 					{
 						if (suspectPawns.get(j).getName() == gameList.get(playerChoice - 1))
 						{
+							// Give suspect pawn to player and remove from Boards list of suspect pawns
 							players.get(i).giveSuspectPawn(suspectPawns.get(j));
 							suspectPawns.remove(j);
 						}
@@ -251,7 +250,7 @@ public class Game
 		boolean hasRolled = false;
 		int currentRoom;
 
-		System.out.println("\n\nGame begins");
+		System.out.println("\n\nGAME HAS STARTED");
 
 		// Only break from loop if true accusation is made or only one player left
 		while (!gameOver)
@@ -316,7 +315,10 @@ public class Game
 			// Update playerTurn and gameOver based on events of this turn
 			this.playerTurn = turn.getPlayerTurn();
 			this.gameOver = turn.getGameOver();
+		
 		}
+		
+		System.out.println("\n\nGAME OVER");
 	
 	}
 	
