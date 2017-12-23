@@ -8,6 +8,9 @@ package ie.ucd.cluedo;
 
 import java.util.ArrayList;
 
+import static ie.ucd.cluedo.GameValues.*;
+
+
 public class GameManager 
 {
 	
@@ -17,11 +20,12 @@ public class GameManager
 	static Board gameBoard;
 	static ArrayList<Card> cardDeck;
 	
+	
 	// Main
 	public static void main(String[] args) 
-	{
+	{		
 		
-		players = new ArrayList<Player>();
+		players = new ArrayList<Player>(MAX_NUM_PLAYERS);
 		int numPlayers;
 		
 		System.out.println("NEW GAME\n\n");
@@ -41,7 +45,6 @@ public class GameManager
 		Cluedo.allocateCards(players, cardDeck);
 		
 		Cluedo.gameTurns(players, gameBoard);
-
+	
 	}
-
 }

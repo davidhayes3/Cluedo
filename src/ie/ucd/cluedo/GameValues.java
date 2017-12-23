@@ -30,8 +30,8 @@ public final class GameValues
 	// List of constants needed for logic
 	public static final int MIN_NUM_PLAYERS = 2;
 	public static final int MAX_NUM_PLAYERS = 6;		
-	public static final int MIN_DIES_SCORE = 2;
-	public static final int MAX_DIES_SCORE = 12;
+	public static final int MIN_DIE_SCORE = 2;
+	public static final int MAX_DIE_SCORE = 12;
 	public static final int NUM_SUSPECTS = 6;
 	public static final int NUM_WEAPONS = 6;
 	public static final int NUM_ROOMS = 9;
@@ -45,17 +45,10 @@ public final class GameValues
 	public static final int BOARD_HEIGHT = 24;
 	public static final int BUTTON_PIXEL_WIDTH = 21;
 	public static final int BUTTON_PIXEL_HEIGHT = 21;
-	
-	// List of constants needed for button press type;
-	public static final int BOARD_BUTTON_PRESS = 1;
-	public static final int DIES_BUTTON_PRESS = 2;
-	public static final int END_TURN_BUTTON_PRESS = 3;
-	public static final int NOTEBOOK_BUTTON_PRESS = 4; 
-	public static final int DOOR_BUTTON_PRESS = 5; 
-	
-	// Hash map for button colors
-	
-
+	public static final int KITCHEN_ROOM_NUMBER = 1;
+	public static final int CONSERVATORY_ROOM_NUMBER = 3;
+	public static final int LOUNGE_ROOM_NUMBER = 5;
+	public static final int STUDY_ROOM_NUMBER = 7;
 	
 	// List of all possible suspects, weapons and rooms 
 	public static final ArrayList<Name> gameList = new ArrayList<Name>(EnumSet.allOf(Name.class));

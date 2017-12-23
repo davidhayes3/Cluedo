@@ -1,3 +1,9 @@
+/***************************************************************/
+/* MoveType Class
+/* 
+/* Implements the types of move possible on the board 
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
@@ -14,19 +20,27 @@ public class MoveType
 	}
 	
 	
+	/* Public Methods */
+	
+	
+	
+	// normalRoomMove() Method
+	// Purpose: Implements possible actions when in a room
 	public int normalRoomMove(ArrayList<Player> players, int playerTurn, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
 		switch (playerChoice)
 		{
 		
-			case "l":	Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard);
+			case "l":	// Choosing to leave moves the player to the rooms door without taking a move away
+						Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard);
 						players.get(playerTurn).getSuspectPawn().movePosition(doorSlot);
 	
 						break;
 						
 			
-			case "s":	movesRemaining = 0;
+			case "s":	// Choosing to stay ends the players movement for that turn
+						movesRemaining = 0;
 						break;
 			
 			default:	break;
@@ -34,8 +48,12 @@ public class MoveType
 		}
 		
 		return movesRemaining;
+		
 	}
 	
+	
+	// secretRoomMove() Method
+	// Purpose: Implements possible actions when in a room with a secret passage
 	public int secretRoomMove(ArrayList<Player> players, int playerTurn, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
@@ -50,7 +68,8 @@ public class MoveType
 			case "s":	movesRemaining = 0;
 						break;
 						
-			case "p":	Slot secretSlot = getSecretSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard, players);
+			case "p":	// Moves player to room at other side of secret passage
+						Slot secretSlot = getSecretSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard, players);
 						players.get(playerTurn).getSuspectPawn().movePosition(secretSlot);
 			
 						movesRemaining--;
@@ -60,9 +79,11 @@ public class MoveType
 		}
 		
 		return movesRemaining;
+		
 	}
 	
-	
+	// boardMove() Method
+	// Purpose: Implements possible actions when in the corridor
 	public int boardMove(ArrayList<Player> players, int playerTurn, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
@@ -76,14 +97,17 @@ public class MoveType
 			case "u":	newRow = currentPosition.getYPosition() - 1;
 						newCol = currentPosition.getXPosition();
 						
+						// Checks if player can move to indicated postion of preference
 						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
 					
+						// If the players intended move is legal, move the player
 						if (canMove)
 						{
 							players.get(playerTurn).getSuspectPawn().movePosition(gameBoard.getSlots()[newRow][newCol]);
 							movesRemaining--;
 						}
 						
+						// If player moves on to a board button, move the player to a room slot within that room
 						if (players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
 						{
 							
@@ -94,6 +118,7 @@ public class MoveType
 						}
 						
 						return movesRemaining;
+			
 			
 			case "d":	newRow = currentPosition.getYPosition() + 1;
 						newCol = currentPosition.getXPosition();
@@ -115,6 +140,7 @@ public class MoveType
 						
 						return movesRemaining;
 			
+			
 			case "l":	newRow = currentPosition.getYPosition();
 						newCol = currentPosition.getXPosition() - 1;
 	
@@ -135,6 +161,7 @@ public class MoveType
 						
 						return movesRemaining;
 				
+			
 			case "r":	newRow = currentPosition.getYPosition();
 						newCol = currentPosition.getXPosition() + 1;
 
@@ -155,36 +182,50 @@ public class MoveType
 						
 						return movesRemaining;
 			
-			case "f":	movesRemaining = 0;
+			
+			case "f":	// If the player wants to finish moving without using all its possible moves
+						movesRemaining = 0;
 						return movesRemaining;
 				
+			
 			default:	System.out.println("Please enter a valid option");
 						return movesRemaining;
 							
 		}
 	}
 	
-
-
+	
+	/* Private Methods */
+	
+	
+	// boardMove() Method
+	// Purpose: Implements possible actions when in the corridor
 	boolean canMove(Slot currentPosition, int newCol, int newRow, Board gameBoard, ArrayList<Player> players)
 	{
 		
+		// If desired position is not on board
 		if (newRow < 0 || newRow > BOARD_HEIGHT - 1 || newCol < 0 || newCol > BOARD_WIDTH - 1)
 		{
 			System.out.println("That position is not on the board.");
 			return false;
 		}
 
+		
+		// If player tries to access room other than through a door
 		else if (gameBoard.getSlots()[newRow][newCol] == null || gameBoard.getSlots()[newRow][newCol] instanceof RoomSlot)
 		{
+			
+			// If not from a door slot, print illegal move
 			if (!(currentPosition instanceof DoorSlot))
 			{
-				System.out.println("Illegal move.");
+				System.out.println("Cannot access a room through a wall.");
 			}
 			
 			return false;
 		}
 		
+		
+		// If there's already a suspect pawn at the desired position
 		else
 		{
 			for (Player p: players)
@@ -194,6 +235,16 @@ public class MoveType
 					System.out.println("There's already a player at that position.");
 					return false;
 				}
+			}
+			
+			for (SuspectPawn s: gameBoard.getSuspectPawns())
+			{
+				if (s.getPosition() == gameBoard.getSlots()[newRow][newCol])
+				{
+					System.out.println("There's already a pawn at that position.");
+					return false;
+				}
+					
 			}
 		}
 

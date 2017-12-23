@@ -210,6 +210,11 @@ public class Board
 		return this.suspectPawns;
 	}
 	
+	public void setSuspectPawns(ArrayList<SuspectPawn> suspectPawns)
+	{
+		this.suspectPawns = suspectPawns;
+	}
+	
 	public Slot[][] getSlots()
 	{
 		return this.boardSlots;		
