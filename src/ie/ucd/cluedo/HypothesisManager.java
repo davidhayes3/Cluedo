@@ -59,18 +59,41 @@ public class HypothesisManager
 	public void moveSuspectPawn(int suspectHypothesis, int roomHypothesis)
 	{
 		
-		Slot roomSlot = getRoomSlot(roomHypothesis, suspectHypothesis);
-		
-		for (int i = 0; i < this.players.size(); i++)
+		Player pl = null;
+				
+		for (Player p: this.players)
 		{
-			if (this.players.get(i).getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
+			if (p.getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
 			{
-				players.get(i).getSuspectPawn().movePosition(roomSlot);
-				return;
+				pl = p;
+				
+				if (pl.getSuspectPawn().getPosition().getRoomNumber() == roomHypothesis - 11)
+				{
+					return;
+				}
 			}
 		}
 		
-		this.gameBoard.getSuspectPawns().get(suspectHypothesis).movePosition(roomSlot);
+		if (this.gameBoard.getSuspectPawns().get(suspectHypothesis).getPosition().getRoomNumber() == roomHypothesis - 11)
+		{
+			return;
+		}
+			
+		else
+		{
+			Slot roomSlot = getRoomSlot(roomHypothesis, suspectHypothesis);
+	
+			for (int i = 0; i < this.players.size(); i++)
+			{
+				if (this.players.get(i).getSuspectPawn().getPawnIndex() - 1 == suspectHypothesis)
+				{	
+					players.get(i).getSuspectPawn().movePosition(roomSlot);
+					return;
+				}
+			}
+		
+			this.gameBoard.getSuspectPawns().get(suspectHypothesis).movePosition(roomSlot);
+		}
 	}
 
 	private Slot getRoomSlot(int roomHypothesis, int suspectHypothesis)
