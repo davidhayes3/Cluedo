@@ -1,3 +1,7 @@
+/***************************************************************/
+/*  Public Method Implementations
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import java.awt.Color;
@@ -5,15 +9,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static ie.ucd.cluedo.GameValues.*;
 
 public class Game 
 {
 	
-	// Game attributes
-
+	// Attributes
+	
 	Board gameBoard;
 	ArrayList<Card> cardDeck;
 	boolean gameOver;
@@ -21,7 +24,8 @@ public class Game
 	HypothesisManager hypothesisManager;
 	AccusationManager accusationManager;
 	
-	// Game Constructor
+	// Constructor
+	
 	public Game()
 	{
 		
@@ -205,7 +209,7 @@ public class Game
 				{
 					@SuppressWarnings("resource")
 					Scanner scanner = new Scanner(System.in);
-					System.out.printf("\nWhat do you want to do?\nView Notebook [n]\nFinish Move [f]\nOption: ");
+					System.out.printf("\nWhat do you want to do?\\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.afterRollMove(hasRolled, playerChoice);
 				}
@@ -215,8 +219,7 @@ public class Game
 
 					@SuppressWarnings("resource")
 					Scanner scanner = new Scanner(System.in);
-					System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h],"
-							+ "\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: ");
+					System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h]\nView Cards [c]\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.afterRollMoveInRoom(hasRolled, playerChoice);
 				}
@@ -261,27 +264,7 @@ public class Game
 	{
 		System.out.println("\nMURDER DETAILS:\n");
 		System.out.printf("Suspect: %s\nWeapon: %s\nRoom: %s\n\n", murderSuspect, murderWeapon, murderRoom);
-	}	
+	}*/	
 	
-	public void printPlayerDetails()
-	{
-		System.out.printf("\nPLAYER DETAILS:\n\n");
-		
-		for (int i = 0; i < players.size(); i++)
-		{
-			System.out.printf("Player %d\n", players.get(i).getPlayerNumber());
-			System.out.printf("Pawn: %s\n\n", players.get(i).getSuspectPawn().getName());
-		}
-	}
-	
-	// Print the type and name of cards to be dealt to players
-	public void printDeckInPlayDetails()
-	{
-		System.out.println("\nDECK IN PLAY:\n");
-	
-		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
-		{
-			System.out.printf("Type: %s, Name: %s\n", cardDeck.get(i).getType(), cardDeck.get(i).getName());
-		}
-	}*/
 }
+	

@@ -1,7 +1,6 @@
 package ie.ucd.cluedo;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Turn 
 {
@@ -27,12 +26,11 @@ public class Turn
 	@SuppressWarnings("resource")
 	public boolean beforeRollMove(boolean hasRolled, String playerChoice)
 	{
-
 		
 		switch (playerChoice)
 		{
 			
-			case "r":	MoveChoice move = new MoveChoice(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
+			case "r":	move = new MoveChoice(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
 						move.chooseMove();
 						return true;
 						
@@ -68,8 +66,9 @@ public class Turn
 						return hasRolled;
 		
 			case "h":	hypothesisManager = new HypothesisManager(this.players, this.gameBoard);
-						hypothesisManager.simulateHypothesis(this.playerTurn);
-						return hasRolled;
+						hypothesisManager.simulateHypothesis(this.playerTurn, this.numPlayers);
+						this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+						return false;
 		
 			case "a":	accusationManager = new AccusationManager(this.players);
 						this.gameOver = accusationManager.simulateAccusation(this.playerTurn, this.numPlayers, this.gameOver);
@@ -123,8 +122,9 @@ public class Turn
 		switch (playerChoice)
 		{
 			case "h":	hypothesisManager = new HypothesisManager(this.players, this.gameBoard);
-						hypothesisManager.simulateHypothesis(this.playerTurn);
-						return hasRolled;
+						hypothesisManager.simulateHypothesis(this.playerTurn, this.numPlayers);
+						this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
+						return false;
 						
 			case "c":	this.players.get(this.playerTurn).getPlayerHand().showHand();
 						return hasRolled;

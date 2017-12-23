@@ -1,9 +1,6 @@
 package ie.ucd.cluedo;
 
-import static ie.ucd.cluedo.GameValues.BOARD_HEIGHT;
-import static ie.ucd.cluedo.GameValues.BOARD_WIDTH;
-import static ie.ucd.cluedo.GameValues.MAX_DIES_SCORE;
-import static ie.ucd.cluedo.GameValues.MIN_DIES_SCORE;
+import static ie.ucd.cluedo.GameValues.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -86,9 +83,6 @@ public class MoveChoice
 		
 		System.out.printf("\nYour moves are finished for this turn");
 
-	}
-	
-	
-		
+	}	
 	
 }

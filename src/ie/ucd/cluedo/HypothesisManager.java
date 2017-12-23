@@ -22,7 +22,7 @@ public class HypothesisManager
 	
 	
 	
-	public void simulateHypothesis(int playerTurn)
+	public void simulateHypothesis(int playerTurn, int numPlayers)
 	{
 
 		@SuppressWarnings("resource")
@@ -49,14 +49,14 @@ public class HypothesisManager
 		
 		Hypothesis playerHypothesis = new Hypothesis(suspectHypothesis, weaponHypothesis, roomHypothesis);
 		
-		checkPlayersCards(playerHypothesis, playerTurn);
+		checkPlayersCards(playerHypothesis, playerTurn, numPlayers);
 		
 		moveSuspectPawn(suspectHypothesis, roomHypothesis);
 
 	}
 	
 	
-	public void moveSuspectPawn(int suspectHypothesis, int roomHypothesis)
+	private void moveSuspectPawn(int suspectHypothesis, int roomHypothesis)
 	{
 		
 		Player pl = null;
@@ -136,43 +136,7 @@ public class HypothesisManager
 		return null;
 	}
 	
-	/*private Slot getRoomSlot(int roomNumber)
-	{
-
-		ArrayList<RoomSlot> roomSlots = this.gameBoard.getRoomSlots();
-		
-		for (RoomSlot rs: roomSlots)
-		{
-
-			if (rs.getRoomNumber() == roomNumber - 11)
-			{
-				for (int i = 0; i < NUM_SUSPECTS; i++)
-				{
-					if (this.gameBoard.getSuspectPawns().get(i).getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
-					{
-						break;
-					}
-				}
-					
-				for (Player p: this.players)
-				{
-					if (p.getSuspectPawn().getPosition() == this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()])
-					{
-						break;
-					}
-				}
-			}
-				
-			return this.gameBoard.getSlots()[rs.getYPosition()][rs.getXPosition()];
-			
-		}
-		
-		return null;
-	}*/
-	
-	
-	
-	public void checkPlayersCards(Hypothesis hypothesis, int playerTurn)
+	private void checkPlayersCards(Hypothesis hypothesis, int playerTurn, int numPlayers)
 	{
 		
 		ArrayList<Card> playerCards;
@@ -181,15 +145,10 @@ public class HypothesisManager
 		int weaponHypothesis = hypothesis.getWeapon();
 		int roomHypothesis = hypothesis.getRoom();
 		
-		for (int i = 0; i < players.size(); i++)
+		int i = playerTurn - 1;
+		
+		while (i != playerTurn)
 		{
-			if (i == playerTurn)
-			{
-				continue;
-			}
-			
-			else
-			{
 				
 				playerCards = players.get(i).getCards();
 				
@@ -217,7 +176,9 @@ public class HypothesisManager
 					}
 
 				}
-			}
+				
+				i--;
+				i = (i < 0) ? (i + numPlayers) : i;
 		}
 		
 		System.out.println("The hypothesis was not refuted");
