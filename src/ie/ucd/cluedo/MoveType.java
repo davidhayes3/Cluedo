@@ -56,15 +56,10 @@ public class MoveType
 	}
 	
 	@SuppressWarnings({ "resource" })
-	public int secretRoomMove(int movesRemaining)
+	public int secretRoomMove(int movesRemaining, String playerChoice)
 	{
 		
-		String playerChoice;
-		Scanner scanner = new Scanner(System.in);
-		
-		System.out.printf("\nLeave Room [l]\nStay in room [s]\nAccess Secret Passage [p]\nOption: " );				
-		playerChoice = scanner.nextLine();
-		
+
 		switch (playerChoice)
 		{
 		
@@ -93,16 +88,11 @@ public class MoveType
 	
 	
 	@SuppressWarnings("resource")
-	public int boardMove(int movesRemaining)
+	public int boardMove(int movesRemaining, String playerChoice)
 	{
 		
 		int newCol, newRow;
 		boolean canMove;
-		String playerChoice;
-		Scanner scanner = new Scanner(System.in);
-		
-		System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
-		playerChoice = scanner.nextLine();	
 				
 		switch (playerChoice)
 		{
@@ -198,7 +188,7 @@ public class MoveType
 	
 
 
-	private boolean canMove(int newCol, int newRow)
+	boolean canMove(int newCol, int newRow)
 	{
 		
 		if (newRow < 0 || newRow > BOARD_HEIGHT - 1 || newCol < 0 || newCol > BOARD_WIDTH - 1)

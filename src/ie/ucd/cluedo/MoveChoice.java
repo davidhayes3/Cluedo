@@ -46,7 +46,11 @@ public class MoveChoice
 			
 			if (currentSlot instanceof BoardSlot)
 			{
-				movesRemaining = typemove.boardMove(movesRemaining);
+				Scanner scanner = new Scanner(System.in);
+				
+				System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
+				String playerChoice = scanner.nextLine();	
+				movesRemaining = typemove.boardMove(movesRemaining, playerChoice);
 			}
 			
 			else if (currentSlot instanceof RoomSlot)
@@ -54,8 +58,13 @@ public class MoveChoice
 				
 				if (currentSlot.getRoomNumber() == 1 || currentSlot.getRoomNumber() == 3 || currentSlot.getRoomNumber() == 5 || currentSlot.getRoomNumber() == 7)
 				{
-					movesRemaining = typemove.secretRoomMove(movesRemaining);
-				}
+					String playerChoice;
+					@SuppressWarnings("resource")
+					Scanner scanner = new Scanner(System.in);
+					
+					System.out.printf("\nLeave Room [l]\nStay in room [s]\nAccess Secret Passage [p]\nOption: " );				
+					playerChoice = scanner.nextLine();
+					movesRemaining = typemove.secretRoomMove(movesRemaining, playerChoice);				}
 				
 				else
 				{
@@ -66,7 +75,11 @@ public class MoveChoice
 			
 			else if (currentSlot instanceof DoorSlot)
 			{
-				movesRemaining = typemove.boardMove(movesRemaining);
+				Scanner scanner = new Scanner(System.in);
+
+				System.out.printf("\nWhat do you want to do?\nMove Up [u]\nMove Down [d],\nMove Left [l]\nMove Right [r]\nFinish moving [f]\nOption: " );
+				String playerChoice = scanner.nextLine();	
+				movesRemaining = typemove.boardMove(movesRemaining, playerChoice);
 			}
 			
 		}

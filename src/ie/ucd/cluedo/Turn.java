@@ -25,12 +25,9 @@ public class Turn
 	}
 	
 	@SuppressWarnings("resource")
-	public boolean beforeRollMove(boolean hasRolled)
+	public boolean beforeRollMove(boolean hasRolled, String playerChoice)
 	{
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: " );
-		String playerChoice = scanner.nextLine();
 		
 		switch (playerChoice)
 		{
@@ -56,14 +53,10 @@ public class Turn
 	
 	
 	@SuppressWarnings("resource")
-	public boolean beforeRollMoveInRoom(boolean hasRolled)
+	public boolean beforeRollMoveInRoom(boolean hasRolled, String playerChoice)
 	{
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nMake Hypothesis [h],"
-				+ "\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: " );
-		String playerChoice = scanner.nextLine();
-		
+
 		switch (playerChoice)
 		{
 			
@@ -100,12 +93,9 @@ public class Turn
 	
 
 	@SuppressWarnings("resource")
-	public boolean afterRollMove(boolean hasRolled)
+	public boolean afterRollMove(boolean hasRolled, String playerChoice)
 	{
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.printf("\nWhat do you want to do?\nView Notebook [n]\nFinish Move [f]\nOption: ");
-		String playerChoice = scanner.nextLine();
 		
 		switch (playerChoice)
 		{
@@ -126,13 +116,9 @@ public class Turn
 	
 	
 	@SuppressWarnings("resource")
-	public boolean afterRollMoveInRoom(boolean hasRolled)
+	public boolean afterRollMoveInRoom(boolean hasRolled, String playerChoice)
 	{
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h],"
-				+ "\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: ");
-		String playerChoice = scanner.nextLine();
 		
 		switch (playerChoice)
 		{
