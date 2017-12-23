@@ -22,8 +22,6 @@ public class MoveType
 		
 			case "l":	Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard);
 						players.get(playerTurn).getSuspectPawn().movePosition(doorSlot);
-						
-						movesRemaining--;
 	
 						break;
 						
@@ -46,8 +44,6 @@ public class MoveType
 		
 			case "l":	Slot doorSlot = getDoorSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard);
 						players.get(playerTurn).getSuspectPawn().movePosition(doorSlot);
-						
-						movesRemaining--;
 				
 						break;
 						
@@ -72,14 +68,37 @@ public class MoveType
 		
 		int newCol, newRow;
 		boolean canMove;
+		Slot currentPosition = players.get(playerTurn).getSuspectPawn().getPosition();
 				
 		switch (playerChoice)
 		{
 			
-			case "u":	newRow = players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() - 1;
-						newCol = players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
+			case "u":	newRow = currentPosition.getYPosition() - 1;
+						newCol = currentPosition.getXPosition();
 						
-						canMove = canMove(newCol, newRow, gameBoard, players);
+						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
+					
+						if (canMove)
+						{
+							players.get(playerTurn).getSuspectPawn().movePosition(gameBoard.getSlots()[newRow][newCol]);
+							movesRemaining--;
+						}
+						
+						if (players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
+						{
+							
+							Slot roomSlot = getRoomSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard, players);
+							
+							players.get(playerTurn).getSuspectPawn().movePosition(roomSlot);
+							
+						}
+						
+						return movesRemaining;
+			
+			case "d":	newRow = currentPosition.getYPosition() + 1;
+						newCol = currentPosition.getXPosition();
+			
+						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
 					
 						if (canMove)
 						{
@@ -96,30 +115,10 @@ public class MoveType
 						
 						return movesRemaining;
 			
-			case "d":	newRow = players.get(playerTurn).getSuspectPawn().getPosition().getYPosition() + 1;
-						newCol = players.get(playerTurn).getSuspectPawn().getPosition().getXPosition();
-			
-						canMove = canMove(newCol, newRow, gameBoard, players);
-					
-						if (canMove)
-						{
-							players.get(playerTurn).getSuspectPawn().movePosition(gameBoard.getSlots()[newRow][newCol]);
-							movesRemaining--;
-						}
-						
-						if (players.get(playerTurn).getSuspectPawn().getPosition() instanceof DoorSlot)
-						{
-							Slot roomSlot = getRoomSlot(players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber(), gameBoard, players);
-							
-							players.get(playerTurn).getSuspectPawn().movePosition(roomSlot);
-						}
-						
-						return movesRemaining;
-			
-			case "l":	newRow = players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
-						newCol = players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() - 1;
+			case "l":	newRow = currentPosition.getYPosition();
+						newCol = currentPosition.getXPosition() - 1;
 	
-						canMove = canMove(newCol, newRow, gameBoard, players);
+						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
 						
 						if (canMove)
 						{
@@ -136,10 +135,10 @@ public class MoveType
 						
 						return movesRemaining;
 				
-			case "r":	newRow = players.get(playerTurn).getSuspectPawn().getPosition().getYPosition();
-						newCol = players.get(playerTurn).getSuspectPawn().getPosition().getXPosition() + 1;
+			case "r":	newRow = currentPosition.getYPosition();
+						newCol = currentPosition.getXPosition() + 1;
 
-						canMove = canMove(newCol, newRow, gameBoard, players);
+						canMove = canMove(currentPosition, newCol, newRow, gameBoard, players);
 	
 						if (canMove)
 						{
@@ -167,7 +166,7 @@ public class MoveType
 	
 
 
-	boolean canMove(int newCol, int newRow, Board gameBoard, ArrayList<Player> players)
+	boolean canMove(Slot currentPosition, int newCol, int newRow, Board gameBoard, ArrayList<Player> players)
 	{
 		
 		if (newRow < 0 || newRow > BOARD_HEIGHT - 1 || newCol < 0 || newCol > BOARD_WIDTH - 1)
@@ -178,7 +177,11 @@ public class MoveType
 
 		else if (gameBoard.getSlots()[newRow][newCol] == null || gameBoard.getSlots()[newRow][newCol] instanceof RoomSlot)
 		{
-			System.out.println("Illegal move.");
+			if (!(currentPosition instanceof DoorSlot))
+			{
+				System.out.println("Illegal move.");
+			}
+			
 			return false;
 		}
 		
