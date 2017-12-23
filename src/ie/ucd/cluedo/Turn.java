@@ -1,3 +1,9 @@
+/***************************************************************/
+/* Turn Class
+/* 
+/* Implements a turn in the game of Cluedo
+/***************************************************************/
+
 package ie.ucd.cluedo;
 
 import java.util.ArrayList;
@@ -5,39 +11,52 @@ import java.util.ArrayList;
 public class Turn 
 {
 	
+	// Attributes
+	
 	ArrayList<Player> players;
 	int playerTurn;
 	int numPlayers;
 	Board gameBoard;
 	boolean gameOver;
-	MoveChoice move;
+	Movement move;
 	HypothesisManager hypothesisManager;
 	AccusationManager accusationManager;
 	
+	
+	// Constructor
 	public Turn(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard, boolean gameOver) 
 	{
+		
 		this.players = players;
 		this.playerTurn = playerTurn;
 		this.numPlayers = numPlayers;
 		this.gameBoard = gameBoard;
 		this.gameOver = gameOver;
+	
 	}
 	
-	@SuppressWarnings("resource")
+	
+	/* Public Methods */
+	
+	
+	// beforeRollMove() Method
+	// Purpose: Implements a move where the player has not rolled yet and is not in a room
+	// Input: hasRolled, true if player has already rolled; playerChoice, the players choice of move
+	// Output: None
 	public boolean beforeRollMove(boolean hasRolled, String playerChoice)
 	{
 		
 		switch (playerChoice)
 		{
 			
-			case "r":	move = new MoveChoice(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
+			case "r":	move = new Movement(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
 						move.chooseMove();
 						return true;
 						
 			case "c":	this.players.get(this.playerTurn).getPlayerHand().showHand();
 						return hasRolled;
 			
-			case "n":	this.players.get(playerTurn).getNotebook().showNoteBook();
+			case "n":	this.players.get(this.playerTurn).getNotebook().showNoteBook();
 						return hasRolled;
 			
 			case "f":	this.playerTurn = (this.playerTurn + 1) % this.numPlayers;
@@ -50,15 +69,17 @@ public class Turn
 	}
 	
 	
-	@SuppressWarnings("resource")
+	// beforeRollMoveInRoom() Method
+	// Purpose: Implements a move where the player has not rolled yet and is already in a room
+	// Input: hasRolled, true if player has already rolled; playerChoice, the players choice of move
+	// Output: None
 	public boolean beforeRollMoveInRoom(boolean hasRolled, String playerChoice)
 	{
-
 
 		switch (playerChoice)
 		{
 			
-			case "r":	move = new MoveChoice(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
+			case "r":	move = new Movement(this.players, this.playerTurn, this.numPlayers, this.gameBoard);
 						move.chooseMove();
 						return true;
 						
@@ -91,10 +112,12 @@ public class Turn
 	}
 	
 
-	@SuppressWarnings("resource")
+	// afterRollMove() Method
+	// Purpose: Implements a move where the player has already rolled and is not in a room
+	// Input: hasRolled, true if player has already rolled; playerChoice, the players choice of move
+	// Output: None
 	public boolean afterRollMove(boolean hasRolled, String playerChoice)
 	{
-
 		
 		switch (playerChoice)
 		{
@@ -110,14 +133,17 @@ public class Turn
 			
 			default:	System.out.println("Please enter a valid option");
 						return hasRolled;
+						
 		}
 	}
 	
 	
-	@SuppressWarnings("resource")
+	// afterRollMoveInRoom() Method
+	// Purpose: Implements a move where the player has already rolled and is in a room
+	// Input: hasRolled, true if player has already rolled; playerChoice, the players choice of move
+	// Output: None
 	public boolean afterRollMoveInRoom(boolean hasRolled, String playerChoice)
 	{
-
 		
 		switch (playerChoice)
 		{
@@ -149,16 +175,22 @@ public class Turn
 			
 	}
 	
+	
+	// getPlayerTurn() Method
 	public int getPlayerTurn()
 	{
 		return this.playerTurn;
 	}
 	
+	
+	// getNumPlayers() Method
 	public int getNumPlayers()
 	{
 		return this.numPlayers;
 	}
 	
+	
+	// getGameOver() Method
 	public boolean getGameOver()
 	{
 		return this.gameOver;

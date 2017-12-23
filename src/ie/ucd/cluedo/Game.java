@@ -1,5 +1,7 @@
 /***************************************************************/
-/*  Public Method Implementations
+/* Game Class
+/* 
+/* Implements all main actions in game of Cluedo
 /***************************************************************/
 
 package ie.ucd.cluedo;
@@ -19,10 +21,9 @@ public class Game
 	
 	Board gameBoard;
 	ArrayList<Card> cardDeck;
-	boolean gameOver;
 	int playerTurn;
-	HypothesisManager hypothesisManager;
-	AccusationManager accusationManager;
+	boolean gameOver;
+	
 	
 	// Constructor
 	
@@ -30,30 +31,34 @@ public class Game
 	{
 		
 		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
-		
 	    this.playerTurn = 0;
 	    this.gameOver = false;
 			
 	}
 	
 	
+	/* Public Methods */
 	
-	/***************************************************************/
-	/*  Public Method Implementations
-	/***************************************************************/
 	
-	// Get number of players
+	// getNumPlayers() Method
+	// Purpose: Repeatedly asks users for input until an integer between 2 and 6 is chosen
+	// Input: None
+	// Output: numPlayers, the number of players in the game
 	@SuppressWarnings("resource")
 	public int getNumPlayers()
 	{	
-		// Ask user for input until no. of players between 2 and 6 is selected
-		System.out.println("Welcome to Cluedo. Please enter the number of players (2-6):");
+
 		int numPlayers;
+		
+		System.out.println("Welcome to Cluedo. Please enter the number of players (2-6):");
+		
+		// Ask user for input until number of players between 2 and 6 is selected
 		while (true)
 		{
 			
 			Scanner scanner = new Scanner(System.in);
 			
+			// Wait until an integer value is input
 			while (!scanner.hasNextInt())
 			{
 				scanner.next();
@@ -71,31 +76,46 @@ public class Game
 				System.out.println("Please enter an integer value between 2 and 6 (inclusive)");
 			}
 		}
+		
 		return numPlayers;
 	}
 
-	// Create Players
+	
+	// makePlayers() Method
+	// Purpose: Creates ArrayList containing all players of the game
+	// Input: numPlayers; empty ArrayList players
+	// Output: ArrayList players with all players of game
 	public ArrayList<Player> makePlayers(int numPlayers, ArrayList<Player> players)
 	{		
 		for (int i = 0; i < numPlayers; i++)
 		{
+			// Create player and assign player number and notebook
 			players.add(new Player(i + 1, new Notebook()));
 		}
+		
 		return players;
 	}
 	
-	// Make board
+	
+	// makeBoard() Method
+	// Purpose: Instantiates board object
+	// Input: None
+	// Output: None
 	public void makeBoard()
 	{
 		 this.gameBoard = new Board();
 	}
 	
 	
-	// Create suspect pawns
+	// getCharacters() Method
+	// Purpose: Assigns the suspectPawn of the character each player wants to that player
+	// Input: ArrayList players
+	// Output: None
 	@SuppressWarnings("resource")
 	public void getCharacters(ArrayList<Player> players)
 	{		
 
+		// HashMap used to print color of player's suspectPawn
 		Map<Color, String> colorMap = new HashMap<Color, String>();
 		colorMap.put(Color.RED, "Red");  
 	    colorMap.put(Color.BLUE, "Blue");
@@ -107,9 +127,9 @@ public class Game
 		for (int i = 0; i < players.size(); i++)
 		{
 			
-			// Ask user for input until no. of players between 2 and 6 is selected
-			System.out.println("\nPlayer " + (i + 1) + ", please select your character:\n1. MISS SCARLET\n2. PROFESSOR PLUM\n"
-					+ "3. MRS. PEACOCK\n4. REVEREND MR. GREEN\n5. COLONEL MUSTARD\n6. MRS. WHITE\n");
+			// Ask player for character they would like to play as
+			System.out.println("\nPlayer " + (i + 1) + ", please select your character:\n1) MISS SCARLET\n2) PROFESSOR PLUM\n"
+					+ "3) MRS. PEACOCK\n4) REVEREND MR. GREEN\n5) COLONEL MUSTARD\n6) MRS. WHITE\n");
 			
 			while (true)
 			{
@@ -127,59 +147,88 @@ public class Game
 				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
 				{
 					players.get(i).giveSuspectPawn(this.gameBoard.getSuspectPawns().get(playerChoice - 1));
-					System.out.println("Player " + (i + 1) + " is " + players.get(i).getSuspectPawn().getName() + " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
+					System.out.println("Player " + players.get(i).getPlayerNumber() + " is " + players.get(i).getSuspectPawn().getName() 
+							+ " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
 					break;
 				}
+				
 				else
 				{
 					System.out.println("Please enter an integer value between 1 and 6 (inclusive): ");
 				}
+				
 			}
 		}
 	}
 
 	
-	// Creates deck of cards with all cards except murder cards
-	public 	ArrayList<Card> createDeck()
+	// createDeck() Method
+	// Purpose: Creates the card deck to be distributed among players i.e all cards minus murder cards
+	// Input: None
+	// Output: None
+	public void createDeck()
 	{
+		
 		for (int i = 0; i < NUM_CARDS_IN_DECK; i++)
 		{
+			
 			if (i == murderSuspectIndex || i == murderWeaponIndex || i == murderRoomIndex)
 			{
 				continue;
 			}
+			
 			else
 			{
 				this.cardDeck.add(new Card(i));
 			}
+			
 		}
-		return cardDeck;
+		
 	}
 	
-	// Allocates the deck of cards created among all players, giving one at a time to each player starting with player 1, player 2...
-	public void allocateCards(ArrayList<Player> players,int numPlayers) 
+	
+	// allocateCards() Method
+	// Purpose: Allocates the deck of cards created among all players, one at a time to each player and allocates a hand object to each player
+	// Input: ArrayList players, numPlayers
+	// Output: None
+	public void allocateCards(ArrayList<Player> players, int numPlayers) 
 	{
+		
 		int playerNumber = 0;
 		
+		// Allocate cards one by one to each player
 		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
 		{
+		
 			players.get(playerNumber++).giveCard(this.cardDeck.get(i));
 			
 			if (playerNumber == players.size())
 			{
 				playerNumber = 0;
 			}
+			
 		}
+		
+		// Create PlayerHand for each players
 		for(int j = 0; j < numPlayers; j++)
 		{
-			players.get(j).giveHand(new PlayerHand(players.get(j)));
+			
+			players.get(j).giveHand(new PlayerHand(players.get(j).getCards()));
+		
 		}
 	}
 	
-	// Turn for a player
+	
+	// gameTurns() Method
+	// Purpose: Simulates the turns of the game. The options available to a player vary depending 
+	// on where they are on board and if they have already rolled
+	// Input: ArrayList players, numPlayers
+	// Output: None
+	@SuppressWarnings("resource")
 	public void gameTurns(ArrayList<Player> players, int numPlayers)
 	{
 		
+		// HashMap to print color of player
 		Map<Color, String> colorMap = new HashMap<Color, String>();
 		colorMap.put(Color.RED, "Red");  
 	    colorMap.put(Color.BLUE, "Blue");
@@ -193,35 +242,40 @@ public class Game
 
 		System.out.println("\n\nGame begins");
 
+		// Repeat until true accusation is made or only one player left
 		while (!gameOver)
 		{			
 			
+			// Instantiate Turn object
 			Turn turn = new Turn(players, this.playerTurn, numPlayers, this.gameBoard, this.gameOver);
 			
 			currentRoom = players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
 			
-			System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" + colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
+			System.out.println("\n" + players.get(playerTurn).getSuspectPawn().getName() + "'s turn (" 
+					+ colorMap.get(players.get(playerTurn).getSuspectPawn().getColor()) + ")");
 			
+			// Vary choices available to player depending on their position on board and if they have rolled already
 			if (hasRolled)
 			{
 				
 				if (currentRoom == 0)
 				{
-					@SuppressWarnings("resource")
+					
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.afterRollMove(hasRolled, playerChoice);
+				
 				}
 				
 				else
 				{
 
-					@SuppressWarnings("resource")
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h]\nView Cards [c]\nMake Accusation [a]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.afterRollMoveInRoom(hasRolled, playerChoice);
+					
 				}
 				
 			}
@@ -231,40 +285,33 @@ public class Game
 				
 				if (currentRoom == 0)
 				{
-					@SuppressWarnings("resource")
+					
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: " );
 					String playerChoice = scanner.nextLine();
 					hasRolled = turn.beforeRollMove(hasRolled, playerChoice);
+					
 				}
 				
 				else
 				{
-					@SuppressWarnings("resource")
+					
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: " );
 					String playerChoice = scanner.nextLine();
-					hasRolled = turn.beforeRollMoveInRoom(hasRolled,playerChoice);				}
+					hasRolled = turn.beforeRollMoveInRoom(hasRolled,playerChoice);				
+				
+				}
 				
 			}
 			
+			// Update key factors in game
 			this.playerTurn = turn.getPlayerTurn();
 			numPlayers = turn.getNumPlayers();
 			this.gameOver = turn.getGameOver();
 			
 		}
 	}
-	
-	
-	// Other Methods
-	
-	
-	// Print details of murder for this game
-	/*public void printMurderDetails()
-	{
-		System.out.println("\nMURDER DETAILS:\n");
-		System.out.printf("Suspect: %s\nWeapon: %s\nRoom: %s\n\n", murderSuspect, murderWeapon, murderRoom);
-	}*/	
 	
 }
 	

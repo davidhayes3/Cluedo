@@ -11,10 +11,10 @@ public class PlayerHand extends JFrame {
 	JLabel label = new JLabel();
 	ArrayList<Card> playerHand;
 	
-	public PlayerHand(Player player)
+	public PlayerHand(ArrayList<Card> cards)
 	{
 
-		playerHand = player.getCards();
+		playerHand = cards;
 		this.setSize(500, 500);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
