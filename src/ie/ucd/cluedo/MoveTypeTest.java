@@ -61,7 +61,7 @@ public class MoveTypeTest {
 	@Test
 	public void testCanMove() {
 		
-		boolean output = testMoveType.canMove(0, 7, testBoard, players);
+		boolean output = testMoveType.canMove(testPlayer.getSuspectPawn().getPosition(), 0, 7, testBoard, players);
 		assertEquals("", true, output);
 	}
 
