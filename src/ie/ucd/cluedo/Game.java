@@ -19,8 +19,6 @@ public class Game
 	
 	// Attributes
 	
-	Board gameBoard;
-	ArrayList<Card> cardDeck;
 	int playerTurn;
 	boolean gameOver;
 	
@@ -30,7 +28,6 @@ public class Game
 	public Game()
 	{
 		
-		this.cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 	    this.playerTurn = 0;
 	    this.gameOver = false;
 			
@@ -101,9 +98,13 @@ public class Game
 	// Purpose: Instantiates board object
 	// Input: None
 	// Output: None
-	public void makeBoard()
+	public Board makeBoard()
 	{
-		 this.gameBoard = new Board();
+		 
+		Board gameBoard = new Board();
+		
+		return gameBoard;
+		
 	}
 	
 	
@@ -112,7 +113,7 @@ public class Game
 	// Input: ArrayList players
 	// Output: None
 	@SuppressWarnings("resource")
-	public void getCharacters(ArrayList<Player> players)
+	public void getCharacters(ArrayList<Player> players, Board gameBoard)
 	{		
 
 		// HashMap used to print color of player's suspectPawn
@@ -146,7 +147,7 @@ public class Game
 				
 				if (playerChoice > 0 && playerChoice <= MAX_NUM_PLAYERS)
 				{
-					players.get(i).giveSuspectPawn(this.gameBoard.getSuspectPawns().get(playerChoice - 1));
+					players.get(i).giveSuspectPawn(gameBoard.getSuspectPawns().get(playerChoice - 1));
 					System.out.println("Player " + players.get(i).getPlayerNumber() + " is " + players.get(i).getSuspectPawn().getName() 
 							+ " (" + colorMap.get(players.get(i).getSuspectPawn().getColor()) + ")");
 					break;
@@ -166,8 +167,10 @@ public class Game
 	// Purpose: Creates the card deck to be distributed among players i.e all cards minus murder cards
 	// Input: None
 	// Output: None
-	public void createDeck()
+	public ArrayList<Card> createDeck()
 	{
+		
+		ArrayList<Card> cardDeck = new ArrayList<Card>(NUM_CARDS_IN_PLAY);
 		
 		for (int i = 0; i < NUM_CARDS_IN_DECK; i++)
 		{
@@ -179,10 +182,12 @@ public class Game
 			
 			else
 			{
-				this.cardDeck.add(new Card(i));
+				cardDeck.add(new Card(i));
 			}
 			
 		}
+		
+		return cardDeck;
 		
 	}
 	
@@ -191,7 +196,7 @@ public class Game
 	// Purpose: Allocates the deck of cards created among all players, one at a time to each player and allocates a hand object to each player
 	// Input: ArrayList players, numPlayers
 	// Output: None
-	public void allocateCards(ArrayList<Player> players, int numPlayers) 
+	public void allocateCards(ArrayList<Player> players, ArrayList<Card> cardDeck) 
 	{
 		
 		int playerNumber = 0;
@@ -200,7 +205,7 @@ public class Game
 		for (int i = 0; i < NUM_CARDS_IN_PLAY; i++)
 		{
 		
-			players.get(playerNumber++).giveCard(this.cardDeck.get(i));
+			players.get(playerNumber++).giveCard(cardDeck.get(i));
 			
 			if (playerNumber == players.size())
 			{
@@ -210,7 +215,7 @@ public class Game
 		}
 		
 		// Create PlayerHand for each players
-		for(int j = 0; j < numPlayers; j++)
+		for(int j = 0; j < players.size(); j++)
 		{
 			
 			players.get(j).giveHand(new PlayerHand(players.get(j).getCards()));
@@ -225,7 +230,7 @@ public class Game
 	// Input: ArrayList players, numPlayers
 	// Output: None
 	@SuppressWarnings("resource")
-	public void gameTurns(ArrayList<Player> players, int numPlayers)
+	public void gameTurns(ArrayList<Player> players, Board gameBoard, int numPlayers)
 	{
 		
 		// HashMap to print color of player
@@ -247,7 +252,7 @@ public class Game
 		{			
 			
 			// Instantiate Turn object
-			Turn turn = new Turn(players, this.playerTurn, numPlayers, this.gameBoard, this.gameOver);
+			Turn turn = new Turn(this.playerTurn, numPlayers, this.gameOver);
 			
 			currentRoom = players.get(playerTurn).getSuspectPawn().getPosition().getRoomNumber();
 			
@@ -264,7 +269,7 @@ public class Game
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
-					hasRolled = turn.afterRollMove(hasRolled, playerChoice);
+					hasRolled = turn.afterRollMove(players, gameBoard, hasRolled, playerChoice);
 				
 				}
 				
@@ -274,7 +279,7 @@ public class Game
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\nMake Hypothesis [h]\nMake Accusation [a]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
-					hasRolled = turn.afterRollMoveInRoom(hasRolled, playerChoice);
+					hasRolled = turn.afterRollMoveInRoom(players, gameBoard, hasRolled, playerChoice);
 					
 				}
 				
@@ -289,7 +294,7 @@ public class Game
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: " );
 					String playerChoice = scanner.nextLine();
-					hasRolled = turn.beforeRollMove(hasRolled, playerChoice);
+					hasRolled = turn.beforeRollMove(players, gameBoard, hasRolled, playerChoice);
 					
 				}
 				
@@ -299,7 +304,7 @@ public class Game
 					Scanner scanner = new Scanner(System.in);
 					System.out.printf("\nWhat do you want to do?\nRoll Dice [r]\nMake Hypothesis [h]\nMake Accusation [a]\nView Cards [c]\nView Notebook [n]\nFinish Move [f]\nOption: ");
 					String playerChoice = scanner.nextLine();
-					hasRolled = turn.beforeRollMoveInRoom(hasRolled,playerChoice);				
+					hasRolled = turn.beforeRollMoveInRoom(players, gameBoard, hasRolled, playerChoice);				
 				
 				}
 				

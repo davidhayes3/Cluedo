@@ -16,7 +16,6 @@ public class MoveType
 	}
 	
 	
-	@SuppressWarnings("resource")
 	public int normalRoomMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
@@ -39,7 +38,6 @@ public class MoveType
 		return movesRemaining;
 	}
 	
-	@SuppressWarnings("resource")
 	public int secretRoomMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		
@@ -69,8 +67,6 @@ public class MoveType
 	}
 	
 	
-	
-	@SuppressWarnings("resource")
 	public int boardMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard, int movesRemaining, String playerChoice)
 	{
 		

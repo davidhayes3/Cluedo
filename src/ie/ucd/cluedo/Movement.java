@@ -36,7 +36,6 @@ public class Movement
 	// Purpose: Allows the player to choose what type of move they want to make and updates movesRemaining accordingly
 	// Input: None
 	// Output: numPlayers, the number of players in the game
-	@SuppressWarnings("resource")
 	public void chooseMove(ArrayList<Player> players, int playerTurn, int numPlayers, Board gameBoard)
 	{
 		

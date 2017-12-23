@@ -15,6 +15,8 @@ public class GameManager
 	// Attributes
 	static Game Cluedo;
 	static ArrayList<Player> players;
+	static Board gameBoard;
+	static ArrayList<Card> cardDeck;
 	
 	// Main
 	public static void main(String[] args) 
@@ -31,15 +33,15 @@ public class GameManager
 			
 		Cluedo.makePlayers(numPlayers, players);
 		
-		Cluedo.makeBoard();
+		gameBoard = Cluedo.makeBoard();
 		
-		Cluedo.getCharacters(players);
+		Cluedo.getCharacters(players, gameBoard);
 		
-		Cluedo.createDeck();
+		cardDeck = Cluedo.createDeck();
 		
-		Cluedo.allocateCards(players, numPlayers);
+		Cluedo.allocateCards(players, cardDeck);
 		
-		Cluedo.gameTurns(players, numPlayers);
+		Cluedo.gameTurns(players, gameBoard, numPlayers);
 
 	}
 
