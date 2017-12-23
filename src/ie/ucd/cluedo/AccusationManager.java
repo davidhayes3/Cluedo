@@ -144,14 +144,14 @@ public class AccusationManager
 	
 	// moveSuspectPawn() Method
 	// Purpose: Moves the suspect pawn of the of the suspect in the accusation to the room in the accusation 
-	private void moveSuspectPawn(ArrayList <Player> players, Board gameBoard, int suspectHypothesis, int roomHypothesis)
+	private void moveSuspectPawn(ArrayList <Player> players, Board gameBoard, int suspectAccusation, int roomAccusation)
 	{
 		
 		for (int i = 0; i < players.size(); i++)
 		{
-			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectHypothesis)
+			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectAccusation)
 			{
-				if (players.get(i).getSuspectPawn().getPosition().getRoomNumber() == roomHypothesis - NUM_SUSPECTS - NUM_WEAPONS + 1)
+				if (players.get(i).getSuspectPawn().getPosition().getRoomNumber() == roomAccusation - NUM_SUSPECTS - NUM_WEAPONS + 1)
 				{
 					return;
 				}
@@ -161,9 +161,9 @@ public class AccusationManager
 		
 		for (int j = 0; j < gameBoard.getSuspectPawns().size(); j++)
 		{
-			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectHypothesis)
+			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectAccusation)
 			{
-				if (gameBoard.getSuspectPawns().get(j).getPosition().getRoomNumber() == roomHypothesis - NUM_SUSPECTS - NUM_WEAPONS + 1)
+				if (gameBoard.getSuspectPawns().get(j).getPosition().getRoomNumber() == roomAccusation - NUM_SUSPECTS - NUM_WEAPONS + 1)
 				{
 					return;
 				}
@@ -171,11 +171,11 @@ public class AccusationManager
 		}
 		
 		
-		Slot roomSlot = getRoomSlot(players, gameBoard, roomHypothesis);
+		Slot roomSlot = getRoomSlot(players, gameBoard, roomAccusation);
 
 		for (int i = 0; i < players.size(); i++)
 		{
-			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectHypothesis)
+			if (players.get(i).getSuspectPawn().getPawnIndex() == suspectAccusation)
 			{	
 				players.get(i).getSuspectPawn().movePosition(roomSlot);
 				return;
@@ -185,7 +185,7 @@ public class AccusationManager
 		
 		for (int j = 0; j < gameBoard.getSuspectPawns().size(); j++)
 		{
-			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectHypothesis)
+			if (gameBoard.getSuspectPawns().get(j).getPawnIndex() == suspectAccusation)
 			{
 				gameBoard.getSuspectPawns().get(j).movePosition(roomSlot);
 				return;
@@ -194,7 +194,7 @@ public class AccusationManager
 			
 	}
 
-	private Slot getRoomSlot(ArrayList<Player> players, Board gameBoard, int roomHypothesis)
+	private Slot getRoomSlot(ArrayList<Player> players, Board gameBoard, int roomAccusation)
 	{
 		boolean slotOccupied;
 		
@@ -204,7 +204,7 @@ public class AccusationManager
 		{
 			slotOccupied = false;
 			
-			if (rs.getRoomNumber() == roomHypothesis - NUM_SUSPECTS - NUM_WEAPONS + 1)
+			if (rs.getRoomNumber() == roomAccusation - NUM_SUSPECTS - NUM_WEAPONS + 1)
 			{
 				
 				for (Player p: players)

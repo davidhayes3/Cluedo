@@ -192,21 +192,21 @@ public class HypothesisManager
 				{
 					if (playerCards.get(j).getCardIndex() == suspectHypothesis)
 					{
-						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis");
+						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis.");
 						updateNotebook(players, players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
 						return;
 					}
 
 					else if (playerCards.get(j).getCardIndex() == weaponHypothesis)
 					{
-						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis");
+						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis.");
 						updateNotebook(players, players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
 						return;
 					}
 				
 					else if (playerCards.get(j).getCardIndex() == roomHypothesis)
 					{
-						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis");
+						System.out.println(players.get(i).getSuspectPawn().getName() + " refuted the hypothesis.");
 						updateNotebook(players, players.get(playerTurn), players.get(i), playerCards.get(j), suspectHypothesis, weaponHypothesis, roomHypothesis);
 						return;
 					}
@@ -238,7 +238,7 @@ public class HypothesisManager
 		for (int i = 0; i < players.size(); i++)
 		{
 			
-			if (i + 1 == refuter.getPlayerNumber() || i + 1 == accuser.getPlayerNumber())
+			if (i == refuter.getPlayerNumber() - 1 || i == accuser.getPlayerNumber() - 1)
 			{
 				continue;
 			}
